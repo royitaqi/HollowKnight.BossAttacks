@@ -22,6 +22,5 @@ internal class Option<T> {
 			}
 		}
 	}
-
 	private T _value;
 }

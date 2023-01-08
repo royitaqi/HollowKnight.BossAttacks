@@ -14,7 +14,7 @@ internal class ModuleManager {
         this.LogMod("Load");
         Unload();
 
-        foreach (var module in GetLoadableModules(scene))
+        foreach (var module in ModuleList)
         {
             if (module.Load(scene))
             {
@@ -35,17 +35,15 @@ internal class ModuleManager {
 
     public IEnumerable<Module> GetLoadedModules()
     {
-        //this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.Name))}");
+        this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.Name))}");
         return _loadedModules;
     }
 
-    private IEnumerable<Module> GetLoadableModules(Scene scene)
+    private readonly Module[] ModuleList = new Module[]
     {
-        return new[]
-        {
-            new GenericAttackSelector(),
-        };
-    }
+        new GenericAttackSelector(),
+        new WhiteDefender_InfiniteRollJumps(),
+    };
 
     private List<Module> _loadedModules = new List<Module>();
 }

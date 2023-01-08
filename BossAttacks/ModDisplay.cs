@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using BossAttacks.Utils;
 using Modding;
 using UnityEngine;
 
@@ -19,8 +20,8 @@ namespace BossAttacks
         public DateTime NotificationExpireTime = DateTime.Now;
 
         internal TimeSpan FadeOutDuration = TimeSpan.FromSeconds(6);
-        internal Vector2 TextSize = new(240, 100);
-        internal Vector2 TextPosition = new(0.12f, 0.04f);
+        internal Vector2 TextSize = new(440, 520);
+        internal Vector2 TextPosition = new(0.13f, 0.23f);
 
         private GameObject _canvas;
 
@@ -37,11 +38,9 @@ namespace BossAttacks
 
             UnityEngine.Object.DontDestroyOnLoad(_canvas);
 
-            CanvasUtil.CreateTextPanel(_canvas, text, 24, TextAnchor.MiddleCenter,
+            CanvasUtil.CreateTextPanel(_canvas, text, 24, TextAnchor.LowerLeft,
                 new CanvasUtil.RectData(TextSize, Vector2.zero, TextPosition, TextPosition),
                 CanvasUtil.GetFont("Perpetua"));
-
-            Update();
         }
 
         public void Destroy()
@@ -58,7 +57,7 @@ namespace BossAttacks
 
                 string text = DateTime.Now > NotificationExpireTime ? DisplayText : NotificationText;
                 Create(text);
-                
+
                 _canvas.SetActive(true);
             }
             else
@@ -87,6 +86,68 @@ namespace BossAttacks
             NotificationExpireTime = DateTime.Now + FadeOutDuration;
             Update();
             Task.Delay(FadeOutDuration).ContinueWith(t => Update());
+        }
+
+        public void EnableDebugger()
+        {
+            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
+        }
+
+        private void ModHooks_HeroUpdateHook()
+        {
+            // Require CTRL to be pressed to access the debugg ability
+            if (!Input.GetKeyDown(KeyCode.LeftControl) && !Input.GetKeyDown(KeyCode.RightControl))
+            {
+                return;
+            }
+
+            // Display: *horizontal* position and size
+            bool touched = false;
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x - 0.01f, ModDisplay.Instance.TextPosition.y);
+                touched = true;
+            }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x + 0.01f, ModDisplay.Instance.TextPosition.y);
+                touched = true;
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x - 10, ModDisplay.Instance.TextSize.y);
+                touched = true;
+            }
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x + 10, ModDisplay.Instance.TextSize.y);
+                touched = true;
+            }
+
+            // Display: *vertical* position and size
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x, ModDisplay.Instance.TextPosition.y - 0.01f);
+                touched = true;
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x, ModDisplay.Instance.TextPosition.y + 0.01f);
+                touched = true;
+            }
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x, ModDisplay.Instance.TextSize.y - 10);
+                touched = true;
+            }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x, ModDisplay.Instance.TextSize.y + 10);
+                touched = true;
+            }
+
+            ModDisplay.Instance.Update();
+            this.LogModDebug($"{ModDisplay.Instance.TextPosition.x,0:F2} {ModDisplay.Instance.TextPosition.y,0:F2} - {ModDisplay.Instance.TextSize.x,0:F0} {ModDisplay.Instance.TextSize.y,0:F0}");
         }
     }
 }
