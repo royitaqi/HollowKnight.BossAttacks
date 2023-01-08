@@ -10,6 +10,7 @@ namespace BossAttacks.Modules;
  */
 internal abstract class Module {
 	public virtual string Name => GetType().Name;
+	public virtual int Priority => 0;
 
 	public bool Load(Scene scene)
     {

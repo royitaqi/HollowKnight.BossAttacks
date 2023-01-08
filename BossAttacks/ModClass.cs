@@ -80,7 +80,7 @@ namespace BossAttacks
         {
             var toOnOff = (bool b) =>
             {
-                return b ? "On" : "Off";
+                return b ? "[ ✓ ]" : "[     ]";
             };
 
             var sb = new StringBuilder();
@@ -96,14 +96,18 @@ namespace BossAttacks
                 }
                 else if (options.Length == 1)
                 {
-                    sb.AppendLine($"\"{++i}\" - {options[0].Key}: {toOnOff(options[0].Value.Value)}");
+                    // "1" - [   ] - DIVE IN
+                    // "2" - [ ✓ ] - DOLPHIN
+                    // "3" - [   ] - GROUND SLAM
+                    // "4" - [ ✓ ] - ROLL JUMP
+                    sb.AppendLine($"\"{++i}\" - {toOnOff(options[0].Value.Value)} - {options[0].Key}");
                 }
                 else
                 {
                     sb.AppendLine($"{m.Name}:");
                     foreach (var o in options)
                     {
-                        sb.AppendLine($"    \"{++i}\" - {o.Key}: {toOnOff(o.Value.Value)}");
+                        sb.AppendLine($"        \"{++i}\" - {toOnOff(o.Value.Value)} - {o.Key}");
                     }
                 }
             }

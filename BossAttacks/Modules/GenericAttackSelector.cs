@@ -8,11 +8,6 @@ using System.Collections.Generic;
 
 namespace BossAttacks.Modules;
 
-/**
- * The basic unit of modding the game logic.
- * 
- * Can be loaded/unloaded (from mod menu; from entering/leaving boss scene).
- */
 internal class GenericAttackSelector : Module
 {
     public override string Name => "Toggle attacks";

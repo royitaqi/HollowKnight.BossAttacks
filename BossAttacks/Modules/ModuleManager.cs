@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using BossAttacks.Utils;
 using UnityEngine.SceneManagement;
 
@@ -14,13 +15,14 @@ internal class ModuleManager {
         this.LogMod("Load");
         Unload();
 
-        foreach (var module in ModuleList)
+        foreach (var module in FindModules())
         {
             if (module.Load(scene))
             {
                 _loadedModules.Add(module);
             }
         }
+        this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.Name))}");
     }
 
     public void Unload()
@@ -35,15 +37,16 @@ internal class ModuleManager {
 
     public IEnumerable<Module> GetLoadedModules()
     {
-        this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.Name))}");
         return _loadedModules;
     }
 
-    private readonly Module[] ModuleList = new Module[]
-    {
-        new GenericAttackSelector(),
-        new WhiteDefender_InfiniteRollJumps(),
-    };
+    private static IEnumerable<Module> FindModules() => Assembly
+        .GetExecutingAssembly()
+        .GetTypes()
+        .Where(type => type.IsSubclassOf(typeof(Module)))
+        .Where(type => !type.IsAbstract)
+        .Select(type => Activator.CreateInstance(type) as Module)
+        .OrderBy(module => module.Priority);
 
-    private List<Module> _loadedModules = new List<Module>();
+    private List<Module> _loadedModules = new();
 }
