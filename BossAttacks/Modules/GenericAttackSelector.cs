@@ -49,7 +49,9 @@ internal class GenericAttackSelector : Module
 
         foreach (var t in state.Transitions)
         {
-            this.LogModDebug($"Transition: {t.EventName} -> {t.ToState}");
+            var eventName = t.EventName;
+            var originalToState = t.ToState;
+            this.LogModDebug($"Transition: {eventName} -> {originalToState}");
             var opt = new Option<bool>
             {
                 Value = true,
@@ -57,9 +59,9 @@ internal class GenericAttackSelector : Module
                 {
                     // If attack is on, connect the attack choice to the actual attack.
                     // Otherwise, connect the attack choice backto the Choice state itself.
-                    var targetStateName = attackIsOn ? t.ToState : state.Name;
-                    state.ChangeTransition(t.EventName, targetStateName);
-                    this.LogModDebug($"Changing transition: {state.Name} -> {targetStateName}");
+                    var targetStateName = attackIsOn ? originalToState : state.Name;
+                    state.ChangeTransition(eventName, targetStateName);
+                    this.LogModDebug($"Changing transition: {eventName} -> {targetStateName}");
                 }
             };
             _booleanOptions.Add(t.EventName, opt);

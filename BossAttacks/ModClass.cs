@@ -24,10 +24,11 @@ namespace BossAttacks
             Log("Initializing mod");
 
             Instance = this;
-
             ModuleManager.Instance = new ModuleManager();
 
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+
+            new Debugger().Load();
 
             Log("Initialized mod");
         }
