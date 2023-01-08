@@ -11,22 +11,22 @@ namespace BossAttacks
         internal static ModDisplay Instance;
 
         public bool Visible = true;
-        public int Mode = 2; // 0 = off; 1 = auto-hide; 2 = on
 
-        public string DisplayText = "Boss Attacks";
-        public DateTime DisplayExpireTime = DateTime.Now;
+        private string DisplayText = "Boss Attacks";
+        private DateTime DisplayExpireTime = DateTime.Now;
+        private TimeSpan DisplayDuration = TimeSpan.FromSeconds(6);
 
-        public string NotificationText = "Boss Attacks Notification";
-        public DateTime NotificationExpireTime = DateTime.Now;
+        private string NotificationText = "Boss Attacks Notification";
+        private DateTime NotificationExpireTime = DateTime.Now;
+        private TimeSpan NotificationDuration = TimeSpan.FromSeconds(2);
 
-        internal TimeSpan FadeOutDuration = TimeSpan.FromSeconds(6);
-        internal Vector2 TextSize = new(440, 520);
-        internal Vector2 TextPosition = new(0.13f, 0.23f);
+        private Vector2 TextSize = new(440, 520);
+        private Vector2 TextPosition = new(0.13f, 0.26f);
 
         private GameObject _canvas;
         private UnityEngine.UI.Text _text;
 
-        public void Create()
+        private void Create()
         {
             if (_canvas != null) return;
 
@@ -46,7 +46,7 @@ namespace BossAttacks
             ).GetComponent<UnityEngine.UI.Text>();
         }
 
-        public void Destroy()
+        private void Destroy()
         {
             if (_canvas != null) UnityEngine.Object.Destroy(_canvas);
             _canvas = null;
@@ -55,15 +55,21 @@ namespace BossAttacks
 
         public void Update()
         {
+            this.LogModDebug("Update()");
             Create();
 
-            if (Visible && Mode != 0 && !(Mode == 1 && DateTime.Now > DisplayExpireTime && DateTime.Now > NotificationExpireTime))
+            if (Visible
+                && BossAttacks.Instance.GlobalData.DisplayMode != 0
+                && !(BossAttacks.Instance.GlobalData.DisplayMode == 1 && DateTime.Now >= DisplayExpireTime && DateTime.Now >= NotificationExpireTime)
+            )
             {
-                _text.text = DateTime.Now > NotificationExpireTime ? DisplayText : NotificationText;
+                _text.text = DateTime.Now >= NotificationExpireTime ? DisplayText : NotificationText;
+                this.LogModDebug($"Showing text: {_text.text}");
                 _canvas.SetActive(true);
             }
             else
             {
+                this.LogModDebug("Hiding text");
                 _canvas?.SetActive(false);
             }
         }
@@ -73,10 +79,11 @@ namespace BossAttacks
          */
         public void Display(string text)
         {
-            DisplayText = text;
-            DisplayExpireTime = DateTime.Now + FadeOutDuration;
+            this.LogModDebug($"Display(): {text}");
+            DisplayText = text.Trim();
+            DisplayExpireTime = DateTime.Now + DisplayDuration;
             Update();
-            Task.Delay(FadeOutDuration).ContinueWith(t => Update());
+            Task.Delay(DisplayDuration + TimeSpan.FromMilliseconds(100)).ContinueWith(t => Update());
         }
 
         /**
@@ -84,10 +91,11 @@ namespace BossAttacks
          */
         public void Notify(string text)
         {
-            NotificationText = text;
-            NotificationExpireTime = DateTime.Now + FadeOutDuration;
+            this.LogModDebug($"Notify(): {text}");
+            NotificationText = text.Trim();
+            NotificationExpireTime = DateTime.Now + NotificationDuration;
             Update();
-            Task.Delay(FadeOutDuration).ContinueWith(t => Update());
+            Task.Delay(NotificationDuration + TimeSpan.FromMilliseconds(100)).ContinueWith(t => Update());
         }
 
         public void EnableDebugger()
@@ -97,50 +105,59 @@ namespace BossAttacks
 
         private void ModHooks_HeroUpdateHook()
         {
-            // Require CTRL to be pressed to access the debugg ability
-            if (!Input.GetKeyDown(KeyCode.LeftControl) && !Input.GetKeyDown(KeyCode.RightControl))
-            {
-                return;
-            }
+            Vector2? posDelta = null;
+            Vector2? sizeDelta = null;
 
             // Display: *horizontal* position and size
             if (Input.GetKeyDown(KeyCode.F))
             {
-                ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x - 0.01f, ModDisplay.Instance.TextPosition.y);
+                posDelta = new Vector2(-0.01f, 0);
             }
             if (Input.GetKeyDown(KeyCode.G))
             {
-                ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x + 0.01f, ModDisplay.Instance.TextPosition.y);
+                posDelta = new Vector2(0.01f, 0);
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
-                ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x - 10, ModDisplay.Instance.TextSize.y);
+                sizeDelta = new Vector2(-10, 0);
             }
             if (Input.GetKeyDown(KeyCode.T))
             {
-                ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x + 10, ModDisplay.Instance.TextSize.y);
+                sizeDelta = new Vector2(10, 0);
             }
 
             // Display: *vertical* position and size
             if (Input.GetKeyDown(KeyCode.J))
             {
-                ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x, ModDisplay.Instance.TextPosition.y - 0.01f);
+                posDelta = new Vector2(0, -0.01f);
             }
             if (Input.GetKeyDown(KeyCode.U))
             {
-                ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x, ModDisplay.Instance.TextPosition.y + 0.01f);
+                posDelta = new Vector2(0, 0.01f);
             }
             if (Input.GetKeyDown(KeyCode.K))
             {
-                ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x, ModDisplay.Instance.TextSize.y - 10);
+                sizeDelta = new Vector2(0, -10);
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
-                ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x, ModDisplay.Instance.TextSize.y + 10);
+                sizeDelta = new Vector2(0, 10);
             }
 
-            ModDisplay.Instance.Update();
-            this.LogModDebug($"{ModDisplay.Instance.TextPosition.x,0:F2} {ModDisplay.Instance.TextPosition.y,0:F2} - {ModDisplay.Instance.TextSize.x,0:F0} {ModDisplay.Instance.TextSize.y,0:F0}");
+            if (posDelta != null || sizeDelta != null)
+            {
+                if (posDelta != null)
+                {
+                    TextPosition += posDelta.Value;
+                }
+                if (sizeDelta != null)
+                {
+                    TextSize += sizeDelta.Value;
+                }
+                Destroy();
+                Update();
+                this.LogModDebug($"{TextPosition.x,0:F2} {TextPosition.y,0:F2} - {TextSize.x,0:F0} {TextSize.y,0:F0}");
+            }
         }
     }
 }

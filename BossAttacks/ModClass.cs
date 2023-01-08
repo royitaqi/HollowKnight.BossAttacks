@@ -13,9 +13,10 @@ using UObject = UnityEngine.Object;
 
 namespace BossAttacks
 {
-    public class BossAttacks : Mod, ICustomMenuMod
+    public class BossAttacks : Mod, ICustomMenuMod, IGlobalSettings<GlobalData>
     {
         internal static BossAttacks Instance;
+        internal GlobalData GlobalData { get; set; } = new GlobalData();
 
         ///
         /// Mod
@@ -33,12 +34,11 @@ namespace BossAttacks
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 
             new Debugger().Load();
-            ModDisplay.Instance.EnableDebugger();
 
             Log("Initialized mod");
         }
 
-        internal void UpdateOptionDisplay()
+        private void UpdateOptionDisplay()
         {
             var toOnOff = (bool b) =>
             {
@@ -73,6 +73,11 @@ namespace BossAttacks
             ModDisplay.Instance.Display(sb.ToString());
         }
 
+        private void UpdateOptionDisplayWithError()
+        {
+            ModDisplay.Instance.Notify("Cannot make change. Most commonly because there needs to be one active attack.");
+        }
+
         private void SceneManager_activeSceneChanged(Scene from, Scene to)
         {
             ModuleManager.Instance.Load(to);
@@ -82,10 +87,8 @@ namespace BossAttacks
             {
                 foreach (var o in m.BooleanOptions.Values)
                 {
-                    o.OnSet.Add(_ =>
-                    {
-                        UpdateOptionDisplay();
-                    });
+                    o.OnSet.Add(_ => UpdateOptionDisplay());
+                    o.OnCannotSet.Add(_ => UpdateOptionDisplayWithError());
                 }
             }
         }
@@ -95,5 +98,11 @@ namespace BossAttacks
         ///
         public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
         public bool ToggleButtonInsideMenu => false;
+
+        ///
+        /// IGlobalSettings<GlobalData>
+        ///
+        public void OnLoadGlobal(GlobalData data) => GlobalData = data;
+        public GlobalData OnSaveGlobal() => GlobalData;
     }
 }

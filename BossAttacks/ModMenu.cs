@@ -21,70 +21,32 @@ namespace BossAttacks
             MenuRef.SetMenuButtonNameAndDesc(BossAttacks.Instance, "Boss Attacks");
             var menuScreen = MenuRef.GetMenuScreen(modListMenu);
 
-            MenuRef.OnBuilt += MenuRef_OnBuilt;
-            MenuRef.OnReflow += MenuRef_OnReflow;
-            MenuRef.OnUpdate += MenuRef_OnUpdate;
-            MenuRef.OnVisibilityChange += Menu_OnVisibilityChange;
-
             return menuScreen;
-        }
-
-        private static void MenuRef_OnUpdate(object sender, UpdateEventArgs e)
-        {
-            MenuRef.LogModTEMP("MenuRef_OnUpdate");
-            //MenuRef.AddElement(new MenuButton(
-            //    "DEBUG MenuRef_OnUpdate",
-            //    "",
-            //    _ => { }
-            //));
-        }
-
-        private static void MenuRef_OnReflow(object sender, ReflowEventArgs e)
-        {
-            MenuRef.LogModTEMP("MenuRef_OnReflow");
-            //MenuRef.AddElement(new MenuButton(
-            //    "DEBUG MenuRef_OnReflow",
-            //    "",
-            //    _ => { }
-            //));
-        }
-
-        private static void MenuRef_OnBuilt(object sender, ContainerBuiltEventArgs e)
-        {
-            MenuRef.LogModTEMP("MenuRef_OnBuilt");
-        }
-
-        private static void Menu_OnVisibilityChange(object sender, VisibilityChangeEventArgs e)
-        {
-            MenuRef.LogModTEMP("Menu_OnVisibilityChange");
         }
 
         private static Menu PrepareMenu()
         {
             MenuRef.LogModTEMP("PrepareMenu");
-            var moduleOptions = ModuleManager.Instance.GetLoadedModules().SelectMany(
-                m => m.BooleanOptions.Select(
-                    kvp => new HorizontalOption(
-                        m.Name + " - " + kvp.Key,
-                        "",
-                        new[] { "Off", "On" },
-                        selectedIndex => {
-                            kvp.Value.Value = selectedIndex == 1;
-                        },
-                        () => kvp.Value.Value ? 1 : 0
-                    )
-                )
-            ).ToArray();
-
-            var elements = new List<Element>();
-            elements.AddRange(moduleOptions);
-            elements.Add(new MenuButton(
-                "DEBUG Button",
-                "",
-                _ => { }
-            ));
-
-            return new Menu("Boss Attack", elements.ToArray());
+            return new Menu("Boss Attacks", new Element[]
+            {
+                new HorizontalOption(
+                    "Display",
+                    "",
+                    new []{ "Off", "Auto-hide", "On" },
+                    selectedIndex => {
+                        BossAttacks.Instance.GlobalData.DisplayMode = selectedIndex;
+                        ModDisplay.Instance.Update();
+                    },
+                    () => BossAttacks.Instance.GlobalData.DisplayMode
+                ),
+#if DEBUG
+                new MenuButton(
+                    "DEBUG: Display",
+                    "",
+                    _ => ModDisplay.Instance.EnableDebugger()
+                ),
+#endif
+            });
         }
 
         public static Menu MenuRef;
