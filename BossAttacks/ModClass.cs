@@ -32,10 +32,48 @@ namespace BossAttacks
             ModDisplay.Instance = new ModDisplay();
 
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
 
             new Debugger().Load();
 
             Log("Initialized mod");
+        }
+
+        private void ModHooks_HeroUpdateHook()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                UpdateOptionDisplay();
+            }
+
+            int i = 0;
+            // Order MATTERS
+            foreach (var m in ModuleManager.Instance.GetLoadedModules().OrderBy(m => m.Name))
+            {
+                foreach (var o in m.BooleanOptions.OrderBy(kv => kv.Key).Select(kv => kv.Value))
+                {
+                    if (Input.GetKeyDown(KeyCode.Alpha0 + ++i))
+                    {
+                        o.Value = !o.Value;
+                    }
+                }
+            }
+        }
+
+        private void SceneManager_activeSceneChanged(Scene from, Scene to)
+        {
+            ModuleManager.Instance.Load(to);
+            UpdateOptionDisplay();
+
+            // Order doesn't matter
+            foreach (var m in ModuleManager.Instance.GetLoadedModules())
+            {
+                foreach (var o in m.BooleanOptions.Values)
+                {
+                    o.OnSet.Add(_ => UpdateOptionDisplay());
+                    o.OnCannotSet.Add(_ => UpdateOptionDisplayWithError());
+                }
+            }
         }
 
         private void UpdateOptionDisplay()
@@ -47,6 +85,7 @@ namespace BossAttacks
 
             var sb = new StringBuilder();
             int i = 0;
+            // Order MATTERS
             foreach (var m in ModuleManager.Instance.GetLoadedModules().OrderBy(m => m.Name))
             {
                 var options = m.BooleanOptions.OrderBy(kv => kv.Key).ToArray();
@@ -76,21 +115,6 @@ namespace BossAttacks
         private void UpdateOptionDisplayWithError()
         {
             ModDisplay.Instance.Notify("Cannot make change. Most commonly because there needs to be one active attack.");
-        }
-
-        private void SceneManager_activeSceneChanged(Scene from, Scene to)
-        {
-            ModuleManager.Instance.Load(to);
-            UpdateOptionDisplay();
-
-            foreach (var m in ModuleManager.Instance.GetLoadedModules())
-            {
-                foreach (var o in m.BooleanOptions.Values)
-                {
-                    o.OnSet.Add(_ => UpdateOptionDisplay());
-                    o.OnCannotSet.Add(_ => UpdateOptionDisplayWithError());
-                }
-            }
         }
 
         ///
