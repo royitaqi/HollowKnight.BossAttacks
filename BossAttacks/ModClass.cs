@@ -113,7 +113,16 @@ namespace BossAttacks
             }
             this.LogModDebug(sb.ToString());
 
-            ModDisplay.Instance.Display(sb.ToString());
+            if (i == 0)
+            {
+                // No option was loaded. Display an introduction text.
+                ModDisplay.Instance.Display("Enter a boss fight to see boss attacks.");
+            }
+            else
+            {
+                // Some option was loaded. Display the options.
+                ModDisplay.Instance.Display(sb.ToString());
+            }
         }
 
         private void UpdateOptionDisplayWithError()
