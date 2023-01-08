@@ -25,6 +25,7 @@ namespace BossAttacks
 
             Instance = this;
             ModuleManager.Instance = new ModuleManager();
+            ModDisplay.Instance = new ModDisplay();
 
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
 
