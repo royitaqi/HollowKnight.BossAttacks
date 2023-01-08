@@ -24,11 +24,12 @@ namespace BossAttacks
         internal Vector2 TextPosition = new(0.13f, 0.23f);
 
         private GameObject _canvas;
-        private GameObject _text;
+        private UnityEngine.UI.Text _text;
 
-        public void Create(string text)
+        public void Create()
         {
             if (_canvas != null) return;
+
             // Create base canvas
             _canvas = CanvasUtil.CreateCanvas(RenderMode.ScreenSpaceOverlay, new Vector2(1920, 1080));
 
@@ -38,26 +39,27 @@ namespace BossAttacks
 
             UnityEngine.Object.DontDestroyOnLoad(_canvas);
 
-            _text = CanvasUtil.CreateTextPanel(_canvas, text, 24, TextAnchor.LowerLeft,
+            _text = CanvasUtil.CreateTextPanel(
+                _canvas, "Boss Attacks", 24, TextAnchor.LowerLeft,
                 new CanvasUtil.RectData(TextSize, Vector2.zero, TextPosition, TextPosition),
-                CanvasUtil.GetFont("Perpetua"));
+                CanvasUtil.GetFont("Perpetua")
+            ).GetComponent<UnityEngine.UI.Text>();
         }
 
         public void Destroy()
         {
             if (_canvas != null) UnityEngine.Object.Destroy(_canvas);
             _canvas = null;
+            _text = null;
         }
 
         public void Update()
         {
+            Create();
+
             if (Visible && Mode != 0 && !(Mode == 1 && DateTime.Now > DisplayExpireTime && DateTime.Now > NotificationExpireTime))
             {
-                Destroy();
-
-                string text = DateTime.Now > NotificationExpireTime ? DisplayText : NotificationText;
-                Create(text);
-
+                _text.text = DateTime.Now > NotificationExpireTime ? DisplayText : NotificationText;
                 _canvas.SetActive(true);
             }
             else
@@ -100,15 +102,6 @@ namespace BossAttacks
             {
                 return;
             }
-
-            var s = _canvas.GetComponent<UnityEngine.UI.Text>();
-            this.LogModTEMP($"s {s?.name} {s?.text}");
-
-            var t = _text.GetComponent<UnityEngine.UI.Text>();
-            this.LogModTEMP($"t {t?.name} {t?.text}");
-
-            //t.text = "Surprise!!!";
-            //return;
 
             // Display: *horizontal* position and size
             if (Input.GetKeyDown(KeyCode.F))
