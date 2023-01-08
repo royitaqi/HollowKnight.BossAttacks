@@ -16,8 +16,10 @@ internal class ModuleManager {
 
         foreach (var module in GetLoadableModules(scene))
         {
-            module.Load(scene);
-            _loadedModules.Add(module);
+            if (module.Load(scene))
+            {
+                _loadedModules.Add(module);
+            }
         }
     }
 
@@ -33,7 +35,7 @@ internal class ModuleManager {
 
     public IEnumerable<Module> GetLoadedModules()
     {
-        this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.Name))}");
+        //this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.Name))}");
         return _loadedModules;
     }
 

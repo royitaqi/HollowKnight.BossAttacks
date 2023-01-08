@@ -7,7 +7,7 @@ namespace BossAttacks.Modules;
 internal class Option<T> {
 
 
-	public Action<T> OnSet;
+	public Func<T, bool> CanSet;
 	
 	public T Value {
 		get
@@ -16,11 +16,9 @@ internal class Option<T> {
         }
 		set
         {
-			_value = value;
-			
-			if (OnSet != null)
+			if (CanSet == null || CanSet(value))
             {
-				OnSet(Value);
+				_value = value;
 			}
 		}
 	}

@@ -11,7 +11,7 @@ namespace BossAttacks.Modules;
 internal abstract class Module {
 	public virtual string Name => GetType().Name;
 
-	public abstract void Load(Scene scene);
+	public abstract bool Load(Scene scene);
 	public abstract void Unload();
 
 	public abstract Dictionary<string, Option<bool>> GetBooleanOptions();
