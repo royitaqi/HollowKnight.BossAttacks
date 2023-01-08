@@ -63,7 +63,7 @@ namespace BossAttacks
         {
             MenuRef.LogModTEMP("PrepareMenu");
             var moduleOptions = ModuleManager.Instance.GetLoadedModules().SelectMany(
-                m => m.GetBooleanOptions().Select(
+                m => m.BooleanOptions.Select(
                     kvp => new HorizontalOption(
                         m.Name + " - " + kvp.Key,
                         "",

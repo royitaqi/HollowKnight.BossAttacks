@@ -40,11 +40,16 @@ namespace BossAttacks
 
         internal void UpdateOptionDisplay()
         {
+            var toOnOff = (bool b) =>
+            {
+                return b ? "On" : "Off";
+            };
+
             var sb = new StringBuilder();
             int i = 0;
             foreach (var m in ModuleManager.Instance.GetLoadedModules().OrderBy(m => m.Name))
             {
-                var options = m.GetBooleanOptions().OrderBy(kv => kv.Key).ToArray();
+                var options = m.BooleanOptions.OrderBy(kv => kv.Key).ToArray();
 
                 if (options.Length == 0)
                 {
@@ -52,14 +57,14 @@ namespace BossAttacks
                 }
                 else if (options.Length == 1)
                 {
-                    sb.AppendLine($"\"{++i}\" - {options[0].Key}: {options[0].Value.Value}");
+                    sb.AppendLine($"\"{++i}\" - {options[0].Key}: {toOnOff(options[0].Value.Value)}");
                 }
                 else
                 {
                     sb.AppendLine($"{m.Name}:");
                     foreach (var o in options)
                     {
-                        sb.AppendLine($"    \"{++i}\" - {o.Key}: {o.Value.Value}");
+                        sb.AppendLine($"    \"{++i}\" - {o.Key}: {toOnOff(o.Value.Value)}");
                     }
                 }
             }
@@ -72,6 +77,17 @@ namespace BossAttacks
         {
             ModuleManager.Instance.Load(to);
             UpdateOptionDisplay();
+
+            foreach (var m in ModuleManager.Instance.GetLoadedModules())
+            {
+                foreach (var o in m.BooleanOptions.Values)
+                {
+                    o.OnSet.Add(_ =>
+                    {
+                        UpdateOptionDisplay();
+                    });
+                }
+            }
         }
 
         ///

@@ -15,22 +15,14 @@ namespace BossAttacks.Modules;
  */
 internal class WhiteDefender_InfiniteRollJumps : Module
 {
-    public override bool Load(Scene scene)
+    protected override bool OnLoad(Scene scene)
     {
-        return true;
-    }
-
-    public override Dictionary<string, Option<bool>> GetBooleanOptions()
-    {
-        return new()
+        _booleanOptions = new()
         {
             { "Infinite ROLL JUMP", new Option<bool> { Value = false } },
             { "Infinite ROLL JUMP 2", new Option<bool> { Value = false } },
             { "Infinite ROLL JUMP 3", new Option<bool> { Value = false } },
         };
-    }
-
-    public override void Unload()
-    {
+        return true;
     }
 }

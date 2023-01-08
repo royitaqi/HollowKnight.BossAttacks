@@ -17,7 +17,7 @@ internal class GenericAttackSelector : Module
 {
     public override string Name => "Toggle attacks";
 
-    public override bool Load(Scene scene)
+    protected override bool OnLoad(Scene scene)
     {
         this.LogMod($"Loading for scene {scene.name}");
 
@@ -86,33 +86,50 @@ internal class GenericAttackSelector : Module
         {
             this.LogModDebug($"Event: {eventName}");
 
-            var opt = new Option<bool>
+            var opt = new Option<bool>{Value = true};
+            opt.CanSet.Add((attackIsOn) =>
             {
-                Value = true,
-                CanSet = (attackIsOn) =>
+                // If turning off current attack AND there are some state which cannot turn off this attack, cannot set.
+                if (!attackIsOn && states.Any(s => !CanTurnOffAttack(s, eventName)))
                 {
-                    // If turning off current attack AND there are some state which cannot turn off this attack, cannot set.
-                    if (!attackIsOn && states.Any(s => !CanTurnOffAttack(s, eventName)))
-                    {
-                        return false;
-                    }
-
-                    // Turn off current attack in all states:
-                    // - If attack is on, connect the attack choice to the actual attack.
-                    // - Otherwise, connect the attack choice backto the Choice state itself.
-                    foreach (var s in states)
-                    {
-                        TurnAttack(s, eventName, attackIsOn);
-                    }
-                    return true;
+                    return false;
                 }
-            };
+
+                // Turn off current attack in all states:
+                // - If attack is on, connect the attack choice to the actual attack.
+                // - Otherwise, connect the attack choice backto the Choice state itself.
+                foreach (var s in states)
+                {
+                    TurnAttack(s, eventName, attackIsOn);
+                }
+                return true;
+            });
 
             _booleanOptions.Add(eventName, opt);
         }
 
         return true;
     }
+
+    protected override void OnUnload()
+    {
+        this.LogMod("Unload()");
+
+        if (_booleanOptions != null)
+        {
+            foreach (var kvp in _booleanOptions)
+            {
+                // Turn all attacks back on when the module is unloaded.
+                kvp.Value.Value = true;
+            }
+            _booleanOptions = null;
+        }
+
+        _originalTransition = null;
+    }
+
+    // fromState -> event -> toState
+    private Dictionary<string, Dictionary<string, string>> _originalTransition = null;
 
     // Helper functions
     private bool CanTurnOffAttack(FsmState state, string eventName)
@@ -132,30 +149,4 @@ internal class GenericAttackSelector : Module
         state.ChangeTransition(eventName, toStateName);
         this.LogModDebug($"Changing transition: {state.Name}.{eventName} -> {toStateName}");
     }
-
-    public override Dictionary<string, Option<bool>> GetBooleanOptions()
-    {
-        return _booleanOptions;
-    }
-
-    public override void Unload()
-    {
-        this.LogMod("Unload()");
-
-        if (_booleanOptions != null)
-        {
-            foreach (var kvp in _booleanOptions)
-            {
-                // Turn all attacks back on when the module is unloaded.
-                kvp.Value.Value = true;
-            }
-            _booleanOptions = null;
-        }
-
-        _originalTransition = null;
-    }
-
-    private Dictionary<string, Option<bool>> _booleanOptions = null;
-    // fromState -> event -> toState
-    private Dictionary<string, Dictionary<string, string>> _originalTransition = null;
 }

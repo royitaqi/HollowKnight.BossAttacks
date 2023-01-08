@@ -42,8 +42,8 @@ namespace BossAttacks
 
         private void PrintAllBooleanOptions()
         {
-            this.LogModTEMP("All boolean options:");
             var options = GetAllBooleanOptions();
+            this.LogModTEMP("All boolean options:");
             for (int i = 0; i < Math.Min(options.Length, 9); i++)
             {
                 var tuple = options[i];
@@ -58,8 +58,7 @@ namespace BossAttacks
                 .GetLoadedModules()
                 .OrderBy(m => m.Name)
                 .SelectMany(m =>
-                    m
-                        .GetBooleanOptions()
+                    m.BooleanOptions
                         .OrderBy(kvp => kvp.Key)
                         .Select(kvp => new Tuple<Module, string, Option<bool>>(m, kvp.Key, kvp.Value))
                 )

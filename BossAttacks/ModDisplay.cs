@@ -24,7 +24,7 @@ namespace BossAttacks
         internal Vector2 TextPosition = new(0.13f, 0.23f);
 
         private GameObject _canvas;
-
+        private GameObject _text;
 
         public void Create(string text)
         {
@@ -38,7 +38,7 @@ namespace BossAttacks
 
             UnityEngine.Object.DontDestroyOnLoad(_canvas);
 
-            CanvasUtil.CreateTextPanel(_canvas, text, 24, TextAnchor.LowerLeft,
+            _text = CanvasUtil.CreateTextPanel(_canvas, text, 24, TextAnchor.LowerLeft,
                 new CanvasUtil.RectData(TextSize, Vector2.zero, TextPosition, TextPosition),
                 CanvasUtil.GetFont("Perpetua"));
         }
@@ -101,49 +101,49 @@ namespace BossAttacks
                 return;
             }
 
+            var s = _canvas.GetComponent<UnityEngine.UI.Text>();
+            this.LogModTEMP($"s {s?.name} {s?.text}");
+
+            var t = _text.GetComponent<UnityEngine.UI.Text>();
+            this.LogModTEMP($"t {t?.name} {t?.text}");
+
+            //t.text = "Surprise!!!";
+            //return;
+
             // Display: *horizontal* position and size
-            bool touched = false;
             if (Input.GetKeyDown(KeyCode.F))
             {
                 ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x - 0.01f, ModDisplay.Instance.TextPosition.y);
-                touched = true;
             }
             if (Input.GetKeyDown(KeyCode.G))
             {
                 ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x + 0.01f, ModDisplay.Instance.TextPosition.y);
-                touched = true;
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
                 ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x - 10, ModDisplay.Instance.TextSize.y);
-                touched = true;
             }
             if (Input.GetKeyDown(KeyCode.T))
             {
                 ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x + 10, ModDisplay.Instance.TextSize.y);
-                touched = true;
             }
 
             // Display: *vertical* position and size
             if (Input.GetKeyDown(KeyCode.J))
             {
                 ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x, ModDisplay.Instance.TextPosition.y - 0.01f);
-                touched = true;
             }
             if (Input.GetKeyDown(KeyCode.U))
             {
                 ModDisplay.Instance.TextPosition = new Vector2(ModDisplay.Instance.TextPosition.x, ModDisplay.Instance.TextPosition.y + 0.01f);
-                touched = true;
             }
             if (Input.GetKeyDown(KeyCode.K))
             {
                 ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x, ModDisplay.Instance.TextSize.y - 10);
-                touched = true;
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
                 ModDisplay.Instance.TextSize = new Vector2(ModDisplay.Instance.TextSize.x, ModDisplay.Instance.TextSize.y + 10);
-                touched = true;
             }
 
             ModDisplay.Instance.Update();
