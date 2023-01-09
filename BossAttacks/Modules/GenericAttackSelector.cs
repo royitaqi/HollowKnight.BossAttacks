@@ -4,6 +4,7 @@ using BossAttacks.Utils;
 using SFCore.Utils;
 using System.Linq;
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using HutongGames.PlayMaker.Actions;
 using UnityEngine;
@@ -80,6 +81,20 @@ internal class GenericAttackSelector : Module
             }
         }
         this.LogModDebug($"States: ({states.Length}) {String.Join(", ", states.Select(s => s.Name))}");
+
+        // Short circuit protection.
+        // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
+        //var loopCountProperty = typeof(FsmState).GetProperty("loopCount");
+        foreach (var s in states)
+        {
+            var wait = new ConditionedStop { Wait = TimeSpan.FromSeconds(5) };
+            //s.InsertMethod(() =>
+            //{
+            //    wait.Enabled = s.loopCount > 100;
+            //    this.LogModDebug($"State {s.Name} has triggered short circuit protection. Loop count {s.loopCount}.");
+            //}, 0);
+            s.InsertAction(wait, 0);
+        }
 
         _originalTransition = states
             .Select(s => new
