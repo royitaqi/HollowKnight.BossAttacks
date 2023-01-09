@@ -22,10 +22,10 @@ namespace BossAttacks.Utils
             { "GG_Collector"         , new() { GoName = "Battle Scene/Jar Collector", FsmName = "Control" } }, // Move Choice V2
             { "GG_Collector_V"       , new() { GoName = "Battle Scene/Jar Collector", FsmName = "Control" } }, // Move Choice V2
             { "GG_Crystal_Guardian"  , new() { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" } }, // Choice V3
-            { "GG_Crystal_Guardian_2", new() { GoName = "Battle Scene/Zombie Beam Miner Rematch", FsmName = "Beam Miner" } }, // Choice V3
+            { "GG_Crystal_Guardian_2", new() { GoName = "Battle Scene/Zombie Beam Miner Rematch", FsmName = "Beam Miner" } }, // Choice V3 // all = good
             { "GG_Dung_Defender"     , new() { GoName = "Dung Defender", FsmName = "Dung Defender" } }, // Move Choice V3
             { "GG_Failed_Champion"   , new() { GoName = "False Knight Dream", FsmName = "FalseyControl" } }, // Move Choice no-V
-            { "GG_False_Knight"      , new() { GoName = "Battle Scene/False Knight New", FsmName = "FalseyControl" } }, // Move Choice no-V
+            { "GG_False_Knight"      , new() { GoName = "Battle Scene/False Knight New", FsmName = "FalseyControl" } }, // Move Choice no-V // stalled
             { "GG_Flukemarm"         , null }, // X not interesting
             { "GG_Ghost_Galien"      , null }, // X not interesting
             { "GG_Ghost_Gorb"        , null }, // X not interesting
@@ -49,7 +49,7 @@ namespace BossAttacks.Utils
             { "GG_Hollow_Knight"     , new() { GoName = "HK Prime", FsmName = "Control", StateNames = new[] { "Choice P1", "Choice P2", "Choice P3" } } }, // all = good
             { "GG_Hornet_1"          , new() { GoName = "Boss Holder/Hornet Boss 1", FsmName = "Control", StateNames = new[] { "Move Choice A", "Move Choice B" } } }, // V3
             { "GG_Hornet_2"          , new() { GoName = "Boss Holder/Hornet Boss 2", FsmName = "Control", StateNames = new[] { "Move Choice A", "Move Choice B" } } }, // V3
-            { "GG_Lost_Kin"          , new() { GoName = "Lost Kin", FsmName = "IK Control" } }, // Attack Choice V3
+            { "GG_Lost_Kin"          , new() { GoName = "Lost Kin", FsmName = "IK Control" } }, // Attack Choice V3 // all = good
             { "GG_Mage_Knight"       , new() { GoName = "Mage Knight", FsmName = "Mage Knight" } }, // Move Decision no-V
             { "GG_Mage_Knight_V"     , new() { GoName = "Balloon Spawner/Mage Knight", FsmName = "Mage Knight" } }, // Move Decision no-V
             { "GG_Mantis_Lords"      , new() { GoName = "Mantis Battle/Battle Main/Mantis Lord", FsmName = "Mantis Lord" } }, // Attack Choice V3
@@ -64,7 +64,7 @@ namespace BossAttacks.Utils
             { "GG_Sly"               , new() { GoName = "Battle Scene/Sly Boss", FsmName = "Control", StateNames = new[] { "Near", "Mid", "Far", "NA Choice" } } }, // V3
             { "GG_Soul_Master"       , new() { GoName = "Mage Lord", FsmName = "Mage Lord" } }, // Attack Choice V3
             { "GG_Soul_Tyrant"       , new() { GoName = "Dream Mage Lord", FsmName = "Mage Lord" } }, // all = good
-            { "GG_Traitor_Lord"      , new() { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis" } }, // Attack Choice V2
+            { "GG_Traitor_Lord"      , new() { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis" } }, // Attack Choice V2 // all = good
             { "GG_Uumuu"             , null }, // X not interesting
             { "GG_Uumuu_V"           , null }, // X not interesting
             { "GG_Vengefly"          , new() { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer" } }, // ??? Choose Attack manual random

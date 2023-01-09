@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using HutongGames.PlayMaker.Actions;
+using UnityEngine;
 
 namespace BossAttacks.Modules;
 
@@ -32,7 +33,7 @@ internal class GenericAttackSelector : Module
 
 
         // Inspect GO and FSM, and set up.
-        var go = scene.Find(config.GoName);
+        var go = FindGameObject(scene, config.GoName);
         if (go == null)
         {
             this.LogModWarn($"Cannot find GO {config.GoName} in scene");
@@ -124,9 +125,28 @@ internal class GenericAttackSelector : Module
     private Dictionary<string, Dictionary<string, string>> _originalTransition;
 
     // Helper functions
+    private static GameObject FindGameObject(Scene scene, string path)
+    {
+        string[] parts = path.Split('/');
+        var go = scene.Find(parts[0]);
+        for (int i = 1; i < parts.Length; i++)
+        {
+            go = go?.Find(parts[i]);
+        }
+        return go;
+    }
+
     private static IEnumerable<string> GetAttackEvents(FsmState state)
     {
-        return (state.Actions.First(a => a.GetType().Name == "SendRandomEventV3") as SendRandomEventV3).events.Select(e => e.Name);
+        var choiceAction = state.Actions.First(a => a.GetType().Name.StartsWith("SendRandomEvent"));
+        FsmEvent[] events = choiceAction.GetType().Name switch
+        {
+            "SendRandomEvent" => (choiceAction as SendRandomEvent).events,
+            "SendRandomEventV2" => (choiceAction as SendRandomEventV2).events,
+            "SendRandomEventV3" => (choiceAction as SendRandomEventV3).events,
+            _ => throw new NotImplementedException()
+        };
+        return events.Select(e => e.Name);
     }
 
     private bool CanTurnOffAttack(FsmState state, string eventName)
