@@ -15,19 +15,18 @@ internal abstract class Module {
 	public bool Load(Scene scene)
     {
 		Unload();
-		_booleanOptions = new();
 		return OnLoad(scene);
 	}
 
 	public void Unload()
     {
 		OnUnload();
-		_booleanOptions = null;
+		_booleanOptions.Clear();
     }
 
 	protected virtual bool OnLoad(Scene scene) => true;
 	protected virtual void OnUnload() { }
 
 	public Dictionary<string, Option<bool>> BooleanOptions { get => _booleanOptions; }
-	protected Dictionary<string, Option<bool>> _booleanOptions;
+	protected readonly Dictionary<string, Option<bool>> _booleanOptions = new();
 }

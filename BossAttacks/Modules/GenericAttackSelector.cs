@@ -76,7 +76,6 @@ internal class GenericAttackSelector : Module
             .ToDictionary(kv => kv.K, kv => kv.V);
 
         var eventNames = states.SelectMany(s => s.Transitions.Select(t => t.EventName)).Distinct().OrderBy(n => n);
-        _booleanOptions = new();
         foreach (var eventName in eventNames)
         {
             this.LogModDebug($"Event: {eventName}");
@@ -110,21 +109,17 @@ internal class GenericAttackSelector : Module
     {
         this.LogMod("Unload()");
 
-        if (_booleanOptions != null)
+        // Turn all attacks back on when the module is unloaded.
+        foreach (var kvp in _booleanOptions)
         {
-            foreach (var kvp in _booleanOptions)
-            {
-                // Turn all attacks back on when the module is unloaded.
-                kvp.Value.Value = true;
-            }
-            _booleanOptions = null;
+            kvp.Value.Value = true;
         }
 
         _originalTransition = null;
     }
 
     // fromState -> event -> toState
-    private Dictionary<string, Dictionary<string, string>> _originalTransition = null;
+    private Dictionary<string, Dictionary<string, string>> _originalTransition;
 
     // Helper functions
     private bool CanTurnOffAttack(FsmState state, string eventName)

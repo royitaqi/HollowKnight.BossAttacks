@@ -50,11 +50,12 @@ namespace BossAttacks
             // Order MATTERS
             foreach (var m in ModuleManager.Instance.GetLoadedModules().OrderBy(m => m.Name))
             {
-                foreach (var o in m.BooleanOptions.OrderBy(kv => kv.Key).Select(kv => kv.Value))
+                foreach (var kv in m.BooleanOptions.OrderBy(kv => kv.Key))
                 {
                     if (Input.GetKeyDown(KeyCode.Alpha0 + ++i))
                     {
-                        o.Value = !o.Value;
+                        this.LogModDebug($"Changing module {m.Name} option {kv.Key} from {kv.Value.Value} to {!kv.Value.Value}");
+                        kv.Value.Value = !kv.Value.Value;
                     }
                 }
             }

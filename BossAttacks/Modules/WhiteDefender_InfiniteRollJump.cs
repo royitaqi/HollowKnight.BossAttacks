@@ -17,11 +17,17 @@ internal class WhiteDefender_InfiniteRollJump : Module
             return false;
         }
 
-        _booleanOptions = new()
-        {
-            { "Infinite ROLL JUMP", new Option<bool> { Value = false } },
-            { "Infinite ROLL JUMP 2", new Option<bool> { Value = false } },
-        };
+        _booleanOptions.Add("Infinite ROLL JUMP", new Option<bool> { Value = false });
+        _booleanOptions.Add("Infinite ROLL JUMP 2", new Option<bool> { Value = false });
         return true;
+    }
+
+    protected override void OnUnload()
+    {
+        // Turn all options off when the module is unloaded.
+        foreach (var kvp in _booleanOptions)
+        {
+            kvp.Value.Value = false;
+        }
     }
 }
