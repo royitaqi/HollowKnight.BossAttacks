@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Vasi;
 using UObject = UnityEngine.Object;
+using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace BossAttacks
 {
@@ -31,7 +32,7 @@ namespace BossAttacks
             ModuleManager.Instance = new ModuleManager();
             ModDisplay.Instance = new ModDisplay();
 
-            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+            USceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
 
             new Debugger().Load();
@@ -43,7 +44,7 @@ namespace BossAttacks
         {
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                UpdateOptionDisplay();
+                UpdateOptionDisplay(USceneManager.GetActiveScene());
             }
 
             int i = 0;
@@ -64,20 +65,20 @@ namespace BossAttacks
         private void SceneManager_activeSceneChanged(Scene from, Scene to)
         {
             ModuleManager.Instance.Load(to);
-            UpdateOptionDisplay();
+            UpdateOptionDisplay(to);
 
             // Order doesn't matter
             foreach (var m in ModuleManager.Instance.GetLoadedModules())
             {
                 foreach (var o in m.BooleanOptions.Values)
                 {
-                    o.OnSet.Add(_ => UpdateOptionDisplay());
+                    o.OnSet.Add(_ => UpdateOptionDisplay(to));
                     o.OnCannotSet.Add(_ => UpdateOptionDisplayWithError());
                 }
             }
         }
 
-        private void UpdateOptionDisplay()
+        private void UpdateOptionDisplay(Scene to)
         {
             var toOnOff = (bool b) =>
             {
@@ -117,7 +118,14 @@ namespace BossAttacks
             if (i == 0)
             {
                 // No option was loaded. Display an introduction text.
-                ModDisplay.Instance.Display("Enter a boss fight to see boss attacks.");
+                if (GodhomeUtils.SceneToBoss.ContainsKey(to.name))
+                {
+                    ModDisplay.Instance.Display("This boss is not supported yet.");
+                }
+                else
+                {
+                    ModDisplay.Instance.Display("Enter a boss fight to see boss attacks.");
+                }
             }
             else
             {
