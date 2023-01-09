@@ -120,7 +120,7 @@ namespace BossAttacks
                 // No option was loaded. Display an introduction text.
                 if (GodhomeUtils.SceneToBoss.ContainsKey(to.name))
                 {
-                    ModDisplay.Instance.Display("This boss is not supported yet.");
+                    ModDisplay.Instance.Display("This boss is not supported.");
                 }
                 else
                 {

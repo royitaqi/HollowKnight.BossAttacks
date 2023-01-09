@@ -57,7 +57,8 @@ internal class GenericAttackSelector : Module
                 this.LogModWarn($"Cannot find Choice/Decision state. Candidates are: ({states.Length}) {String.Join(", ", states.Select(s => s.Name))}.");
                 return false;
             }
-        } else
+        }
+        else
         {
             states = fsm.FsmStates.Where(s => config.StateNames.Contains(s.Name)).ToArray();
             if (states.Length != config.StateNames.Length)
