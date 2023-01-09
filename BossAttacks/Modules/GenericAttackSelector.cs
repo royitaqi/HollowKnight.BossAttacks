@@ -11,7 +11,7 @@ namespace BossAttacks.Modules;
 
 internal class GenericAttackSelector : Module
 {
-    public override string Name => "Toggle attacks";
+    public override string Name => "Select Attacks";
 
     protected override bool OnLoad(Scene scene)
     {
