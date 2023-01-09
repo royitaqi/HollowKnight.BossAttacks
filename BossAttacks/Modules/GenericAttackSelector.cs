@@ -15,6 +15,9 @@ internal class GenericAttackSelector : Module
 {
     public override string Name => "Select Attacks";
 
+    const string SHORT_CIRCUIT_PROTECTION_SUFFIX = " SCP";
+    //const string SHORT_CIRCUIT_PROTECTION_SUFFIX = "";
+
     protected override bool OnLoad(Scene scene)
     {
         this.LogMod($"Loading for scene {scene.name}");
@@ -32,7 +35,6 @@ internal class GenericAttackSelector : Module
             return false;
         }
 
-
         // Inspect GO and FSM, and set up.
         var go = FindGameObject(scene, config.GoName);
         if (go == null)
@@ -49,17 +51,6 @@ internal class GenericAttackSelector : Module
             return false;
         }
         this.LogModDebug($"FSM = {fsm.FsmName}");
-
-#if (DEBUG)
-        // Log boss states as they are being entered.
-        foreach (var state in fsm.FsmStates)
-        {
-            state.InsertMethod(() =>
-            {
-                this.LogModFine($"Boss entering state {state.Name}");
-            }, 0);
-        }
-#endif
 
         FsmState[] states;
         if (config.StateNames == null)
@@ -82,18 +73,14 @@ internal class GenericAttackSelector : Module
         }
         this.LogModDebug($"States: ({states.Length}) {String.Join(", ", states.Select(s => s.Name))}");
 
-        // Short circuit protection.
+        // Short circuit protection (SCP).
         // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
-        //var loopCountProperty = typeof(FsmState).GetProperty("loopCount");
         foreach (var s in states)
         {
-            var wait = new ConditionedStop { Wait = TimeSpan.FromSeconds(5) };
-            //s.InsertMethod(() =>
-            //{
-            //    wait.Enabled = s.loopCount > 100;
-            //    this.LogModDebug($"State {s.Name} has triggered short circuit protection. Loop count {s.loopCount}.");
-            //}, 0);
-            s.InsertAction(wait, 0);
+            // Add a SCP state for each Choice state
+            var scpState = fsm.AddState(s.Name + SHORT_CIRCUIT_PROTECTION_SUFFIX);
+            scpState.AddAction(new ShortCircuitProtectionAction { TriggeringLoopCount = 100, Stall = TimeSpan.FromSeconds(1) });
+            scpState.AddTransition("FINISHED", s.Name);
         }
 
         _originalTransition = states
@@ -130,6 +117,18 @@ internal class GenericAttackSelector : Module
 
             _booleanOptions.Add(eventName, opt);
         }
+
+#if (DEBUG)
+        // Log boss states as they are being entered.
+        // Putting it here at the end of the method, because the method body can be adding states, which should also generate such log.
+        foreach (var state in fsm.FsmStates)
+        {
+            state.InsertMethod(() =>
+            {
+                this.LogModFine($"Boss entering state {state.Name}");
+            }, 0);
+        }
+#endif
 
         return true;
     }
@@ -188,7 +187,7 @@ internal class GenericAttackSelector : Module
             return;
         }
 
-        var toStateName = onOff ? _originalTransition[state.Name][eventName] : state.Name;
+        var toStateName = onOff ? _originalTransition[state.Name][eventName] : (state.Name + SHORT_CIRCUIT_PROTECTION_SUFFIX);
         state.ChangeTransition(eventName, toStateName);
         this.LogModDebug($"Changing transition: {state.Name}.{eventName} -> {toStateName}");
     }

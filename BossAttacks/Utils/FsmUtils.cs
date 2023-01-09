@@ -7,21 +7,28 @@ using HutongGames.PlayMaker;
 
 namespace BossAttacks.Utils
 {
-    internal class ConditionedStop : FsmStateAction
+    internal class ShortCircuitProtectionAction : FsmStateAction
     {
-        public override void OnEnter() => MinFinishTime = DateTime.Now + Wait;
-        public override void OnUpdate() => CheckForCondition();
-
-        public void CheckForCondition()
+        public override void OnEnter()
+        {
+            if (base.State.loopCount >= TriggeringLoopCount)
+            {
+                this.LogModFine($"Short circuit protection has been triggered. Loop count ({State.loopCount}) > trigger ({TriggeringLoopCount}). Will stall for {Stall}.");
+                MinFinishTime = DateTime.Now + Stall;
+            }
+        }
+        public override void OnUpdate()
         {
             if (DateTime.Now > MinFinishTime)
             {
+                this.LogModFine($"Finished stall.");
                 base.Finish();
             }
         }
 
-        public TimeSpan Wait { get; set; }
+        public int TriggeringLoopCount { get; set; }
+        public TimeSpan Stall { get; set; }
 
-        private DateTime MinFinishTime;
+        private DateTime MinFinishTime = DateTime.Now;
     }
 }
