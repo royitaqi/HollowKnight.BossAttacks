@@ -99,22 +99,15 @@ internal class GenericAttackSelector : Module
             this.LogModDebug($"Event: {eventName}");
 
             var opt = new Option<bool>{Value = true};
-            opt.CanSet.Add((attackIsOn) =>
+            opt.OnSet.Add((attackIsOn) =>
             {
-                // If turning off current attack AND there are some state which cannot turn off this attack, cannot set.
-                if (!attackIsOn && states.Any(s => !CanTurnOffAttack(s, eventName)))
-                {
-                    return false;
-                }
-
-                // Turn off current attack in all states:
-                // - If attack is on, connect the attack choice to the actual attack.
-                // - Otherwise, connect the attack choice backto the Choice state itself.
+                // Turn on/off current attack in all states:
+                // - If attack is to be on, connect the attack choice to the actual attack.
+                // - Otherwise, connect the attack choice backto the Choice SCP state.
                 foreach (var s in states)
                 {
                     TurnAttack(s, eventName, attackIsOn);
                 }
-                return true;
             });
 
             _booleanOptions.Add(eventName, opt);
@@ -179,11 +172,6 @@ internal class GenericAttackSelector : Module
             _ => throw new NotImplementedException()
         };
         return events.Select(e => e.Name);
-    }
-
-    private bool CanTurnOffAttack(FsmState state, string eventName)
-    {
-        return GetAttackEvents(state).Where(n => n != eventName).Count(n => _booleanOptions[n].Value) > 0;
     }
 
     private void TurnAttack(FsmState state, string eventName, bool onOff)
