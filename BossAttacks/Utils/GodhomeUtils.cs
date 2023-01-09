@@ -25,7 +25,7 @@ namespace BossAttacks.Utils
             { "GG_Crystal_Guardian_2", new() { GoName = "Battle Scene/Zombie Beam Miner Rematch", FsmName = "Beam Miner" } }, // Choice V3 // all = good
             { "GG_Dung_Defender"     , new() { GoName = "Dung Defender", FsmName = "Dung Defender" } }, // Move Choice V3
             { "GG_Failed_Champion"   , new() { GoName = "False Knight Dream", FsmName = "FalseyControl" } }, // Move Choice no-V
-            { "GG_False_Knight"      , new() { GoName = "Battle Scene/False Knight New", FsmName = "FalseyControl" } }, // Move Choice no-V // stalled
+            { "GG_False_Knight"      , new() { GoName = "Battle Scene/False Knight New", FsmName = "FalseyControl" } }, // Move Choice no-V // all = good
             { "GG_Flukemarm"         , null }, // X not interesting
             { "GG_Ghost_Galien"      , null }, // X not interesting
             { "GG_Ghost_Gorb"        , null }, // X not interesting
