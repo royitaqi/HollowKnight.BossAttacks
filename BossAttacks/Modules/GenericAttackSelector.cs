@@ -49,6 +49,17 @@ internal class GenericAttackSelector : Module
         }
         this.LogModDebug($"FSM = {fsm.FsmName}");
 
+#if (DEBUG)
+        // Log boss states as they are being entered.
+        foreach (var state in fsm.FsmStates)
+        {
+            state.InsertMethod(() =>
+            {
+                this.LogModFine($"Boss entering state {state.Name}");
+            }, 0);
+        }
+#endif
+
         FsmState[] states;
         if (config.StateNames == null)
         {
