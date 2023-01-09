@@ -5,6 +5,7 @@ using SFCore.Utils;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using HutongGames.PlayMaker.Actions;
 
 namespace BossAttacks.Modules;
 
@@ -75,7 +76,7 @@ internal class GenericAttackSelector : Module
             })
             .ToDictionary(kv => kv.K, kv => kv.V);
 
-        var eventNames = states.SelectMany(s => s.Transitions.Select(t => t.EventName)).Distinct().OrderBy(n => n);
+        var eventNames = states.SelectMany(s => GetAttackEvents(s)).Distinct().OrderBy(n => n);
         foreach (var eventName in eventNames)
         {
             this.LogModDebug($"Event: {eventName}");
@@ -122,9 +123,14 @@ internal class GenericAttackSelector : Module
     private Dictionary<string, Dictionary<string, string>> _originalTransition;
 
     // Helper functions
+    private static IEnumerable<string> GetAttackEvents(FsmState state)
+    {
+        return (state.Actions.First(a => a.GetType().Name == "SendRandomEventV3") as SendRandomEventV3).events.Select(e => e.Name);
+    }
+
     private bool CanTurnOffAttack(FsmState state, string eventName)
     {
-        return state.Transitions.Select(t => t.EventName).Where(n => n != eventName).Count(n => _booleanOptions[n].Value) > 0;
+        return GetAttackEvents(state).Where(n => n != eventName).Count(n => _booleanOptions[n].Value) > 0;
     }
 
     private void TurnAttack(FsmState state, string eventName, bool onOff)
