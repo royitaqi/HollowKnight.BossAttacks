@@ -16,7 +16,6 @@ internal class GenericAttackSelector : Module
     public override string Name => "Select Attacks";
 
     const string SHORT_CIRCUIT_PROTECTION_SUFFIX = " SCP";
-    //const string SHORT_CIRCUIT_PROTECTION_SUFFIX = "";
 
     protected override bool OnLoad(Scene scene)
     {
@@ -51,6 +50,7 @@ internal class GenericAttackSelector : Module
             return false;
         }
         this.LogModDebug($"FSM = {fsm.FsmName}");
+        _fsm = fsm;
 
         FsmState[] states;
         if (config.StateNames == null)
@@ -75,12 +75,14 @@ internal class GenericAttackSelector : Module
 
         // Short circuit protection (SCP).
         // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
+        _scpStates = new();
         foreach (var s in states)
         {
             // Add a SCP state for each Choice state
             var scpState = fsm.AddState(s.Name + SHORT_CIRCUIT_PROTECTION_SUFFIX);
-            scpState.AddAction(new ShortCircuitProtectionAction { TriggeringLoopCount = 100, Stall = TimeSpan.FromSeconds(1) });
+            scpState.AddAction(new ShortCircuitProtectionAction());
             scpState.AddTransition("FINISHED", s.Name);
+            _scpStates.Add(scpState);
         }
 
         _originalTransition = states
@@ -143,11 +145,16 @@ internal class GenericAttackSelector : Module
             kvp.Value.Value = true;
         }
 
+        // Remove SCP states
+        foreach (var s in _scpStates)
+        {
+            _fsm.RemoveState(s.Name);
+        }
+        _fsm = null;
+        _scpStates = null;
+
         _originalTransition = null;
     }
-
-    // fromState -> event -> toState
-    private Dictionary<string, Dictionary<string, string>> _originalTransition;
 
     // Helper functions
     private static GameObject FindGameObject(Scene scene, string path)
@@ -191,4 +198,8 @@ internal class GenericAttackSelector : Module
         state.ChangeTransition(eventName, toStateName);
         this.LogModDebug($"Changing transition: {state.Name}.{eventName} -> {toStateName}");
     }
+
+    private Dictionary<string, Dictionary<string, string>> _originalTransition; // fromState -> event -> toState
+    private List<FsmState> _scpStates;
+    private PlayMakerFSM _fsm;
 }
