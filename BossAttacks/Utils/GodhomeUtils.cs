@@ -41,8 +41,8 @@ namespace BossAttacks.Utils
             { "GG_Ghost_Xero_V"      , null }, // X not interesting
             { "GG_God_Tamer"         , new() { GoName = "Entry Object/Lobster", FsmName = "Control", StateNames = new[] { "Attack Choice" } } }, // Attack Choice V3. Q: IDLE == FINISHED? // !!! to be verified
             { "GG_Grey_Prince_Zote"  , new() { GoName = "Grey Prince", FsmName = "Control", StateNames = new[] { "Move Choice 1", "Move Choice 2", "Move Choice 3" } } }, // V3
-            { "GG_Grimm"             , new() { GoName = "Grimm Scene/Grimm Boss", FsmName = "Control" } }, // Move Choice V3 // !!! cannot control
-            { "GG_Grimm_Nightmare"   , new() { GoName = "Grimm Control/Nightmare Grimm Boss", FsmName = "Control" } }, // Move Choice V3 // !!! to be verified
+            { "GG_Grimm"             , new() { GoName = "Grimm Scene/Grimm Boss", FsmName = "Control" } }, // Move Choice V3 // !!! cannot change transition. verified it's the same go and fsm objects. boss states are not printing.
+            { "GG_Grimm_Nightmare"   , new() { GoName = "Grimm Control/Nightmare Grimm Boss", FsmName = "Control" } }, // Move Choice V3 // !!! can control but first need to allow one slash to get boss start moving. see Move Choice action #0.
             { "GG_Gruz_Mother"       , new() { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateNames = new[] { "Super Choose" } } }, // V2
             { "GG_Gruz_Mother_V"     , new() { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateNames = new[] { "Super Choose" } } }, // V2 // !!! row check
             { "GG_Hive_Knight"       , new() { GoName = "Battle Scene/Hive Knight", FsmName = "Control", StateNames = new[] { "Phase 1", "Phase 2", "Phase 3" } } }, // V3 // !!! bee roar cannot trigger

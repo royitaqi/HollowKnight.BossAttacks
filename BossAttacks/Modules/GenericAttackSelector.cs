@@ -41,7 +41,7 @@ internal class GenericAttackSelector : Module
             this.LogModWarn($"Cannot find GO {config.GoName} in scene");
             return false;
         }
-        this.LogModDebug($"GO = {go.name}");
+        this.LogModDebug($"GO = {go.name}  ({go.GetInstanceID()})");
             
         var fsm = go.LocateMyFSM(config.FsmName);
         if (fsm == null)
@@ -49,7 +49,7 @@ internal class GenericAttackSelector : Module
             this.LogModWarn($"Cannot find FSM {config.FsmName} in GO");
             return false;
         }
-        this.LogModDebug($"FSM = {fsm.FsmName}");
+        this.LogModDebug($"FSM = {fsm.FsmName} ({fsm.GetInstanceID()})");
         _fsm = fsm;
 
         FsmState[] states;
