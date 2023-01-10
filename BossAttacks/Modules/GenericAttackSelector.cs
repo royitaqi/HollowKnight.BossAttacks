@@ -163,15 +163,16 @@ internal class GenericAttackSelector : Module
 
     private static IEnumerable<string> GetAttackEvents(FsmState state)
     {
-        var choiceAction = state.Actions.First(a => a.GetType().Name.StartsWith("SendRandomEvent"));
-        FsmEvent[] events = choiceAction.GetType().Name switch
-        {
-            "SendRandomEvent" => (choiceAction as SendRandomEvent).events,
-            "SendRandomEventV2" => (choiceAction as SendRandomEventV2).events,
-            "SendRandomEventV3" => (choiceAction as SendRandomEventV3).events,
-            _ => throw new NotImplementedException()
-        };
-        return events.Select(e => e.Name);
+        //var choiceAction = state.Actions.First(a => a.GetType().Name.StartsWith("SendRandomEvent"));
+        //FsmEvent[] events = choiceAction.GetType().Name switch
+        //{
+        //    "SendRandomEvent" => (choiceAction as SendRandomEvent).events,
+        //    "SendRandomEventV2" => (choiceAction as SendRandomEventV2).events,
+        //    "SendRandomEventV3" => (choiceAction as SendRandomEventV3).events,
+        //    _ => throw new NotImplementedException()
+        //};
+        //return events.Select(e => e.Name);
+        return state.Transitions.Select(t => t.EventName);
     }
 
     private void TurnAttack(FsmState state, string eventName, bool onOff)

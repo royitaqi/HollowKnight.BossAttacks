@@ -67,8 +67,8 @@ namespace BossAttacks.Utils
             { "GG_Traitor_Lord"      , new() { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis" } }, // Attack Choice V2 // all = good
             { "GG_Uumuu"             , null }, // X not interesting
             { "GG_Uumuu_V"           , null }, // X not interesting
-            { "GG_Vengefly"          , new() { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer" } }, // ??? Choose Attack manual random
-            { "GG_Vengefly_V"        , new() { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer" } }, // ??? Choose Attack manual random
+            { "GG_Vengefly"          , new() { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateNames = new[] { "Choose Attack" } } }, // ??? Choose Attack manual random
+            { "GG_Vengefly_V"        , new() { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer" } }, // ??? Choose Attack manual random // ??? multiple GOs
             { "GG_Watcher_Knights"   , null }, // ??? multiple GOs
             { "GG_White_Defender"    , new() { GoName = "White Defender", FsmName = "Dung Defender" } }, // all = good
         };
