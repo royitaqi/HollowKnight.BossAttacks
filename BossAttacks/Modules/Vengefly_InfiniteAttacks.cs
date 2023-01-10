@@ -40,7 +40,9 @@ internal class Vengefly_InfiniteAttacks : Module
             {
                 fsm.GetIntVariable("Summons In A Row").Value = 0;
                 fsm.GetIntVariable("Swoops in A Row").Value = 0;
+                fsm.GetIntVariable("Summons").Value = 15;
             }, 0);
+            fsm.GetState("Idle").Actions[0].Name = "Clear Counters";
             fsm.GetState("Idle").Actions[0].Enabled = false;
         }
 
@@ -49,17 +51,15 @@ internal class Vengefly_InfiniteAttacks : Module
         {
             foreach (var fsm in _fsms)
             {
-                fsm.GetState("Idle").Actions[0].Enabled = onOff;
-
-                // Turn built-in checks the other way
-                fsm.GetState("Check Summon").Actions[0].Enabled = !onOff;
-                fsm.GetState("Check Summon").Actions[4].Enabled = !onOff;
-                fsm.GetState("Check Summon GG").Actions[2].Enabled = !onOff;
-                fsm.GetState("Swoop Antic").Actions[0].Enabled = !onOff;
+                fsm.GetState("Idle").Actions.First(a => a.Name == "Clear Counters").Enabled = onOff;
+                fsm.GetState("Check Summon").ChangeTransition("CANCEL", "Idle");
+                fsm.GetState("Check Summon GG").ChangeTransition("CANCEL", "Idle");
+                fsm.GetState("Summon Antic").ChangeTransition("CANCEL", "Idle");
+                fsm.GetState("Swoop Antic").ChangeTransition("CANCEL", "Idle");
             }
         });
 
-        _booleanOptions.Add("Check to allow more selected attacks to happen", option);
+        _booleanOptions.Add("Allow more summons (up to 15) and swoops (infinite)", option);
         return true;
     }
 
@@ -74,13 +74,18 @@ internal class Vengefly_InfiniteAttacks : Module
         // Restore the FSM
         foreach (var fsm in _fsms)
         {
-            fsm.GetState("Idle").RemoveAction(0);
-
-            // Restore built-in checks
-            fsm.GetState("Check Summon").Actions[0].Enabled = true;
-            fsm.GetState("Check Summon").Actions[4].Enabled = true;
-            fsm.GetState("Check Summon GG").Actions[2].Enabled = true;
-            fsm.GetState("Swoop Antic").Actions[0].Enabled = true;
+            for (int i = 0; i < fsm.GetState("Idle").Actions.Length; i++)
+            {
+                if (fsm.GetState("Idle").Actions[i].Name == "Clear Counters")
+                {
+                    fsm.GetState("Idle").RemoveAction(i);
+                    break;
+                }
+            }
+            fsm.GetState("Check Summon").ChangeTransition("CANCEL", "Swoop Antic");
+            fsm.GetState("Check Summon GG").ChangeTransition("CANCEL", "Swoop Antic");
+            fsm.GetState("Summon Antic").ChangeTransition("CANCEL", "Swoop Antic");
+            fsm.GetState("Swoop Antic").ChangeTransition("CANCEL", "Check Summon");
         }
         _fsms = null;
     }

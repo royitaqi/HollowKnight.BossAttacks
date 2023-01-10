@@ -20,8 +20,8 @@ namespace BossAttacks
         private DateTime NotificationExpireTime = DateTime.Now;
         private TimeSpan NotificationDuration = TimeSpan.FromSeconds(2);
 
-        private Vector2 TextSize = new(440, 520);
-        private Vector2 TextPosition = new(0.13f, 0.26f);
+        private Vector2 TextSize = new(800, 500);
+        private Vector2 TextPosition = new(0.22f, 0.25f);
 
         private GameObject _canvas;
         private UnityEngine.UI.Text _text;
@@ -55,7 +55,7 @@ namespace BossAttacks
 
         public void Update()
         {
-            this.LogModDebug("Update()");
+            //this.LogModDebug("Update()");
             Create();
 
             if (Visible
@@ -64,12 +64,12 @@ namespace BossAttacks
             )
             {
                 _text.text = DateTime.Now >= NotificationExpireTime ? DisplayText : NotificationText;
-                this.LogModDebug($"Showing text: {_text.text}");
+                //this.LogModDebug($"Showing text: {_text.text}");
                 _canvas.SetActive(true);
             }
             else
             {
-                this.LogModDebug("Hiding text");
+                //this.LogModDebug("Hiding text");
                 _canvas?.SetActive(false);
             }
         }
@@ -79,7 +79,7 @@ namespace BossAttacks
          */
         public void Display(string text)
         {
-            this.LogModDebug($"Display(): {text}");
+            //this.LogModDebug($"Display(): {text}");
             DisplayText = text.Trim();
             DisplayExpireTime = DateTime.Now + DisplayDuration;
             Update();
@@ -91,7 +91,7 @@ namespace BossAttacks
          */
         public void Notify(string text)
         {
-            this.LogModDebug($"Notify(): {text}");
+            //this.LogModDebug($"Notify(): {text}");
             NotificationText = text.Trim();
             NotificationExpireTime = DateTime.Now + NotificationDuration;
             Update();
