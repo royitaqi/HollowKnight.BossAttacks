@@ -95,7 +95,11 @@ namespace BossAttacks.Utils
                 new GenericAttackSelectorConfig(),
                 new PrintStatesModuleConfig(),
             } },
-            { "GG_Dung_Defender"     , null },
+            { "GG_Dung_Defender"     , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Dung Defender", FsmName = "Dung Defender" },
+                new GenericAttackSelectorConfig(),
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Failed_Champion"   , new ModuleConfig[] {
                 new DefaultConfig { GoName = "False Knight Dream", FsmName = "FalseyControl" },
                 new GenericAttackSelectorConfig { IgnoreEvents = new() { "RUN", "TEST" } },
