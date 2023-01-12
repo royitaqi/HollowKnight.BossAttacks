@@ -39,13 +39,13 @@ internal class GenericAttackSelector : SingleStateModule
         {
             var eventName = tran.EventName;
             // Ignore specified events
-            if (_config.IgnoreEvents != null && _config.IgnoreEvents.Contains(eventName))
+            if (_config.IgnoreEvent(eventName))
             {
                 continue;
             }
 
             var originalToStateName = tran.ToState;
-            var opt = new BooleanOption { Display = tran.EventName, Value = true };
+            var opt = new BooleanOption { Display = _config.MapEvent(eventName), Value = true };
             opt.Mutated += () =>
             {
                 var toStateName = opt.Value ? originalToStateName : scpStateName;

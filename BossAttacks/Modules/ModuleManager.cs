@@ -69,6 +69,11 @@ internal class ModuleManager {
 
     internal static void PropagateConfig(DefaultConfig from, ModuleConfig to)
     {
+        if (from == null)
+        {
+            return;
+        }
+
         var fromProps = from.GetType().GetProperties();
         foreach (var fp in fromProps)
         {

@@ -77,7 +77,11 @@ namespace BossAttacks.Utils
         public static readonly Dictionary<string, ModuleConfig[]> SceneToModuleConfigs = new()
         {
             { "GG_Broken_Vessel"     , null },
-            { "GG_Brooding_Mawlek"   , null },
+            { "GG_Brooding_Mawlek"   , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control" },
+                new GenericAttackSelectorConfig { StateName = "Super Select", MapEvents = new() { { "TRUE", "SPIT" }, { "FALSE", "JUMP" } } },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Brooding_Mawlek_V" , null },
             { "GG_Collector"         , null },
             { "GG_Collector_V"       , null },
@@ -86,7 +90,11 @@ namespace BossAttacks.Utils
                 new GenericAttackSelectorConfig(),
                 new PrintStatesModuleConfig(),
             } },
-            { "GG_Crystal_Guardian_2", null },
+            { "GG_Crystal_Guardian_2", new ModuleConfig[] {
+                new DefaultConfig { GoName = "Battle Scene/Zombie Beam Miner Rematch", FsmName = "Beam Miner" },
+                new GenericAttackSelectorConfig(),
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Dung_Defender"     , null },
             { "GG_Failed_Champion"   , new ModuleConfig[] {
                 new DefaultConfig { GoName = "False Knight Dream", FsmName = "FalseyControl" },
