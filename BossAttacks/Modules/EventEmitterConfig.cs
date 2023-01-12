@@ -13,6 +13,6 @@ namespace BossAttacks.Modules;
 
 internal class EventEmitterConfig : SingleStateModuleConfig
 {
-    public override Type ModuleType { get => typeof(EventEmitter); }
+    public override Type ModuleType => typeof(EventEmitter);
     public string EventName { get; set; }
 }

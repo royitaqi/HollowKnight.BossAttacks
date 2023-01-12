@@ -13,7 +13,7 @@ namespace BossAttacks.Modules;
 
 internal class VariableSetterConfig : SingleStateModuleConfig
 {
-    public override Type ModuleType { get => typeof(VariableSetter); }
+    public override Type ModuleType => typeof(VariableSetter);
     internal KeyValuePair<string, int>[] IntVariables { get; set; }
     internal KeyValuePair<string, bool>[] BoolVariables { get; set; }
 }

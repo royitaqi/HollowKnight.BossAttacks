@@ -5,9 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace BossAttacks.Modules;
 
-/**
- * Represents all module configs
- */
-internal interface ModuleConfig {
-    public abstract Type ModuleType { get; }
+internal class DefaultConfig : SingleStateModuleConfig
+{
+    public override Type ModuleType => null;
 }

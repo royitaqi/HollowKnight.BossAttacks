@@ -13,6 +13,6 @@ namespace BossAttacks.Modules;
 
 internal class GenericAttackSelectorConfig : SingleStateModuleConfig
 {
-    public override Type ModuleType { get => typeof(GenericAttackSelector); }
+    public override Type ModuleType => typeof(GenericAttackSelector);
     public HashSet<string> IgnoreEvents { get; set; }
 }

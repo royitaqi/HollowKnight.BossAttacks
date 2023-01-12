@@ -29,12 +29,22 @@ internal class ModuleManager {
         Debug.Assert(IsSupportedBossScene(scene), "The current scene should be a supported boss scene.");
 
         var moduleConfigs = GodhomeUtils.SceneToModuleConfigs[scene.name];
+        DefaultConfig defaultConfig = null;
         foreach (var config in moduleConfigs)
         {
-            var type = config.ModuleType;
-            var module = Activator.CreateInstance(type, config) as Module;
-            module.Load(scene);
-            _loadedModules.Add(module);
+            if (config is DefaultConfig)
+            {
+                defaultConfig = config as DefaultConfig;
+            }
+            else
+            {
+                PropagateConfig(defaultConfig, config);
+
+                var type = config.ModuleType;
+                var module = Activator.CreateInstance(type, config) as Module;
+                module.Load(scene);
+                _loadedModules.Add(module);
+            }
         }
 
         this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.GetType().Name))}");
@@ -55,6 +65,25 @@ internal class ModuleManager {
     public IEnumerable<Option> GetOptions()
     {
         return _loadedModules.SelectMany(m => m.Options);
+    }
+
+    private static void PropagateConfig(DefaultConfig from, ModuleConfig to)
+    {
+        foreach (var fromProp in from.GetType().GetProperties(BindingFlags.FlattenHierarchy))
+        {
+            var toProp = to.GetType().GetProperty(fromProp.Name, BindingFlags.FlattenHierarchy | BindingFlags.SetProperty);
+            if (toProp == null)
+            {
+                continue;
+            }
+            // Skip propagate if `to` already have value
+            if (toProp.GetValue(to) != null)
+            {
+                continue;
+            }
+            // Propagate
+            toProp.SetValue(to, fromProp.GetValue(from));
+        }
     }
 
     //public IEnumerable<Module> GetLoadedModules()

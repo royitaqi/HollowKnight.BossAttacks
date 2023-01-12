@@ -7,5 +7,5 @@ namespace BossAttacks.Modules;
 
 internal class PrintStatesModuleConfig : SingleFsmModuleConfig
 {
-    public override Type ModuleType { get => typeof(PrintStatesModule); }
+    public override Type ModuleType => typeof(PrintStatesModule);
 }

@@ -82,14 +82,16 @@ namespace BossAttacks.Utils
             { "GG_Collector"         , null },
             { "GG_Collector_V"       , null },
             { "GG_Crystal_Guardian"  , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
-                new PrintStatesModuleConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
+                new DefaultConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
+                new GenericAttackSelectorConfig(),
+                new PrintStatesModuleConfig(),
             } },
             { "GG_Crystal_Guardian_2", null },
             { "GG_Dung_Defender"     , null },
             { "GG_Failed_Champion"   , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "False Knight Dream", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
-                new VariableSetterConfig { GoName = "False Knight Dream", FsmName = "FalseyControl",
+                new DefaultConfig { GoName = "False Knight Dream", FsmName = "FalseyControl" },
+                new GenericAttackSelectorConfig { IgnoreEvents = new() { "RUN", "TEST" } },
+                new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[] {
                         new("JA In A Row", 0),
                         new("Slam In A Row", 0),
@@ -97,7 +99,7 @@ namespace BossAttacks.Utils
                         new("Stunned Amount", -9),
                     }
                 },
-                new PrintStatesModuleConfig { GoName = "False Knight Dream", FsmName = "FalseyControl" },
+                new PrintStatesModuleConfig(),
             } },
             { "GG_False_Knight"      , null },
             { "GG_Flukemarm"         , null },
@@ -121,16 +123,18 @@ namespace BossAttacks.Utils
             { "GG_Gruz_Mother_V"     , null },
             { "GG_Hive_Knight"       , null },
             { "GG_Hollow_Knight"     , new ModuleConfig[] {
-                new EventEmitterConfig { GoName = "HK Prime", FsmName = "Control", StateName = "Phase?", EventName = "PHASE3" },
-                new GenericAttackSelectorConfig { GoName = "HK Prime", FsmName = "Control", StateName = "Choice P3" },
-                new PrintStatesModuleConfig { GoName = "HK Prime", FsmName = "Control" },
+                new DefaultConfig { GoName = "HK Prime", FsmName = "Control" },
+                new EventEmitterConfig { StateName = "Phase?", EventName = "PHASE3" },
+                new GenericAttackSelectorConfig { StateName = "Choice P3" },
+                new PrintStatesModuleConfig(),
             } },
             { "GG_Hornet_1"          , null },
             { "GG_Hornet_2"          , null },
             { "GG_Lost_Kin"          , null },
             { "GG_Mage_Knight"       , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision" },
-                new PrintStatesModuleConfig { GoName = "Mage Knight", FsmName = "Mage Knight" },
+                new DefaultConfig { GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision" },
+                new GenericAttackSelectorConfig(),
+                new PrintStatesModuleConfig(),
             } },
             { "GG_Mage_Knight_V"     , null },
             { "GG_Mantis_Lords"      , null },
