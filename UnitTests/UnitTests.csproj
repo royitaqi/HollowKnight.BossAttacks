@@ -1,91 +1,37 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <!-- Change this to the path of your modded HK installation -->
     <HollowKnightRefs>D:/XboxGames/Hollow Knight/Content/Hollow Knight_Data/Managed</HollowKnightRefs>
-    <!-- Change this to the path where you want the ready-to-upload exports to be -->
-    <ExportDir>D:/GitHubRepositories/HollowKnight.GodhomeWinLossTracker/Exports</ExportDir>
-    <!-- Uncomment this to generate a documentation file to be included with the mod -->
-    <!--<DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>-->
   </PropertyGroup>
+
   <PropertyGroup>
-    <RootNamespace>BossAttacks</RootNamespace>
-    <AssemblyName>BossAttacks</AssemblyName>
-    <TargetFramework>net472</TargetFramework>
-    <AssemblyTitle>BossAttacks</AssemblyTitle>
-    <Product>BossAttacks</Product>
-    <Description>A Hollow Knight Mod</Description>
-    <Copyright>Copyright ©  2023</Copyright>
-    <AssemblyVersion></AssemblyVersion>
-    <FileVersion></FileVersion>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <LangVersion>latest</LangVersion>
-    <Version>0.0.1</Version>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-
-  <Target Name="CopyModToGame" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
-    <MakeDir Condition="!Exists('$(HollowKnightRefs)/Mods/$(TargetName)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-    <Copy Condition="'$(DocumentationFile)' != ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-    <Copy Condition="'$(DocumentationFile)' == ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-  </Target>
-
-  <Target Name="ClearExportDir" AfterTargets="PostBuildEvent">
-    <RemoveDir Condition="Exists('$(ExportDir)/')" Directories="$(ExportDir)/" />
-  </Target>
-
-
-  <Target Name="ExportMod" AfterTargets="ClearExportDir" Condition="'$(Configuration)' == 'Release'">
-    <MakeDir Directories="$(ExportDir)/" />
-    <MakeDir Directories="$(ExportDir)/$(TargetName)/" />
-    <MakeDir Directories="$(ExportDir)/$(TargetName)/zip/" />
-
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ExportDir)/$(TargetName)/" />
-    
-    <Copy Condition="'$(DocumentationFile)' != ''" SourceFiles="../README.md;$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml" DestinationFolder="$(ExportDir)/$(TargetName)/zip/" />
-    <Copy Condition="'$(DocumentationFile)' == ''" SourceFiles="../README.md;$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(ExportDir)/$(TargetName)/zip/" />
-    
-    <ZipDirectory SourceDirectory="$(ExportDir)/$(TargetName)/zip/" DestinationFile="$(ExportDir)/$(TargetName)/$(TargetName).zip" />
-    <RemoveDir Directories="$(ExportDir)/$(TargetName)/zip/" />
-
-    <PropertyGroup>
-      <OutputFileString>SHA256 - $(AssemblyTitle).dll, Version $(AssemblyVersion):</OutputFileString>
-    </PropertyGroup>
-    <GetFileHash Files="$(ExportDir)/$(TargetName)/$(TargetName).dll" Algorithm="SHA256">
-      <Output TaskParameter="Items" ItemName="FilesWithHashes" />
-    </GetFileHash>
-    <PropertyGroup>
-      <OutputZipString>SHA256 - $(AssemblyTitle).zip:</OutputZipString>
-    </PropertyGroup>
-    <GetFileHash Files="$(ExportDir)/$(TargetName)/$(TargetName).zip" Algorithm="SHA256">
-      <Output TaskParameter="Items" ItemName="ZipFilesWithHashes" />
-    </GetFileHash>
-    <WriteLinesToFile File="$(ExportDir)/$(TargetName)/SHA.txt" Lines="$(OutputFileString);@(FilesWithHashes->'%(FileHash)');$(OutputZipString);@(ZipFilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
-  </Target>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources/**" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="Moq" Version="4.18.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
+    <PackageReference Include="coverlet.collector" Version="3.1.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- For l11n and GO.Child() in ModMenu.cs. -->
-    <Reference Include="Osmi">
-      <HintPath>$(HollowKnightRefs)/Mods/Osmi/Osmi.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\BossAttacks\BossAttacks.csproj" />
+  </ItemGroup>
 
-    <!-- For custom menu. -->
+  <ItemGroup>
     <Reference Include="Satchel, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(HollowKnightRefs)/Mods/Satchel/Satchel.dll</HintPath>
     </Reference>
-
-    <!-- For fsm.MakeLog(). -->
-    <Reference Include="SFCore">
-      <HintPath>$(HollowKnightRefs)/Mods/SFCore/SFCore.dll</HintPath>
-    </Reference>
-
-    <!-- For PlayerMakerFSM.GetState() then .AddMethod(). -->
     <Reference Include="Vasi, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(HollowKnightRefs)/Mods/Vasi/Vasi.dll</HintPath>
     </Reference>
-
     <Reference Include="Assembly-CSharp">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -358,16 +304,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include=".gitignore" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>UnitTests</_Parameter1>
-    </AssemblyAttribute>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
 </Project>

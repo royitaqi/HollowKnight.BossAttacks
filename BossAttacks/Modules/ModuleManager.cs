@@ -67,22 +67,29 @@ internal class ModuleManager {
         return _loadedModules.SelectMany(m => m.Options);
     }
 
-    private static void PropagateConfig(DefaultConfig from, ModuleConfig to)
+    internal static void PropagateConfig(DefaultConfig from, ModuleConfig to)
     {
-        foreach (var fromProp in from.GetType().GetProperties(BindingFlags.FlattenHierarchy))
+        var fromProps = from.GetType().GetProperties();
+        foreach (var fp in fromProps)
         {
-            var toProp = to.GetType().GetProperty(fromProp.Name, BindingFlags.FlattenHierarchy | BindingFlags.SetProperty);
-            if (toProp == null)
+            if (!fp.CanRead)
             {
                 continue;
             }
-            // Skip propagate if `to` already have value
-            if (toProp.GetValue(to) != null)
+            var fv = fp.GetValue(from);
+            if (fv == null)
             {
                 continue;
             }
+
+            var tp = to.GetType().GetProperty(fp.Name);
+            if (tp == null || !fp.CanRead || !fp.CanWrite || tp.GetValue(to) != null)
+            {
+                continue;
+            }
+
             // Propagate
-            toProp.SetValue(to, fromProp.GetValue(from));
+            tp.SetValue(to, fv);
         }
     }
 

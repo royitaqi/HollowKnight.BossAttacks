@@ -39,7 +39,7 @@ internal class GenericAttackSelector : SingleStateModule
         {
             var eventName = tran.EventName;
             // Ignore specified events
-            if (_config.IgnoreEvents.Contains(eventName))
+            if (_config.IgnoreEvents != null && _config.IgnoreEvents.Contains(eventName))
             {
                 continue;
             }
