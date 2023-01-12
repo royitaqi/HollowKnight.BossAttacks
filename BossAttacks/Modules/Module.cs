@@ -7,12 +7,15 @@ namespace BossAttacks.Modules;
 /**
  * The basic unit of modding the game logic.
  * 
- * Can be loaded/unloaded (from mod menu; from entering/leaving boss scene).
+ * Can be loaded/unloaded.
  */
 internal abstract class Module {
-	public virtual string Name => GetType().Name;
+	//public virtual string Name => GetType().Name;
 	public virtual int Priority => 0;
 
+	/**
+	 * Mod the fight.
+	 */
 	public bool Load(Scene scene)
     {
 		Debug.Assert(!Loaded, $"{GetType().Name} shouldn't be loaded");
@@ -21,18 +24,21 @@ internal abstract class Module {
 		return ret;
 	}
 
+	/**
+	 * Un-mod the fight. This shouldn't be required in most cases.
+	 */
 	public void Unload()
     {
 		Debug.Assert(!Loaded, $"{GetType().Name} should be loaded");
 		OnUnload();
-		_booleanOptions.Clear();
+		_options.Clear();
 		Loaded = false;
     }
 
-	protected virtual bool OnLoad(Scene scene) => true;
-	protected virtual void OnUnload() { }
+	protected abstract bool OnLoad(Scene scene);
+	protected abstract void OnUnload();
 	internal bool Loaded { get; private set; }
 
-	public Dictionary<string, Option<bool>> BooleanOptions { get => _booleanOptions; }
-	protected readonly Dictionary<string, Option<bool>> _booleanOptions = new();
+	public List<Option> Options { get => _options; }
+	protected readonly List<Option> _options = new();
 }

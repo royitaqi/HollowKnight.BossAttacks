@@ -17,17 +17,17 @@ internal class TestModule : Module
     public override string Name => "TestModule";
     protected override bool OnLoad(Scene scene)
     {
-        _booleanOptions.Add("Test 1", new Option<bool> { Value = false });
-        _booleanOptions.Add("Test 2", new Option<bool> { Value = false });
-        _booleanOptions.Add("Test 3", new Option<bool> { Value = false });
-        _booleanOptions.Add("Test 4", new Option<bool> { Value = false });
+        _options.Add("Test 1", new Option<bool> { Value = false });
+        _options.Add("Test 2", new Option<bool> { Value = false });
+        _options.Add("Test 3", new Option<bool> { Value = false });
+        _options.Add("Test 4", new Option<bool> { Value = false });
         return true;
     }
 
     protected override void OnUnload()
     {
         // Turn all options off when the module is unloaded.
-        foreach (var kvp in _booleanOptions)
+        foreach (var kvp in _options)
         {
             kvp.Value.Value = false;
         }

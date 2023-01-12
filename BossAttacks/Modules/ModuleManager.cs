@@ -10,19 +10,26 @@ namespace BossAttacks.Modules;
 internal class ModuleManager {
     public static ModuleManager Instance = null;
 
-    public void Load(Scene scene)
+    public bool Load(Scene scene)
     {
         this.LogMod("Load");
         Unload();
 
-        foreach (var module in FindModules())
+        if (!GodhomeUtils.SceneToModuleConfigs.ContainsKey(scene.name))
         {
-            if (module.Load(scene))
-            {
-                _loadedModules.Add(module);
-            }
+            return false;
         }
-        this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.Name))}");
+
+        var moduleConfigs = GodhomeUtils.SceneToModuleConfigs[scene.name];
+        foreach (var config in moduleConfigs)
+        {
+            var type = config.ModuleType;
+            var module = Activator.CreateInstance(type, new[] { config }) as Module;
+            _loadedModules.Add(module);
+        }
+
+        this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.GetType().Name))}");
+        return true;
     }
 
     public void Unload()
@@ -40,13 +47,13 @@ internal class ModuleManager {
         return _loadedModules;
     }
 
-    private static IEnumerable<Module> FindModules() => Assembly
-        .GetExecutingAssembly()
-        .GetTypes()
-        .Where(type => type.IsSubclassOf(typeof(Module)))
-        .Where(type => !type.IsAbstract)
-        .Select(type => Activator.CreateInstance(type) as Module)
-        .OrderBy(module => module.Priority);
+    //private static IEnumerable<Module> FindModules() => Assembly
+    //    .GetExecutingAssembly()
+    //    .GetTypes()
+    //    .Where(type => type.IsSubclassOf(typeof(Module)))
+    //    .Where(type => !type.IsAbstract)
+    //    .Select(type => Activator.CreateInstance(type) as Module)
+    //    .OrderBy(module => module.Priority);
 
     private List<Module> _loadedModules = new();
 }

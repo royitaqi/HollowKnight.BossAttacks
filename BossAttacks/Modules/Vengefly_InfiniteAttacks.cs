@@ -59,14 +59,14 @@ internal class Vengefly_InfiniteAttacks : Module
             }
         });
 
-        _booleanOptions.Add("Allow more summons (up to 15) and swoops (infinite)", option);
+        _options.Add("Allow more summons (up to 15) and swoops (infinite)", option);
         return true;
     }
 
     protected override void OnUnload()
     {
         // Turn all options off when the module is unloaded.
-        foreach (var kvp in _booleanOptions)
+        foreach (var kvp in _options)
         {
             kvp.Value.Value = false;
         }

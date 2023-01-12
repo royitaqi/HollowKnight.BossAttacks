@@ -47,14 +47,14 @@ internal class WhiteDefender_TrimRollJump : Module
             }
         });
 
-        _booleanOptions.Add("Trim ROLL JUMP", option);
+        _options.Add("Trim ROLL JUMP", option);
         return true;
     }
 
     protected override void OnUnload()
     {
         // Turn all options off when the module is unloaded.
-        foreach (var kvp in _booleanOptions)
+        foreach (var kvp in _options)
         {
             kvp.Value.Value = false;
         }
