@@ -24,9 +24,11 @@ internal class EventEmitter : SingleStateModule
 
         LoadSingleStateObjects(scene, _config);
 
-        var action = new NextFrameEvent { sendEvent = _fsm.FsmEvents.First(e => e.Name == _config.EventName) };
-        action.Name = "EventEmitter";
-        _state.InsertAction(action, 0);
+        _state.InsertMethod(() =>
+        {
+            _fsm.SendEvent(_config.EventName);
+        }, 0);
+        _state.Actions[0].Name = "EventEmitter";
     }
 
     protected override void OnUnload()

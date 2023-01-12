@@ -109,7 +109,11 @@ namespace BossAttacks.Utils
             { "GG_Gruz_Mother"       , null },
             { "GG_Gruz_Mother_V"     , null },
             { "GG_Hive_Knight"       , null },
-            { "GG_Hollow_Knight"     , null },
+            { "GG_Hollow_Knight"     , new ModuleConfig[] {
+                new EventEmitterConfig { GoName = "HK Prime", FsmName = "Control", StateName = "Phase?", EventName = "PHASE3" },
+                new GenericAttackSelectorConfig { GoName = "HK Prime", FsmName = "Control", StateName = "Choice P3" },
+                new PrintStatesModuleConfig { GoName = "HK Prime", FsmName = "Control" },
+            } },
             { "GG_Hornet_1"          , null },
             { "GG_Hornet_2"          , null },
             { "GG_Lost_Kin"          , null },
