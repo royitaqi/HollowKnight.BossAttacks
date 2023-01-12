@@ -28,19 +28,6 @@ internal class GenericAttackSelector : SingleStateModule
 
         LoadSingleStateObjects(scene, _config);
 
-        //// If there is no mapping, cannot find a config.
-        //if (!GodhomeUtils.SceneToBoss.ContainsKey(scene.name))
-        //{
-        //    this.LogModWarn($"Scene {scene.name} not configured.");
-        //    return false;
-        //}
-        //var config = GodhomeUtils.SceneToBoss[scene.name];
-        //if (config == null)
-        //{
-        //    this.LogModWarn($"Scene {scene.name} configured to be null.");
-        //    return false;
-        //}
-
         // Short circuit protection (SCP).
         // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
         var scpStateName = _state.Name + SHORT_CIRCUIT_PROTECTION_SUFFIX;
@@ -51,6 +38,12 @@ internal class GenericAttackSelector : SingleStateModule
         foreach (var tran in _state.Transitions)
         {
             var eventName = tran.EventName;
+            // Ignore specified events
+            if (_config.IgnoreEvents.Contains(eventName))
+            {
+                continue;
+            }
+
             var originalToStateName = tran.ToState;
             var opt = new BooleanOption { Display = tran.EventName, Value = true };
             opt.Mutated += () =>

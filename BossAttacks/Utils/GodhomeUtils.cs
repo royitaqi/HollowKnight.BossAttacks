@@ -87,7 +87,18 @@ namespace BossAttacks.Utils
             } },
             { "GG_Crystal_Guardian_2", null },
             { "GG_Dung_Defender"     , null },
-            { "GG_Failed_Champion"   , null },
+            { "GG_Failed_Champion"   , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "False Knight Dream", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
+                new VariableSetterConfig { GoName = "False Knight Dream", FsmName = "FalseyControl",
+                    IntVariables = new KeyValuePair<string, int>[] {
+                        new("JA In A Row", 0),
+                        new("Slam In A Row", 0),
+                        new("Jump Count", 0),
+                        new("Stunned Amount", -9),
+                    }
+                },
+                new PrintStatesModuleConfig { GoName = "False Knight Dream", FsmName = "FalseyControl" },
+            } },
             { "GG_False_Knight"      , null },
             { "GG_Flukemarm"         , null },
             { "GG_Ghost_Galien"      , null },

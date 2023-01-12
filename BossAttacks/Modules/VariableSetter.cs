@@ -25,13 +25,19 @@ internal class VariableSetter : SingleStateModule
         LoadSingleStateObjects(scene, _config);
 
         _state.InsertMethod(() => {
-            foreach (var kv in _config.BoolVariables)
+            if (_config.BoolVariables != null)
             {
-                _fsm.FsmVariables.GetFsmBool(kv.Key).Value = kv.Value;
+                foreach (var kv in _config.BoolVariables)
+                {
+                    _fsm.FsmVariables.GetFsmBool(kv.Key).Value = kv.Value;
+                }
             }
-            foreach (var kv in _config.IntVariables)
+            if (_config.IntVariables != null)
             {
-                _fsm.FsmVariables.GetFsmInt(kv.Key).Value = kv.Value;
+                foreach (var kv in _config.IntVariables)
+                {
+                    _fsm.FsmVariables.GetFsmInt(kv.Key).Value = kv.Value;
+                }
             }
         }, 0);
         _state.Actions[0].Name = "VariableSetter";
