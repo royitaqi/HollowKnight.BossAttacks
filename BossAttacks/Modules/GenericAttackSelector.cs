@@ -17,19 +17,16 @@ internal class GenericAttackSelector : SingleStateModule
 
     const string SHORT_CIRCUIT_PROTECTION_SUFFIX = " SCP";
 
-    internal GenericAttackSelector(GenericAttackSelectorConfig config)
+    public GenericAttackSelector(GenericAttackSelectorConfig config)
     {
         _config = config;
     }
 
-    protected override bool OnLoad(Scene scene)
+    protected override void OnLoad(Scene scene)
     {
         this.LogMod($"Loading for scene {scene.name}");
 
-        if (!base.LoadSingleStateObjects(scene, _config))
-        {
-            return false;
-        }
+        LoadSingleStateObjects(scene, _config);
 
         //// If there is no mapping, cannot find a config.
         //if (!GodhomeUtils.SceneToBoss.ContainsKey(scene.name))
@@ -64,21 +61,6 @@ internal class GenericAttackSelector : SingleStateModule
             };
             _options.Add(opt);
         }
-
-
-//#if (DEBUG)
-//        // Log boss states as they are being entered.
-//        // Putting it here at the end of the method, because the method body can be adding states, which should also generate such log.
-//        foreach (var state in fsm.FsmStates)
-//        {
-//            state.InsertMethod(() =>
-//            {
-//                this.LogModFine($"Boss entering state {state.Name}");
-//            }, 0);
-//        }
-//#endif
-
-        return true;
     }
 
     protected override void OnUnload()

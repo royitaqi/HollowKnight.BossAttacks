@@ -15,6 +15,11 @@ internal abstract class Option
 
 	public delegate void MutatedHandler();
 	public event MutatedHandler Mutated;
+
+	protected void RaiseMutated()
+    {
+		Mutated?.Invoke();
+    }
 }
 
 internal class ReadMe : Option
@@ -40,7 +45,8 @@ internal class BooleanOption : Option
 	public override void Mutate()
     {
 		Value = !Value;
-    }
+		RaiseMutated();
+	}
 
 	private string _display;
 }

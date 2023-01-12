@@ -16,12 +16,11 @@ internal abstract class Module {
 	/**
 	 * Mod the fight.
 	 */
-	public bool Load(Scene scene)
+	public void Load(Scene scene)
     {
 		Debug.Assert(!Loaded, $"{GetType().Name} shouldn't be loaded");
-		bool ret = OnLoad(scene);
+		OnLoad(scene);
 		Loaded = true;
-		return ret;
 	}
 
 	/**
@@ -35,7 +34,7 @@ internal abstract class Module {
 		Loaded = false;
     }
 
-	protected abstract bool OnLoad(Scene scene);
+	protected abstract void OnLoad(Scene scene);
 	protected abstract void OnUnload();
 	internal bool Loaded { get; private set; }
 

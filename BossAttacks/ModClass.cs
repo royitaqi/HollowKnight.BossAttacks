@@ -32,7 +32,7 @@ namespace BossAttacks
             ModuleManager.Instance = new ModuleManager();
             ModDisplay.Instance = new ModDisplay();
 
-            USceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+            USceneManager.activeSceneChanged += SceneManager_OnActiveSceneChanged;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
 
             new Debugger().Load();
@@ -44,94 +44,58 @@ namespace BossAttacks
         {
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                UpdateOptionDisplay(USceneManager.GetActiveScene());
+                UpdateOptionDisplay();
             }
 
             int i = 0;
             // Order MATTERS
-            foreach (var m in ModuleManager.Instance.GetLoadedModules().OrderBy(m => m.Name))
+            foreach (var opt in ModuleManager.Instance.GetOptions())
             {
-                foreach (var kv in m.BooleanOptions.OrderBy(kv => kv.Key))
+                if (Input.GetKeyDown(KeyCode.Alpha0 + ++i))
                 {
-                    if (Input.GetKeyDown(KeyCode.Alpha0 + ++i))
-                    {
-                        this.LogModDebug($"Changing module {m.Name} option {kv.Key} from {kv.Value.Value} to {!kv.Value.Value}");
-                        kv.Value.Value = !kv.Value.Value;
-                    }
+                    this.LogModDebug($"Changing option {opt.Display}");
+                    opt.Mutate();
                 }
             }
         }
 
-        private void SceneManager_activeSceneChanged(Scene from, Scene to)
+        private void SceneManager_OnActiveSceneChanged(Scene from, Scene to)
         {
+            if (!ModuleManager.IsBossScene(to))
+            {
+                ModDisplay.Instance.Display("Enter a boss fight to see boss attacks.");
+                return;
+            }
+            if (!ModuleManager.IsSupportedBossScene(to))
+            {
+                ModDisplay.Instance.Display("This boss is not supported.");
+                return;
+            }
+            // Now it's a supported boss scene
+
             ModuleManager.Instance.Load(to);
-            UpdateOptionDisplay(to);
+            UpdateOptionDisplay();
 
-            // Order doesn't matter
-            foreach (var m in ModuleManager.Instance.GetLoadedModules())
+            foreach (var opt in ModuleManager.Instance.GetOptions())
             {
-                foreach (var o in m.BooleanOptions.Values)
+                if (opt.Mutable)
                 {
-                    o.OnSet.Add(_ => UpdateOptionDisplay(to));
-                    o.OnCannotSet.Add(_ => UpdateOptionDisplayWithError());
+                    opt.Mutated += UpdateOptionDisplay;
                 }
             }
         }
 
-        private void UpdateOptionDisplay(Scene to)
+        private void UpdateOptionDisplay()
         {
-            var toOnOff = (bool b) =>
-            {
-                return b ? "[ ✓ ]" : "[     ]";
-            };
-
             var sb = new StringBuilder();
             int i = 0;
-            // Order MATTERS
-            foreach (var m in ModuleManager.Instance.GetLoadedModules().OrderBy(m => m.Name))
+            foreach (var opt in ModuleManager.Instance.GetOptions())
             {
-                var options = m.BooleanOptions.OrderBy(kv => kv.Key).ToArray();
-
-                if (options.Length == 0)
-                {
-                    continue;
-                }
-                else if (options.Length == 1)
-                {
-                    // "1" - [   ] - DIVE IN
-                    // "2" - [ ✓ ] - DOLPHIN
-                    // "3" - [   ] - GROUND SLAM
-                    // "4" - [ ✓ ] - ROLL JUMP
-                    sb.AppendLine($"\"{++i}\" - {toOnOff(options[0].Value.Value)} - {options[0].Key}");
-                }
-                else
-                {
-                    sb.AppendLine($"{m.Name}:");
-                    foreach (var o in options)
-                    {
-                        sb.AppendLine($"        \"{++i}\" - {toOnOff(o.Value.Value)} - {o.Key}");
-                    }
-                }
+                sb.AppendLine($"\"{++i}\" - {opt.Display}");
             }
             this.LogModDebug(sb.ToString());
 
-            if (i == 0)
-            {
-                // No option was loaded. Display an introduction text.
-                if (GodhomeUtils.SceneToBoss.ContainsKey(to.name))
-                {
-                    ModDisplay.Instance.Display("This boss is not supported.");
-                }
-                else
-                {
-                    ModDisplay.Instance.Display("Enter a boss fight to see boss attacks.");
-                }
-            }
-            else
-            {
-                // Some option was loaded. Display the options.
-                ModDisplay.Instance.Display(sb.ToString());
-            }
+            ModDisplay.Instance.Display(sb.ToString());
         }
 
         private void UpdateOptionDisplayWithError()

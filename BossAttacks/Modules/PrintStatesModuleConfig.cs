@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace BossAttacks.Modules;
 
-internal abstract class SingleStateModuleConfig : SingleFsmModuleConfig
+internal class PrintStatesModuleConfig : SingleFsmModuleConfig
 {
-    public string StateName { get; set; }
+    public override Type ModuleType { get => typeof(PrintStatesModule); }
 }

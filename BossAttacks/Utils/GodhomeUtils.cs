@@ -81,7 +81,10 @@ namespace BossAttacks.Utils
             { "GG_Brooding_Mawlek_V" , null },
             { "GG_Collector"         , null },
             { "GG_Collector_V"       , null },
-            { "GG_Crystal_Guardian"  , null },
+            { "GG_Crystal_Guardian"  , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
+                new PrintStatesModuleConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
+            } },
             { "GG_Crystal_Guardian_2", null },
             { "GG_Dung_Defender"     , null },
             { "GG_Failed_Champion"   , null },
@@ -110,8 +113,9 @@ namespace BossAttacks.Utils
             { "GG_Hornet_1"          , null },
             { "GG_Hornet_2"          , null },
             { "GG_Lost_Kin"          , null },
-            { "GG_Mage_Knight"       , new[] {
-                new GenericAttackSelectorConfig { GoName = "Mage Knight", FsmName = "Mage Knight" },
+            { "GG_Mage_Knight"       , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision" },
+                new PrintStatesModuleConfig { GoName = "Mage Knight", FsmName = "Mage Knight" },
             } },
             { "GG_Mage_Knight_V"     , null },
             { "GG_Mantis_Lords"      , null },

@@ -20,6 +20,18 @@ namespace BossAttacks.Utils
         }
 
         // These logs are accepted:
+        // - Unexpected issue and NOT okay to continue.
+        public static void LogModError<T>(this T logger, string message)
+        {
+            if (LogLevel <= Modding.LogLevel.Error)
+            {
+                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
+                BossAttacks.Instance.LogError($"{time} [E] [{logger?.GetType()?.Name}] {message}");
+                throw new ModException(message);
+            }
+        }
+
+        // These logs are accepted:
         // - Unexpected issue but okay to continue.
         public static void LogModWarn<T>(this T logger, string message)
         {

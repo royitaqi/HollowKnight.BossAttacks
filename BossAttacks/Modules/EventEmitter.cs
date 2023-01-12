@@ -13,25 +13,20 @@ namespace BossAttacks.Modules;
 
 internal class EventEmitter : SingleStateModule
 {
-    internal EventEmitter(EventEmitterConfig config)
+    public EventEmitter(EventEmitterConfig config)
     {
         _config = config;
     }
 
-    protected override bool OnLoad(Scene scene)
+    protected override void OnLoad(Scene scene)
     {
         this.LogMod($"Loading for scene {scene.name}");
-        
-        if (!base.LoadSingleStateObjects(scene, _config))
-        {
-            return false;
-        }
+
+        LoadSingleStateObjects(scene, _config);
 
         var action = new NextFrameEvent { sendEvent = _fsm.FsmEvents.First(e => e.Name == _config.EventName) };
         action.Name = "EventEmitter";
         _state.InsertAction(action, 0);
-
-        return true;
     }
 
     protected override void OnUnload()
