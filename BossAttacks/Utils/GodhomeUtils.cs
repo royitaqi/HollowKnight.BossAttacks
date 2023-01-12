@@ -146,7 +146,11 @@ namespace BossAttacks.Utils
             } },
             { "GG_Hornet_1"          , null },
             { "GG_Hornet_2"          , null },
-            { "GG_Lost_Kin"          , null },
+            { "GG_Lost_Kin"          , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Lost Kin", FsmName = "IK Control" },
+                new GenericAttackSelectorConfig(),
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Mage_Knight"       , new ModuleConfig[] {
                 new DefaultConfig { GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision" },
                 new GenericAttackSelectorConfig(),
@@ -155,7 +159,11 @@ namespace BossAttacks.Utils
             { "GG_Mage_Knight_V"     , null },
             { "GG_Mantis_Lords"      , null },
             { "GG_Mantis_Lords_V"    , null },
-            { "GG_Mega_Moss_Charger" , null },
+            { "GG_Mega_Moss_Charger" , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Mega Moss Charger", FsmName = "Mossy Control" },
+                new GenericAttackSelectorConfig(),
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Nailmasters"       , null },
             { "GG_Nosk"              , null },
             { "GG_Nosk_Hornet"       , null },
@@ -165,7 +173,11 @@ namespace BossAttacks.Utils
             { "GG_Sly"               , null },
             { "GG_Soul_Master"       , null },
             { "GG_Soul_Tyrant"       , null },
-            { "GG_Traitor_Lord"      , null },
+            { "GG_Traitor_Lord" , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis" },
+                new GenericAttackSelectorConfig { IgnoreEvents = new() { "SLAM" } },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Uumuu"             , null },
             { "GG_Uumuu_V"           , null },
             { "GG_Vengefly"          , null },
