@@ -19,6 +19,8 @@ internal class PrintStatesModule : SingleFsmModule
 
     protected override void OnLoad(Scene scene)
     {
+        this.LogMod($"Loading for scene {scene.name}");
+
         LoadSingleFsmObjects(scene, _config);
 
         // Log boss states as they are being entered.

@@ -127,7 +127,11 @@ namespace BossAttacks.Utils
             { "GG_Ghost_No_Eyes_V"   , null },
             { "GG_Ghost_Xero"        , null },
             { "GG_Ghost_Xero_V"      , null },
-            { "GG_God_Tamer"         , null },
+            { "GG_God_Tamer"         , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Entry Object/Lobster", FsmName = "Control" },
+                new GenericAttackSelectorConfig { StateName = "Attack Choice", IgnoreEvents = new() { "FINISHED" } },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Grey_Prince_Zote"  , null },
             { "GG_Grimm"             , null },
             { "GG_Grimm_Nightmare"   , null },
