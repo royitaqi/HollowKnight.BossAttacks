@@ -28,8 +28,8 @@ internal class EventEmitter : SingleStateModule
         _state.InsertMethod(() =>
         {
             _fsm.SendEvent(_config.EventName);
-        }, _config.Index);
-        _state.Actions[_config.Index].Name = "EventEmitter";
+        }, 0);
+        _state.Actions[0].Name = "EventEmitter";
     }
 
     protected override void OnUnload()

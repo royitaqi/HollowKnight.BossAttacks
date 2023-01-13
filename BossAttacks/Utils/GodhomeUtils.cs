@@ -143,7 +143,13 @@ namespace BossAttacks.Utils
                 new GenericAttackSelectorConfig { StateName = "Attack Choice", IgnoreEvents = new() { "FINISHED" } },
                 new PrintStatesModuleConfig(),
             } },
-            { "GG_Grey_Prince_Zote"  , null },
+            { "GG_Grey_Prince_Zote"  , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Grey Prince", FsmName = "Control", StateName = "Move Choice 3" },
+                new GenericAttackSelectorConfig(),
+                new EventEmitterConfig { StateName = "Move Level", EventName = "3" },
+                new TransitionRewirerConfig { StateName = "Spit Antic", EventName = "CANCEL", ToState = "Idle Start" },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Grimm"             , null },
             { "GG_Grimm_Nightmare"   , new ModuleConfig[] {
                 new DefaultConfig { GoName = "Grimm Control/Nightmare Grimm Boss", FsmName = "Control", StateName = "Move Choice" },
