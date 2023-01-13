@@ -10,24 +10,24 @@ namespace BossAttacks.Modules;
 internal abstract class Option
 {
 	public abstract string Display { get; set; }
-	public abstract bool Mutable { get; }
-	public abstract void Mutate();
+	public abstract bool Interactive { get; }
+	public abstract void Interact();
 
-	public delegate void MutatedHandler();
-	public event MutatedHandler Mutated;
+	public delegate void InteractionHandler();
+	public event InteractionHandler Interacted;
 
 	protected void RaiseMutated()
     {
-		Mutated?.Invoke();
+		Interacted?.Invoke();
     }
 }
 
-internal class ReadMe : Option
+internal class MonoOption : Option
 {
 	public override string Display { get; set; }
-	public override bool Mutable { get => false; }
+	public override bool Interactive { get => false; }
 
-    public override void Mutate()
+    public override void Interact()
 	{
 		Debug.Assert(false, "Should not arrive here");
 	}
@@ -40,9 +40,9 @@ internal class BooleanOption : Option
 		get => (Value ? "[ ✓ ] - " : "[     ] - ") + _display;
 		set => _display = value;
 	}
-	public override bool Mutable { get => true; }
+	public override bool Interactive { get => true; }
 
-	public override void Mutate()
+	public override void Interact()
     {
 		Value = !Value;
 		RaiseMutated();

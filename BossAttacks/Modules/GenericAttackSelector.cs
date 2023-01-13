@@ -46,7 +46,7 @@ internal class GenericAttackSelector : SingleStateModule
 
             var originalToStateName = tran.ToState;
             var opt = new BooleanOption { Display = _config.MapEvent(eventName), Value = true };
-            opt.Mutated += () =>
+            opt.Interacted += () =>
             {
                 var toStateName = opt.Value ? originalToStateName : scpStateName;
                 _state.ChangeTransition(eventName, toStateName);
@@ -70,7 +70,7 @@ internal class GenericAttackSelector : SingleStateModule
             }
         }
 
-        // Remove SCP states
+        // Remove SCP state
         _fsm.RemoveState(_config.StateName + SHORT_CIRCUIT_PROTECTION_SUFFIX);
 
         base.UnloadSingleStateObjects();

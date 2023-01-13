@@ -54,7 +54,7 @@ namespace BossAttacks
                 if (Input.GetKeyDown(KeyCode.Alpha0 + ++i))
                 {
                     this.LogModDebug($"Changing option {opt.Display}");
-                    opt.Mutate();
+                    opt.Interact();
                 }
             }
         }
@@ -78,9 +78,9 @@ namespace BossAttacks
 
             foreach (var opt in ModuleManager.Instance.GetOptions())
             {
-                if (opt.Mutable)
+                if (opt.Interactive)
                 {
-                    opt.Mutated += UpdateOptionDisplay;
+                    opt.Interacted += UpdateOptionDisplay;
                 }
             }
         }
