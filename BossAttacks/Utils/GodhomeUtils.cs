@@ -185,7 +185,12 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { StateName = "Can Throw?", EventName = "CAN THROW" },
                 new PrintStatesModuleConfig(),
             } },
-            { "GG_Hornet_2"          , null },
+            { "GG_Hornet_2"          , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Boss Holder/Hornet Boss 2", FsmName = "Control", StateName = "Move Choice A" },
+                new GenericAttackSelectorConfig(),
+                new EventEmitterConfig { StateName = "Can Throw?", EventName = "CAN THROW" },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Lost_Kin"          , new ModuleConfig[] {
                 new DefaultConfig { GoName = "Lost Kin", FsmName = "IK Control" },
                 new GenericAttackSelectorConfig(),
