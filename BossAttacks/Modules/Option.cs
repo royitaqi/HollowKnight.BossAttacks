@@ -35,7 +35,7 @@ internal class MonoOption : Option
 
 internal class BooleanOption : Option
 {
-	public bool Value { get; set; }
+	public bool Value { get; private set; }
 	public override string Display {
 		get => (Value ? "[ ✓ ] - " : "[     ] - ") + _display;
 		set => _display = value;

@@ -80,7 +80,7 @@ namespace BossAttacks.Utils
                 new DefaultConfig { GoName = "Infected Knight", FsmName = "IK Control" },
                 new GenericAttackSelectorConfig(),
                 new LevelChangerModuleConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Reversable = true },
-                new VariableSetterConfig { L = 1, H = 1,
+                new VariableSetterConfig { L = 1, H = 1, StateName = "Idle",
                     BoolVariables = new KeyValuePair<string, bool>[]
                     {
                         new("Do Shake", true),

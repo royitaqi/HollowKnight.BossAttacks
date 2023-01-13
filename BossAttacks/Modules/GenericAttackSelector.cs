@@ -46,7 +46,8 @@ internal class GenericAttackSelector : SingleStateModule
             }
 
             var originalToStateName = tran.ToState;
-            var opt = new BooleanOption { Display = _config.MapEvent(eventName), Value = true };
+            var opt = new BooleanOption { Display = _config.MapEvent(eventName) };
+            opt.Interact(); // set value to true
             opt.Interacted += () =>
             {
                 var toStateName = opt.Value ? originalToStateName : scpStateName;
@@ -67,7 +68,7 @@ internal class GenericAttackSelector : SingleStateModule
             var opt = o as BooleanOption;
             if (!opt.Value)
             {
-                opt.Value = true;
+                opt.Interact();
             }
         }
 
