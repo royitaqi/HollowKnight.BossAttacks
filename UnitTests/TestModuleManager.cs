@@ -1,3 +1,5 @@
+using BossAttacks.Modules.Generic;
+
 namespace UnitTests
 {
     [TestClass]

@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using BossAttacks.Modules;
+using BossAttacks.Modules.Generic;
 
 namespace BossAttacks.Utils
 {

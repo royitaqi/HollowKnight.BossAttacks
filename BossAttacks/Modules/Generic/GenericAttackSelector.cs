@@ -1,21 +1,12 @@
-using UnityEngine.SceneManagement;
-using HutongGames.PlayMaker;
 using BossAttacks.Utils;
 using SFCore.Utils;
-using System.Linq;
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using HutongGames.PlayMaker.Actions;
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
-namespace BossAttacks.Modules;
+namespace BossAttacks.Modules.Generic;
 
 internal class GenericAttackSelector : SingleStateModule
 {
-    //public override string Name => "Select Attacks";
-
-    const string SHORT_CIRCUIT_PROTECTION_SUFFIX = " SCP";
+    public const string SHORT_CIRCUIT_PROTECTION_SUFFIX = " SCP";
 
     public GenericAttackSelector(Scene scene, GenericAttackSelectorConfig config, ModuleManager mgr)
     {
@@ -75,7 +66,7 @@ internal class GenericAttackSelector : SingleStateModule
         // Remove SCP state
         _fsm.RemoveState(_config.StateName + SHORT_CIRCUIT_PROTECTION_SUFFIX);
 
-        base.UnloadSingleStateObjects();
+        UnloadSingleStateObjects();
     }
 
     private Scene _scene;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using UnityEngine.SceneManagement;
-
-namespace BossAttacks.Modules;
+﻿namespace BossAttacks.Modules;
 
 
 internal abstract class Option
@@ -16,7 +10,7 @@ internal abstract class Option
 	public delegate void InteractionHandler();
 	public event InteractionHandler Interacted;
 
-	protected void RaiseMutated()
+	protected void RaiseInteracted()
     {
 		Interacted?.Invoke();
     }
@@ -29,7 +23,7 @@ internal class MonoOption : Option
 
     public override void Interact()
 	{
-		RaiseMutated();
+		RaiseInteracted();
 	}
 }
 
@@ -45,7 +39,7 @@ internal class BooleanOption : Option
 	public override void Interact()
     {
 		Value = !Value;
-		RaiseMutated();
+		RaiseInteracted();
 	}
 
 	private string _display;

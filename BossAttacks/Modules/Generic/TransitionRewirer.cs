@@ -1,15 +1,8 @@
-using UnityEngine.SceneManagement;
-using HutongGames.PlayMaker;
 using BossAttacks.Utils;
 using SFCore.Utils;
-using System.Linq;
-using System;
-using System.Reflection;
-using System.Collections.Generic;
-using HutongGames.PlayMaker.Actions;
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
-namespace BossAttacks.Modules;
+namespace BossAttacks.Modules.Generic;
 
 internal class TransitionRewirer : SingleStateModule
 {

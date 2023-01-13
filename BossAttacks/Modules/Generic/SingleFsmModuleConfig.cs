@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using UnityEngine.SceneManagement;
-
-namespace BossAttacks.Modules;
+namespace BossAttacks.Modules.Generic;
 
 internal abstract class SingleFsmModuleConfig : ModuleConfig
 {

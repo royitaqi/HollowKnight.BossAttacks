@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
+using BossAttacks.Modules.Generic;
 using BossAttacks.Utils;
 using UnityEngine.SceneManagement;
 

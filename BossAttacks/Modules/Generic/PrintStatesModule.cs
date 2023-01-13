@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using BossAttacks.Utils;
-using HutongGames.PlayMaker;
 using SFCore.Utils;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace BossAttacks.Modules;
+namespace BossAttacks.Modules.Generic;
 
 internal class PrintStatesModule : SingleFsmModule
 {
