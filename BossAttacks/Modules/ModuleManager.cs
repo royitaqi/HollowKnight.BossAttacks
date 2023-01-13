@@ -41,13 +41,14 @@ internal class ModuleManager {
 
                 var type = config.ModuleType;
                 var module = Activator.CreateInstance(type, scene, config, this) as Module;
+                module.L = config.L;
+                module.H = config.H;
                 _modules.Add(module);
             }
         }
-
         this.LogModDebug($"Modules: ({_modules.Count}) {String.Join(", ", _modules.Select(m => m.GetType().Name))}");
 
-        // Add logic to subscribe to option change and implement inter-module logic
+        ChangeLevel(0);
     }
 
     public void Unload()
@@ -66,8 +67,9 @@ internal class ModuleManager {
         return _modules.SelectMany(m => m.Options);
     }
 
-    public void ChangeLevel(int level)
+    public int ChangeLevel(int level)
     {
+        int originalLevel = _level;
         _level = level;
         foreach (var m in _modules)
         {
@@ -81,6 +83,7 @@ internal class ModuleManager {
                 m.Unload();
             }
         }
+        return originalLevel;
     }
 
     internal static void PropagateConfig(DefaultConfig from, ModuleConfig to)

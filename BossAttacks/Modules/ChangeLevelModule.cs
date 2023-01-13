@@ -23,6 +23,13 @@ internal class ChangeLevelModule : SingleFsmModule
     {
         this.LogMod($"Loading module");
 
+        Option opt = _config.Reversable ? new MonoOption() : new BooleanOption();
+        opt.Display = _config.OptionDisplay;
+        _targetL = _config.TargetL;
+        opt.Interacted += () =>
+        {
+            _targetL = _mgr.ChangeLevel(_targetL);
+        };
     }
 
     protected override void OnUnload()
@@ -32,4 +39,5 @@ internal class ChangeLevelModule : SingleFsmModule
     private Scene _scene;
     private ChangeLevelModuleConfig _config;
     private ModuleManager _mgr;
+    private int _targetL;
 }
