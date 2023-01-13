@@ -28,24 +28,26 @@ internal class ModuleManager {
 
         Debug.Assert(IsSupportedBossScene(scene), "The current scene should be a supported boss scene.");
 
-        DefaultConfig defaultConfig = null;
+        var dict = new Dictionary<string, object>();
         foreach (var config in GodhomeUtils.SceneToModuleConfigs[scene.name])
         {
-            if (config is DefaultConfig)
-            {
-                defaultConfig = config as DefaultConfig;
-            }
-            else
-            {
-                PropagateConfig(defaultConfig, config);
+            // Propagate values between dict and config
+            PropagateConfig(dict, config);
 
-                var type = config.ModuleType;
-                var module = Activator.CreateInstance(type, scene, config, this) as Module;
-                module.L = config.L;
-                module.H = config.H;
-                _modules.Add(module);
-            }
+            // Create module
+            var type = config.ModuleType;
+            var module = Activator.CreateInstance(type, scene, config, this) as Module;
+            module.L = config.L;
+            module.H = config.H;
+            _modules.Add(module);
         }
+
+        // Create PrintStatesModules
+        foreach (var config in GetPrintStatesModuleConfigs(GodhomeUtils.SceneToModuleConfigs[scene.name]))
+        {
+            _modules.Add(new PrintStatesModule(scene, config, this));
+        }
+
         this.LogModDebug($"Modules: ({_modules.Count}) {String.Join(", ", _modules.Select(m => m.GetType().Name))}");
 
         ChangeLevel(0);
@@ -90,35 +92,41 @@ internal class ModuleManager {
         return originalLevel;
     }
 
-    internal static void PropagateConfig(DefaultConfig from, ModuleConfig to)
+    internal static void PropagateConfig(Dictionary<string, object> dict, ModuleConfig config)
     {
-        if (from == null)
+        foreach (var prop in config.GetType().GetProperties())
         {
-            return;
+            // Cannot propagate to something whose state cannot be verified
+            if (!prop.CanRead)
+            {
+                continue;
+            }
+            var v = prop.GetValue(config);
+            // Propagate: config -> dict
+            if (v != null && !dict.ContainsKey(prop.Name))
+            {
+                dict[prop.Name] = v;
+            }
+            else if (prop.CanWrite && dict.ContainsKey(prop.Name) && v == null)
+            {
+                prop.SetValue(config, dict[prop.Name]);
+            }
         }
+    }
 
-        var fromProps = from.GetType().GetProperties();
-        foreach (var fp in fromProps)
-        {
-            if (!fp.CanRead)
-            {
-                continue;
-            }
-            var fv = fp.GetValue(from);
-            if (fv == null)
-            {
-                continue;
-            }
-
-            var tp = to.GetType().GetProperty(fp.Name);
-            if (tp == null || !fp.CanRead || !fp.CanWrite || tp.GetValue(to) != null)
-            {
-                continue;
-            }
-
-            // Propagate
-            tp.SetValue(to, fv);
-        }
+    internal static IEnumerable<PrintStatesModuleConfig> GetPrintStatesModuleConfigs(ModuleConfig[] configs)
+    {
+        int l = configs.Select(c => c.L).Min();
+        int h = configs.Select(c => c.H).Max();
+        return configs
+            .Select(c => c as SingleFsmModuleConfig)
+            .Where(c => c != null)
+            .Select(c => c.GoName + ":" + c.FsmName)
+            .Distinct()
+            .Select(s => {
+                var parts = s.Split(':');
+                return new PrintStatesModuleConfig { L = l, H = h, GoName = parts[0], FsmName = parts[1] };
+            });
     }
 
     private List<Module> _modules = new();
