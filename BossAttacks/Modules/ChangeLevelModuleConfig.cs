@@ -5,8 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace BossAttacks.Modules;
 
-internal abstract class SingleFsmModuleConfig : ModuleConfig
+internal class ChangeLevelModuleConfig : ModuleConfig
 {
-    public string GoName { get; set; }
-    public string FsmName { get; set; }
+    public override Type ModuleType => typeof(ChangeLevelModule);
 }

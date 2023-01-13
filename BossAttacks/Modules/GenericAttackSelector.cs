@@ -17,16 +17,17 @@ internal class GenericAttackSelector : SingleStateModule
 
     const string SHORT_CIRCUIT_PROTECTION_SUFFIX = " SCP";
 
-    public GenericAttackSelector(GenericAttackSelectorConfig config)
+    public GenericAttackSelector(Scene scene, GenericAttackSelectorConfig config, ModuleManager mgr)
     {
+        _scene = scene;
         _config = config;
     }
 
-    protected override void OnLoad(Scene scene)
+    protected override void OnLoad()
     {
-        this.LogMod($"Loading for scene {scene.name}");
+        this.LogMod($"Loading for scene {_scene.name}");
 
-        LoadSingleStateObjects(scene, _config);
+        LoadSingleStateObjects(_scene, _config);
 
         // Short circuit protection (SCP).
         // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
@@ -76,5 +77,6 @@ internal class GenericAttackSelector : SingleStateModule
         base.UnloadSingleStateObjects();
     }
 
+    private Scene _scene;
     private GenericAttackSelectorConfig _config;
 }

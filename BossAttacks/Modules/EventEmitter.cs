@@ -13,16 +13,17 @@ namespace BossAttacks.Modules;
 
 internal class EventEmitter : SingleStateModule
 {
-    public EventEmitter(EventEmitterConfig config)
+    public EventEmitter(Scene scene, EventEmitterConfig config, ModuleManager mgr)
     {
+        _scene = scene;
         _config = config;
     }
 
-    protected override void OnLoad(Scene scene)
+    protected override void OnLoad()
     {
-        this.LogMod($"Loading for scene {scene.name}");
+        this.LogMod($"Loading for scene {_scene.name}");
 
-        LoadSingleStateObjects(scene, _config);
+        LoadSingleStateObjects(_scene, _config);
 
         _state.InsertMethod(() =>
         {
@@ -36,5 +37,6 @@ internal class EventEmitter : SingleStateModule
         _state.RemoveActionByName("EventEmitter");
     }
 
+    private Scene _scene;
     private EventEmitterConfig _config;
 }

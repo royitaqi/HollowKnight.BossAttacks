@@ -14,12 +14,19 @@ internal abstract class Module {
 	public virtual int Priority => 0;
 
 	/**
+	 * The level range where this module should be loaded.
+	 * Low (L) and high (H) are both inclusive.
+	 */
+	public int L { get; set; }
+	public int H { get; set; }
+
+	/**
 	 * Mod the fight.
 	 */
-	public void Load(Scene scene)
+	public void Load()
     {
 		Debug.Assert(!Loaded, $"{GetType().Name} shouldn't be loaded");
-		OnLoad(scene);
+		OnLoad();
 		Loaded = true;
 	}
 
@@ -34,7 +41,7 @@ internal abstract class Module {
 		Loaded = false;
     }
 
-	protected abstract void OnLoad(Scene scene);
+	protected abstract void OnLoad();
 	protected abstract void OnUnload();
 	internal bool Loaded { get; private set; }
 

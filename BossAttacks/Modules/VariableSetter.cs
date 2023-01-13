@@ -13,16 +13,17 @@ namespace BossAttacks.Modules;
 
 internal class VariableSetter : SingleStateModule
 {
-    public VariableSetter(VariableSetterConfig config)
+    public VariableSetter(Scene scene, VariableSetterConfig config, ModuleManager mgr)
     {
+        _scene = scene;
         _config = config;
     }
 
-    protected override void OnLoad(Scene scene)
+    protected override void OnLoad()
     {
-        this.LogMod($"Loading for scene {scene.name}");
+        this.LogMod($"Loading for scene {_scene.name}");
 
-        LoadSingleStateObjects(scene, _config);
+        LoadSingleStateObjects(_scene, _config);
 
         _state.InsertMethod(() => {
             if (_config.BoolVariables != null)
@@ -48,5 +49,6 @@ internal class VariableSetter : SingleStateModule
         _state.RemoveActionByName("VariableSetter");
     }
 
+    private Scene _scene;
     private VariableSetterConfig _config;
 }

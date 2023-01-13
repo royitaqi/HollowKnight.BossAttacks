@@ -12,16 +12,17 @@ namespace BossAttacks.Modules;
 
 internal class PrintStatesModule : SingleFsmModule
 {
-    public PrintStatesModule(PrintStatesModuleConfig config)
+    public PrintStatesModule(Scene scene, PrintStatesModuleConfig config, ModuleManager mgr)
     {
+        _scene = scene;
         _config = config;
     }
 
-    protected override void OnLoad(Scene scene)
+    protected override void OnLoad()
     {
-        this.LogMod($"Loading for scene {scene.name}");
+        this.LogMod($"Loading for scene {_scene.name}");
 
-        LoadSingleFsmObjects(scene, _config);
+        LoadSingleFsmObjects(_scene, _config);
 
         // Log boss states as they are being entered.
         // Putting it here at the end of the method, because the method body can be adding states, which should also generate such log.
@@ -38,5 +39,6 @@ internal class PrintStatesModule : SingleFsmModule
     {
     }
 
+    private Scene _scene;
     private PrintStatesModuleConfig _config;
 }

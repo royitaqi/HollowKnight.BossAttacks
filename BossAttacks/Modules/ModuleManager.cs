@@ -28,9 +28,8 @@ internal class ModuleManager {
 
         Debug.Assert(IsSupportedBossScene(scene), "The current scene should be a supported boss scene.");
 
-        var moduleConfigs = GodhomeUtils.SceneToModuleConfigs[scene.name];
         DefaultConfig defaultConfig = null;
-        foreach (var config in moduleConfigs)
+        foreach (var config in GodhomeUtils.SceneToModuleConfigs[scene.name])
         {
             if (config is DefaultConfig)
             {
@@ -41,13 +40,12 @@ internal class ModuleManager {
                 PropagateConfig(defaultConfig, config);
 
                 var type = config.ModuleType;
-                var module = Activator.CreateInstance(type, config) as Module;
-                module.Load(scene);
-                _loadedModules.Add(module);
+                var module = Activator.CreateInstance(type, scene, config, this) as Module;
+                _modules.Add(module);
             }
         }
 
-        this.LogModDebug($"Loaded modules: ({_loadedModules.Count}) {String.Join(", ", _loadedModules.Select(m => m.GetType().Name))}");
+        this.LogModDebug($"Modules: ({_modules.Count}) {String.Join(", ", _modules.Select(m => m.GetType().Name))}");
 
         // Add logic to subscribe to option change and implement inter-module logic
     }
@@ -55,16 +53,34 @@ internal class ModuleManager {
     public void Unload()
     {
         this.LogMod("Unload");
-        foreach (var module in _loadedModules)
+        foreach (var module in _modules)
         {
             module.Unload();
         }
-        _loadedModules.Clear();
+        _modules.Clear();
+        _level = 0;
     }
 
     public IEnumerable<Option> GetOptions()
     {
-        return _loadedModules.SelectMany(m => m.Options);
+        return _modules.SelectMany(m => m.Options);
+    }
+
+    public void ChangeLevel(int level)
+    {
+        _level = level;
+        foreach (var m in _modules)
+        {
+            bool shouldBeLoaded = m.L <= _level && _level <= m.H;
+            if (shouldBeLoaded && !m.Loaded)
+            {
+                m.Load();
+            }
+            else if (!shouldBeLoaded && m.Loaded)
+            {
+                m.Unload();
+            }
+        }
     }
 
     internal static void PropagateConfig(DefaultConfig from, ModuleConfig to)
@@ -111,5 +127,6 @@ internal class ModuleManager {
     //    .Select(type => Activator.CreateInstance(type) as Module)
     //    .OrderBy(module => module.Priority);
 
-    private List<Module> _loadedModules = new();
+    private List<Module> _modules = new();
+    private int _level;
 }
