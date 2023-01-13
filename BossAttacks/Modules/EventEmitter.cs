@@ -34,6 +34,7 @@ internal class EventEmitter : SingleStateModule
 
     protected override void OnUnload()
     {
+        this.LogMod($"Unloading");
         _state.RemoveActionByName("EventEmitter");
     }
 

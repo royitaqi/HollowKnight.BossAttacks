@@ -29,7 +29,7 @@ internal class MonoOption : Option
 
     public override void Interact()
 	{
-		Debug.Assert(false, "Should not arrive here");
+		RaiseMutated();
 	}
 }
 

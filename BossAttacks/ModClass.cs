@@ -73,16 +73,18 @@ namespace BossAttacks
             }
             // Now it's a supported boss scene
 
-            ModuleManager.Instance.Load(to);
-            UpdateOptionDisplay();
-
-            foreach (var opt in ModuleManager.Instance.GetOptions())
+            ModuleManager.Instance.OptionsChanged += () =>
             {
-                if (opt.Interactive)
+                UpdateOptionDisplay();
+                foreach (var opt in ModuleManager.Instance.GetOptions())
                 {
-                    opt.Interacted += UpdateOptionDisplay;
+                    if (opt.Interactive)
+                    {
+                        opt.Interacted += UpdateOptionDisplay;
+                    }
                 }
-            }
+            };
+            ModuleManager.Instance.Load(to);
         }
 
         private void UpdateOptionDisplay()

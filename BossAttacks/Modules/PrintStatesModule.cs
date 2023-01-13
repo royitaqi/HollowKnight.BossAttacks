@@ -37,6 +37,7 @@ internal class PrintStatesModule : SingleFsmModule
 
     protected override void OnUnload()
     {
+        this.LogMod($"Unloading");
     }
 
     private Scene _scene;

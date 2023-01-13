@@ -5,14 +5,14 @@ using UnityEngine.SceneManagement;
 
 namespace BossAttacks.Modules;
 
-internal class ChangeLevelModuleConfig : ModuleConfig
+internal class LevelChangerModuleConfig : ModuleConfig
 {
-    public override Type ModuleType => typeof(ChangeLevelModule);
+    public override Type ModuleType => typeof(LevelChangerModule);
 
     /**
      * Text to display as option.
      */
-    public string OptionDisplay { get; set; }
+    public string Display { get; set; }
 
     /**
      * What level to change into when interacted.

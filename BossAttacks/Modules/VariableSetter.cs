@@ -46,6 +46,7 @@ internal class VariableSetter : SingleStateModule
 
     protected override void OnUnload()
     {
+        this.LogMod($"Unloading");
         _state.RemoveActionByName("VariableSetter");
     }
 

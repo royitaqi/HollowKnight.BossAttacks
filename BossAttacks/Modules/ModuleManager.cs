@@ -67,6 +67,9 @@ internal class ModuleManager {
         return _modules.SelectMany(m => m.Options);
     }
 
+    public delegate void OptionsChangedHandler();
+    public event OptionsChangedHandler OptionsChanged;
+
     public int ChangeLevel(int level)
     {
         int originalLevel = _level;
@@ -83,6 +86,7 @@ internal class ModuleManager {
                 m.Unload();
             }
         }
+        OptionsChanged?.Invoke();
         return originalLevel;
     }
 
@@ -116,19 +120,6 @@ internal class ModuleManager {
             tp.SetValue(to, fv);
         }
     }
-
-    //public IEnumerable<Module> GetLoadedModules()
-    //{
-    //    return _loadedModules;
-    //}
-
-    //private static IEnumerable<Module> FindModules() => Assembly
-    //    .GetExecutingAssembly()
-    //    .GetTypes()
-    //    .Where(type => type.IsSubclassOf(typeof(Module)))
-    //    .Where(type => !type.IsAbstract)
-    //    .Select(type => Activator.CreateInstance(type) as Module)
-    //    .OrderBy(module => module.Priority);
 
     private List<Module> _modules = new();
     private int _level;

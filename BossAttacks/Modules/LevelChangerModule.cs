@@ -10,9 +10,9 @@ using UnityEngine.SceneManagement;
 
 namespace BossAttacks.Modules;
 
-internal class ChangeLevelModule : SingleFsmModule
+internal class LevelChangerModule : SingleFsmModule
 {
-    public ChangeLevelModule(Scene scene, ChangeLevelModuleConfig config, ModuleManager mgr)
+    public LevelChangerModule(Scene scene, LevelChangerModuleConfig config, ModuleManager mgr)
     {
         _scene = scene;
         _config = config;
@@ -21,23 +21,26 @@ internal class ChangeLevelModule : SingleFsmModule
 
     protected override void OnLoad()
     {
-        this.LogMod($"Loading module");
+        this.LogMod($"Loading");
 
-        Option opt = _config.Reversable ? new MonoOption() : new BooleanOption();
-        opt.Display = _config.OptionDisplay;
+        Option opt = _config.Reversable ? new BooleanOption() : new MonoOption();
+        opt.Display = _config.Display;
         _targetL = _config.TargetL;
         opt.Interacted += () =>
         {
+            this.LogModDebug($"Changing level to {_targetL}");
             _targetL = _mgr.ChangeLevel(_targetL);
         };
+        _options.Add(opt);
     }
 
     protected override void OnUnload()
     {
+        this.LogMod($"Unloading");
     }
 
     private Scene _scene;
-    private ChangeLevelModuleConfig _config;
+    private LevelChangerModuleConfig _config;
     private ModuleManager _mgr;
     private int _targetL;
 }

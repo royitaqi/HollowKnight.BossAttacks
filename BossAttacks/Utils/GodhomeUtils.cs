@@ -76,7 +76,18 @@ namespace BossAttacks.Utils
 
         public static readonly Dictionary<string, ModuleConfig[]> SceneToModuleConfigs = new()
         {
-            { "GG_Broken_Vessel"     , null },
+            { "GG_Broken_Vessel"     , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Infected Knight", FsmName = "IK Control" },
+                new GenericAttackSelectorConfig(),
+                new LevelChangerModuleConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Reversable = true },
+                new VariableSetterConfig { L = 1, H = 1,
+                    BoolVariables = new KeyValuePair<string, bool>[]
+                    {
+                        new("Do Shake", true),
+                    },
+                },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Brooding_Mawlek"   , new ModuleConfig[] {
                 new DefaultConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control" },
                 new GenericAttackSelectorConfig { StateName = "Super Select", MapEvents = new() { { "TRUE", "SPIT" }, { "FALSE", "JUMP" } } },

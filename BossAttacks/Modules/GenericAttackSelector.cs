@@ -59,7 +59,7 @@ internal class GenericAttackSelector : SingleStateModule
 
     protected override void OnUnload()
     {
-        this.LogMod("Unload()");
+        this.LogMod($"Unloading");
 
         // Turn all attacks back on when the module is unloaded.
         foreach (var o in _options)
