@@ -172,7 +172,12 @@ namespace BossAttacks.Utils
                 new PrintStatesModuleConfig(),
             } },
             { "GG_Gruz_Mother_V"     , null },
-            { "GG_Hive_Knight"       , null },
+            { "GG_Hive_Knight"       , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Battle Scene/Hive Knight", FsmName = "Control", StateName = "Phase 3" },
+                new GenericAttackSelectorConfig { IgnoreEvents = new() { "JUMP" } },
+                new EventEmitterConfig { StateName = "Phase Check", EventName = "P3" },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Hollow_Knight"     , new ModuleConfig[] {
                 new DefaultConfig { GoName = "HK Prime", FsmName = "Control" },
                 new EventEmitterConfig { StateName = "Phase?", EventName = "PHASE3" },
