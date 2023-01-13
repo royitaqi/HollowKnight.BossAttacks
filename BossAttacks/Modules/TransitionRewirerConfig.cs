@@ -11,9 +11,9 @@ using UnityEngine;
 
 namespace BossAttacks.Modules;
 
-internal class EventEmitterConfig : SingleStateModuleConfig
+internal class TransitionRewirerConfig : SingleStateModuleConfig
 {
-    public override Type ModuleType => typeof(EventEmitter);
+    public override Type ModuleType => typeof(TransitionRewirer);
     public string EventName { get; set; }
-    public int Index { get; set; }
+    public string ToState { get; set; }
 }

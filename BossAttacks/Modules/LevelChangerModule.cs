@@ -37,6 +37,7 @@ internal class LevelChangerModule : SingleFsmModule
     protected override void OnUnload()
     {
         this.LogMod($"Unloading");
+        _targetL = 0;
     }
 
     private Scene _scene;

@@ -11,9 +11,9 @@ using UnityEngine;
 
 namespace BossAttacks.Modules;
 
-internal class EventEmitter : SingleStateModule
+internal class TransitionRewirer : SingleStateModule
 {
-    public EventEmitter(Scene scene, EventEmitterConfig config, ModuleManager mgr)
+    public TransitionRewirer(Scene scene, TransitionRewirerConfig config, ModuleManager mgr)
     {
         _scene = scene;
         _config = config;
@@ -25,19 +25,18 @@ internal class EventEmitter : SingleStateModule
 
         LoadSingleStateObjects(_scene, _config);
 
-        _state.InsertMethod(() =>
-        {
-            _fsm.SendEvent(_config.EventName);
-        }, _config.Index);
-        _state.Actions[_config.Index].Name = "EventEmitter";
+        _originalToState = _state.GetTransition(_config.EventName).ToState;
+        _state.ChangeTransition(_config.EventName, _config.ToState);
     }
 
     protected override void OnUnload()
     {
         this.LogMod($"Unloading");
-        _state.RemoveActionByName("EventEmitter");
+        _state.ChangeTransition(_config.EventName, _originalToState);
+        _originalToState = null;
     }
 
     private Scene _scene;
-    private EventEmitterConfig _config;
+    private TransitionRewirerConfig _config;
+    private string _originalToState;
 }

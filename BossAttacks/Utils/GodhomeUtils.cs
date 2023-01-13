@@ -86,7 +86,7 @@ namespace BossAttacks.Utils
                         new("Do Shake", true),
                     },
                 },
-                new PrintStatesModuleConfig(),
+                new PrintStatesModuleConfig { L = 0, H = 1 },
             } },
             { "GG_Brooding_Mawlek"   , new ModuleConfig[] {
                 new DefaultConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control" },
@@ -145,7 +145,20 @@ namespace BossAttacks.Utils
             } },
             { "GG_Grey_Prince_Zote"  , null },
             { "GG_Grimm"             , null },
-            { "GG_Grimm_Nightmare"   , null },
+            { "GG_Grimm_Nightmare"   , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Grimm Control/Nightmare Grimm Boss", FsmName = "Control", StateName = "Move Choice" },
+                new GenericAttackSelectorConfig { IgnoreEvents = new() { "BALLOON" } },
+                new EventEmitterConfig { StateName = "After Evade", EventName = "SLASH" }, // Skip possible firebats after evade in SLASH
+                new VariableSetterConfig {
+                    BoolVariables = new KeyValuePair<string, bool>[]
+                    {
+                        new("First Move", true), // Remove the constraint that "first attack must be SLASH", because the user could have already unselected SLASH
+                    },
+                },
+                new LevelChangerModuleConfig { L = 0, H = 1, Display = "BALLOON (exclusive)", TargetL = 1, Reversable = true },
+                new EventEmitterConfig { L = 1, H = 1, EventName = "BALLOON" }, // enable BALLOON
+                new PrintStatesModuleConfig { L = 0, H = 1 },
+            } },
             { "GG_Gruz_Mother"       , new ModuleConfig[] {
                 new DefaultConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
                 new GenericAttackSelectorConfig(),
@@ -190,7 +203,18 @@ namespace BossAttacks.Utils
             { "GG_Nosk"              , null },
             { "GG_Nosk_Hornet"       , null },
             { "GG_Oblobbles"         , null },
-            { "GG_Painter"           , null },
+            { "GG_Painter"           , null }, // Complex. Need more understanding.
+            //{ "GG_Painter"           , new ModuleConfig[] {
+            //    new DefaultConfig { GoName = "Battle Scene/Sheo Boss", FsmName = "nailmaster_sheo", StateName = "Choice" },
+            //    new GenericAttackSelectorConfig { IgnoreEvents = new() { "GREAT SLASH" } },
+            //    new LevelChangerModuleConfig { L = 0, H = 1, Display = "GREAT SLASH (exclusive)", TargetL = 1, Reversable = true },
+            //    new VariableSetterConfig { L = 1, H = 1,
+            //        IntVariables = new KeyValuePair<string, int>[]
+            //        {
+            //            new("Art Counter", 0),
+            //        },
+            //    },
+            //} },
             { "GG_Radiance"          , null },
             { "GG_Sly"               , null },
             { "GG_Soul_Master"       , null },

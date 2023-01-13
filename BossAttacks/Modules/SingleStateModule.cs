@@ -29,7 +29,7 @@ internal abstract class SingleStateModule : SingleFsmModule
         {
             _state = _fsm.GetState(config.StateName);
         }
-        this.LogModDebug($"State: {_state.Name}");
+        this.LogModDebug($"State = {_state.Name}");
     }
 
     protected void UnloadSingleStateObjects()
