@@ -191,7 +191,9 @@ namespace BossAttacks.Utils
                 new GenericAttackSelectorConfig { GoName = "Mega Moss Charger", FsmName = "Mossy Control" },
             } },
             { "GG_Nailmasters"       , null },
-            { "GG_Nosk"              , null },
+            { "GG_Nosk"              , new ModuleConfig[] {
+                new NoskConfig { GoName = "Mimic Spider", FsmName = "Mimic Spider" }, // Custom module
+            } },
             { "GG_Nosk_Hornet"       , new ModuleConfig[] {
                 new GenericAttackSelectorConfig { GoName = "Battle Scene/Hornet Nosk", FsmName = "Hornet Nosk", StateName = "Choose Attack 2" },
                 new EventEmitterConfig { StateName = "Choose Attack", EventName = "HALF" },
