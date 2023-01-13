@@ -109,7 +109,7 @@ namespace BossAttacks.Utils
                         new("Slam In A Row", 0),
                         new("Jump Count", 0),
                         new("Stunned Amount", -9),
-                    }
+                    },
                 },
                 new PrintStatesModuleConfig(),
             } },
@@ -135,7 +135,18 @@ namespace BossAttacks.Utils
             { "GG_Grey_Prince_Zote"  , null },
             { "GG_Grimm"             , null },
             { "GG_Grimm_Nightmare"   , null },
-            { "GG_Gruz_Mother"       , null },
+            { "GG_Gruz_Mother"       , new ModuleConfig[] {
+                new DefaultConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
+                new GenericAttackSelectorConfig(),
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Slams In A Row", 0),
+                        new("Charges In A Row", 0),
+                    },
+                },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Gruz_Mother_V"     , null },
             { "GG_Hive_Knight"       , null },
             { "GG_Hollow_Knight"     , new ModuleConfig[] {
