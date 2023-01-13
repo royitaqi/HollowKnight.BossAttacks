@@ -125,19 +125,19 @@ namespace BossAttacks.Utils
                 new PrintStatesModuleConfig(),
             } },
             { "GG_False_Knight"      , null },
-            { "GG_Flukemarm"         , null },
-            { "GG_Ghost_Galien"      , null },
-            { "GG_Ghost_Gorb"        , null },
-            { "GG_Ghost_Gorb_V"      , null },
+            { "GG_Flukemarm"         , null }, // X not interesting
+            { "GG_Ghost_Galien"      , null }, // X not interesting
+            { "GG_Ghost_Gorb"        , null }, // X not interesting
+            { "GG_Ghost_Gorb_V"      , null }, // X not interesting
             { "GG_Ghost_Hu"          , null },
-            { "GG_Ghost_Markoth"     , null },
-            { "GG_Ghost_Markoth_V"   , null },
-            { "GG_Ghost_Marmu"       , null },
-            { "GG_Ghost_Marmu_V"     , null },
-            { "GG_Ghost_No_Eyes"     , null },
-            { "GG_Ghost_No_Eyes_V"   , null },
-            { "GG_Ghost_Xero"        , null },
-            { "GG_Ghost_Xero_V"      , null },
+            { "GG_Ghost_Markoth"     , null }, // X not interesting
+            { "GG_Ghost_Markoth_V"   , null }, // X not interesting
+            { "GG_Ghost_Marmu"       , null }, // X not interesting
+            { "GG_Ghost_Marmu_V"     , null }, // X not interesting
+            { "GG_Ghost_No_Eyes"     , null }, // X not interesting
+            { "GG_Ghost_No_Eyes_V"   , null }, // X not interesting
+            { "GG_Ghost_Xero"        , null }, // X not interesting
+            { "GG_Ghost_Xero_V"      , null }, // X not interesting
             { "GG_God_Tamer"         , new ModuleConfig[] {
                 new DefaultConfig { GoName = "Entry Object/Lobster", FsmName = "Control" },
                 new GenericAttackSelectorConfig { StateName = "Attack Choice", IgnoreEvents = new() { "FINISHED" } },
@@ -179,7 +179,12 @@ namespace BossAttacks.Utils
                 new GenericAttackSelectorConfig { StateName = "Choice P3" },
                 new PrintStatesModuleConfig(),
             } },
-            { "GG_Hornet_1"          , null },
+            { "GG_Hornet_1"          , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Boss Holder/Hornet Boss 1", FsmName = "Control", StateName = "Move Choice A" },
+                new GenericAttackSelectorConfig(),
+                new EventEmitterConfig { StateName = "Can Throw?", EventName = "CAN THROW" },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Hornet_2"          , null },
             { "GG_Lost_Kin"          , new ModuleConfig[] {
                 new DefaultConfig { GoName = "Lost Kin", FsmName = "IK Control" },
@@ -202,7 +207,7 @@ namespace BossAttacks.Utils
             { "GG_Nailmasters"       , null },
             { "GG_Nosk"              , null },
             { "GG_Nosk_Hornet"       , null },
-            { "GG_Oblobbles"         , null },
+            { "GG_Oblobbles"         , null }, // X not interesting
             { "GG_Painter"           , null }, // Complex. Need more understanding.
             //{ "GG_Painter"           , new ModuleConfig[] {
             //    new DefaultConfig { GoName = "Battle Scene/Sheo Boss", FsmName = "nailmaster_sheo", StateName = "Choice" },
