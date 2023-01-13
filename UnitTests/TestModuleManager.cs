@@ -58,7 +58,7 @@ namespace UnitTests
         {
             var configs = new ModuleConfig[] {
                 new GenericAttackSelectorConfig { GoName = "Mage Lord", FsmName = "Mage Lord" },
-                new LevelChangerModuleConfig { L = 0, H = 1, Display = "Phase 2: Infinite QUAKE (irreversible)", TargetL = 1, Reversable = false },
+                new LevelChangerModuleConfig { L = 0, H = 1, Display = "Phase 2: Infinite QUAKE (irreversible)", TargetL = 1, Reversible = false },
                 new EventEmitterConfig { L = 1, H = 1, GoName = "Mage Lord Phase2", FsmName = "Mage Lord 2", StateName = "Shoot?", EventName = "FINISHED" },
             };
 

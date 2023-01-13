@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using BossAttacks.Modules.Generic;
 using BossAttacks.Utils;
@@ -26,7 +25,7 @@ internal class ModuleManager {
         this.LogMod("Load");
         Unload();
 
-        Debug.Assert(IsSupportedBossScene(scene), "The current scene should be a supported boss scene.");
+        ModAssert.AllBuilds(IsSupportedBossScene(scene), "The current scene should be a supported boss scene.");
 
         var dict = new Dictionary<string, object>();
         foreach (var config in GodhomeUtils.SceneToModuleConfigs[scene.name])
@@ -40,8 +39,14 @@ internal class ModuleManager {
         }
 
         // Create PrintStatesModules
-        foreach (var config in GetPrintStatesModuleConfigs(GodhomeUtils.SceneToModuleConfigs[scene.name]))
+        var printConfigs = GetPrintStatesModuleConfigs(GodhomeUtils.SceneToModuleConfigs[scene.name]).ToArray();
+        foreach (var config in printConfigs)
         {
+            // Turn on verbose logging (prints GO and FSM names) if there are multiple GO/FSM pairs
+            if (printConfigs.Length > 1)
+            {
+                config.Verbose = true;
+            }
             var module = CreateModule(scene, config);
             _modules.Add(module);
         }
@@ -56,7 +61,10 @@ internal class ModuleManager {
         this.LogMod("Unload");
         foreach (var module in _modules)
         {
-            module.Unload();
+            if (module.Loaded)
+            {
+                module.Unload();
+            }
         }
         _modules.Clear();
         _level = 0;

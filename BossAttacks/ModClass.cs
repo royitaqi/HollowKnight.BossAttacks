@@ -51,7 +51,7 @@ namespace BossAttacks
             // Order MATTERS
             foreach (var opt in ModuleManager.Instance.GetOptions())
             {
-                if (Input.GetKeyDown(KeyCode.Alpha0 + ++i))
+                if (Input.GetKeyDown(KeyCode.Alpha0 + ++i) && opt.Interactive)
                 {
                     this.LogModDebug($"Changing option {opt.Display}");
                     opt.Interact();
@@ -93,7 +93,8 @@ namespace BossAttacks
             int i = 0;
             foreach (var opt in ModuleManager.Instance.GetOptions())
             {
-                sb.AppendLine($"\"{++i}\" - {opt.Display}");
+                string hotkey = opt.Interactive ? $"\"{++i}\" - " : "";
+                sb.AppendLine(hotkey + opt.Display);
             }
             this.LogModDebug(sb.ToString());
 

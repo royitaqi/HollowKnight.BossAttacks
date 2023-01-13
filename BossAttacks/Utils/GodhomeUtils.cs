@@ -75,7 +75,7 @@ namespace BossAttacks.Utils
         {
             { "GG_Broken_Vessel"     , new ModuleConfig[] {
                 new GenericAttackSelectorConfig { GoName = "Infected Knight", FsmName = "IK Control" },
-                new LevelChangerModuleConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Reversable = true },
+                new LevelChangerModuleConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Reversible = true },
                 new VariableSetterConfig { L = 1, H = 1, StateName = "Idle",
                     BoolVariables = new KeyValuePair<string, bool>[]
                     {
@@ -153,7 +153,7 @@ namespace BossAttacks.Utils
                         new("First Move", true), // Remove the constraint that "first attack must be SLASH", because the user could have already unselected SLASH
                     },
                 },
-                new LevelChangerModuleConfig { L = 0, H = 1, Display = "BALLOON (exclusive)", TargetL = 1, Reversable = true },
+                new LevelChangerModuleConfig { L = 0, H = 1, Display = "BALLOON (exclusive)", TargetL = 1, Reversible = true },
                 new EventEmitterConfig { L = 1, H = 1, EventName = "BALLOON" }, // enable BALLOON
             } },
             { "GG_Gruz_Mother"       , new ModuleConfig[] {

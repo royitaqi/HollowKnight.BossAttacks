@@ -19,5 +19,5 @@ internal class LevelChangerModuleConfig : ModuleConfig
     /**
      * Whether or not the level can be changed back to the original by a second interaction.
      */
-    public bool Reversable { get; set; }
+    public bool Reversible { get; set; }
 }

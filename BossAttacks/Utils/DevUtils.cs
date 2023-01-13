@@ -12,4 +12,25 @@ namespace BossAttacks.Utils
         {
         }
     }
+
+    public static class ModAssert
+    {
+        public static void DebugBuild(bool condition, string message)
+        {
+#if (DEBUG)
+            if (!condition)
+            {
+                throw new ModException(message);
+            }
+#endif
+        }
+
+        public static void AllBuilds(bool condition, string message)
+        {
+            if (!condition)
+            {
+                throw new ModException(message);
+            }
+        }
+    }
 }

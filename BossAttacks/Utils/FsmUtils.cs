@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using BossAttacks.Modules;
 using HutongGames.PlayMaker;
 using SFCore.Utils;
 
@@ -21,7 +15,7 @@ namespace BossAttacks.Utils
                     return;
                 }
             }
-            Debug.Assert(false, "Should never arrive here");
+            ModAssert.AllBuilds(false, "Should never arrive here");
         }
     }
 

@@ -24,7 +24,14 @@ internal class PrintStatesModule : SingleFsmModule
         {
             state.InsertMethod(() =>
             {
-                this.LogModFine($"Boss entering state {state.Name}");
+                if (_config.Verbose)
+                {
+                    this.LogModFine($"{_config.GoName}-{_config.FsmName}: Boss entering state {state.Name}");
+                }
+                else
+                {
+                    this.LogModFine($"Boss entering state {state.Name}");
+                }
             }, 0);
         }
     }
