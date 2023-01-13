@@ -92,6 +92,15 @@ internal class ModuleManager {
         return originalLevel;
     }
 
+    /**
+     * How propagation works:
+     * 
+     * Config -> dict:
+     * - All non-null values in config will be propagated to dict.
+     * 
+     * Dict -> config:
+     * - Only null values in config will receive values from dict.
+     */
     internal static void PropagateConfig(Dictionary<string, object> dict, ModuleConfig config)
     {
         foreach (var prop in config.GetType().GetProperties())
@@ -102,11 +111,14 @@ internal class ModuleManager {
                 continue;
             }
             var v = prop.GetValue(config);
+            
             // Propagate: config -> dict
-            if (v != null && !dict.ContainsKey(prop.Name))
+            if (v != null)
             {
                 dict[prop.Name] = v;
             }
+
+            // Propagate: dict -> config
             else if (prop.CanWrite && dict.ContainsKey(prop.Name) && v == null)
             {
                 prop.SetValue(config, dict[prop.Name]);

@@ -242,7 +242,40 @@ namespace BossAttacks.Utils
                 new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
                 new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
             } },
-            { "GG_Vengefly_V"        , null },
+            { "GG_Vengefly_V"        , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
+                    MapEvents = new()
+                    {
+                        { "SWOOP", "Boss #1 SWOOP " },
+                        { "SUMMON", "Boss #1 SUMMON (up to 15 roars)" },
+                    },
+                },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Summons In A Row", 0),
+                        new("Swoops in A Row", 0),
+                    },
+                },
+                new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
+                new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
+                new GenericAttackSelectorConfig { GoName = "Giant Buzzer Col (1)", FsmName = "Big Buzzer", StateName = "Choose Attack",
+                    MapEvents = new()
+                    {
+                        { "SWOOP", "Boss #2 SWOOP" },
+                        { "SUMMON", "Boss #2 SUMMON (up to 15 roars)" },
+                    },
+                },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Summons In A Row", 0),
+                        new("Swoops in A Row", 0),
+                    },
+                },
+                new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
+                new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
+            } },
             { "GG_Watcher_Knights"   , null },
             { "GG_White_Defender"    , null },
         };

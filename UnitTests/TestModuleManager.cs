@@ -15,6 +15,7 @@ namespace UnitTests
                 new GenericAttackSelectorConfig { FsmName = "fsm" }, // accept one, provide another
                 new GenericAttackSelectorConfig { H = 1 }, // accept two, provide int (which should not propagate because it's non-null)
                 new GenericAttackSelectorConfig { FsmName = "fsm1" }, // override one
+                new GenericAttackSelectorConfig { }, // null
             };
 
             foreach (var c in configs)
