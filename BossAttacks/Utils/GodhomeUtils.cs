@@ -84,7 +84,12 @@ namespace BossAttacks.Utils
                 },
             } },
             { "GG_Brooding_Mawlek"   , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select", MapEvents = new() { { "TRUE", "SPIT" }, { "FALSE", "JUMP" } } },
+                new GenericAttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
+                    MapEvents = new() {
+                        { "TRUE", "SPIT" },
+                        { "FALSE", "JUMP" },
+                    },
+                },
                 new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[]
                     {
@@ -192,7 +197,7 @@ namespace BossAttacks.Utils
             } },
             { "GG_Nailmasters"       , null },
             { "GG_Nosk"              , new ModuleConfig[] {
-                new NoskConfig { GoName = "Mimic Spider", FsmName = "Mimic Spider" }, // Custom module
+                new NoskConfig { GoName = "Mimic Spider", FsmName = "Mimic Spider" }, // custom module
             } },
             { "GG_Nosk_Hornet"       , new ModuleConfig[] {
                 new GenericAttackSelectorConfig { GoName = "Battle Scene/Hornet Nosk", FsmName = "Hornet Nosk", StateName = "Choose Attack 2" },
@@ -220,7 +225,23 @@ namespace BossAttacks.Utils
             } },
             { "GG_Uumuu"             , null },
             { "GG_Uumuu_V"           , null },
-            { "GG_Vengefly"          , null },
+            { "GG_Vengefly"          , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
+                    MapEvents = new()
+                    {
+                        { "SUMMON", "SUMMON (up to 15 roars)" },
+                    },
+                },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Summons In A Row", 0),
+                        new("Swoops in A Row", 0),
+                    },
+                },
+                new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
+                new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
+            } },
             { "GG_Vengefly_V"        , null },
             { "GG_Watcher_Knights"   , null },
             { "GG_White_Defender"    , null },
