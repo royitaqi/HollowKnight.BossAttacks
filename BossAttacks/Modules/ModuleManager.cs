@@ -35,17 +35,15 @@ internal class ModuleManager {
             PropagateConfig(dict, config);
 
             // Create module
-            var type = config.ModuleType;
-            var module = Activator.CreateInstance(type, scene, config, this) as Module;
-            module.L = config.L;
-            module.H = config.H;
+            var module = CreateModule(scene, config);
             _modules.Add(module);
         }
 
         // Create PrintStatesModules
         foreach (var config in GetPrintStatesModuleConfigs(GodhomeUtils.SceneToModuleConfigs[scene.name]))
         {
-            _modules.Add(new PrintStatesModule(scene, config, this));
+            var module = CreateModule(scene, config);
+            _modules.Add(module);
         }
 
         this.LogModDebug($"Modules: ({_modules.Count}) {String.Join(", ", _modules.Select(m => m.GetType().Name))}");
@@ -90,6 +88,14 @@ internal class ModuleManager {
         }
         OptionsChanged?.Invoke();
         return originalLevel;
+    }
+
+    private Module CreateModule(Scene scene, ModuleConfig config)
+    {
+        var module = Activator.CreateInstance(config.ModuleType, scene, config, this) as Module;
+        module.L = config.L;
+        module.H = config.H;
+        return module;
     }
 
     /**

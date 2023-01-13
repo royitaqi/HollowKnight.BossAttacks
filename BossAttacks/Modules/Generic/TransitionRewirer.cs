@@ -14,7 +14,7 @@ internal class TransitionRewirer : SingleStateModule
 
     protected override void OnLoad()
     {
-        this.LogMod($"Loading for scene {_scene.name}");
+        this.LogMod($"Loading for scene {_scene.name} (L = {L}..{H})");
 
         LoadSingleStateObjects(_scene, _config);
 
