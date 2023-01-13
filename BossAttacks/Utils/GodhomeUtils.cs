@@ -216,7 +216,12 @@ namespace BossAttacks.Utils
             } },
             { "GG_Nailmasters"       , null },
             { "GG_Nosk"              , null },
-            { "GG_Nosk_Hornet"       , null },
+            { "GG_Nosk_Hornet"       , new ModuleConfig[] {
+                new DefaultConfig { GoName = "Battle Scene/Hornet Nosk", FsmName = "Hornet Nosk", StateName = "Choose Attack 2" },
+                new GenericAttackSelectorConfig(),
+                new EventEmitterConfig { StateName = "Choose Attack", EventName = "HALF" },
+                new PrintStatesModuleConfig(),
+            } },
             { "GG_Oblobbles"         , null }, // X not interesting
             { "GG_Painter"           , null }, // Complex. Need more understanding.
             //{ "GG_Painter"           , new ModuleConfig[] {
