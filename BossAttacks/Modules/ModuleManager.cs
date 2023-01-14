@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using BossAttacks.Modules.Generic;
 using BossAttacks.Utils;
 using UnityEngine.SceneManagement;
@@ -27,6 +28,7 @@ internal class ModuleManager {
 
         ModAssert.AllBuilds(IsSupportedBossScene(scene), "The current scene should be a supported boss scene.");
 
+        this.LogModDebug($"Modules: ({_modules.Count})");
         var dict = new Dictionary<string, object>();
         foreach (var config in GodhomeUtils.SceneToModuleConfigs[scene.name])
         {
@@ -55,12 +57,6 @@ internal class ModuleManager {
         {
             var module = CreateModule(scene, config);
             _modules.Add(module);
-        }
-
-        this.LogModDebug($"Modules: ({_modules.Count})");
-        foreach (var m in _modules)
-        {
-            this.LogModDebug($"    {m.GetType().Name}: {m.ID}");
         }
 
         ModAssert.AllBuilds(_modules.Count == _modules.Select(m => m.ID).Distinct().Count(), "All modules should have unique IDs");
@@ -129,7 +125,27 @@ internal class ModuleManager {
         var levels = String.Join("", module.Levels.Select(l => l.ToString()));
         module.ID = $"{mainID} | {levels}";
 
+        this.LogModDebug($"    {module.GetType().Name}: {module.ID} -- {ConfigToString(config)}");
         return module;
+    }
+
+    private string ConfigToString(ModuleConfig config)
+    {
+        var sb = new StringBuilder();
+        foreach (var p in config.GetType().GetProperties().Where(p => p.Name != "ModuleType"))
+        {
+            var v = p.GetValue(config);
+            if (v == null)
+            {
+                continue;
+            }
+            if (sb.Length != 0)
+            {
+                sb.Append(", ");
+            }
+            sb.Append($"{p.Name} = {p.GetValue(config)}");
+        }
+        return sb.ToString();
     }
 
     /**
@@ -172,7 +188,7 @@ internal class ModuleManager {
         }
     }
 
-    private static readonly HashSet<string> CanPropagate = new() { "GoName", "FsmName", "StateName" };
+    private static readonly HashSet<string> CanPropagate = new() { "GoName", "FsmName", "StateName", "EventName" };
 
     internal static IEnumerable<PrintStatesConfig> GetPrintStatesModuleConfigs(ModuleConfig[] configs)
     {
