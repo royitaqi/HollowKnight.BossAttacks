@@ -75,7 +75,7 @@ namespace BossAttacks.Utils
         {
             { "GG_Broken_Vessel"     , new ModuleConfig[] {
                 new GenericAttackSelectorConfig { GoName = "Infected Knight", FsmName = "IK Control" },
-                new LevelChangerModuleConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Reversible = true },
+                new LevelChangerConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Reversible = true },
                 new VariableSetterConfig { L = 1, H = 1, StateName = "Idle",
                     BoolVariables = new KeyValuePair<string, bool>[]
                     {
@@ -153,7 +153,7 @@ namespace BossAttacks.Utils
                         new("First Move", true), // Remove the constraint that "first attack must be SLASH", because the user could have already unselected SLASH
                     },
                 },
-                new LevelChangerModuleConfig { L = 0, H = 1, Display = "BALLOON (exclusive)", TargetL = 1, Reversible = true },
+                new LevelChangerConfig { L = 0, H = 1, Display = "BALLOON (exclusive)", TargetL = 1, Reversible = true },
                 new EventEmitterConfig { L = 1, H = 1, EventName = "BALLOON" }, // enable BALLOON
             } },
             { "GG_Gruz_Mother"       , new ModuleConfig[] {
@@ -219,10 +219,22 @@ namespace BossAttacks.Utils
             { "GG_Radiance"          , null },
             { "GG_Sly"               , null },
             { "GG_Soul_Master"       , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Mage Lord", FsmName = "Mage Lord" },
-                new LevelChangerModuleConfig { L = 0, H = 1, Display = "Phase 2: Infinite QUAKE", TargetL = 1, Reversible = false },
-                new EventEmitterConfig { L = 1, H = 1, GoName = "Mage Lord Phase2", FsmName = "Mage Lord 2", StateName = "Shoot?", EventName = "FINISHED" },
-                new GoKillerConfig { L = 1, H = 1, GoName = "Mage Lord", FsmName = "Mage Lord" },
+                /**
+                 *     | 0 | 1 | 2 | 3 |   GO/FSM
+                 * --------------------------------
+                 * GAS | x |   |   |   |   1
+                 * MPC | x | t |   |   |   n/a
+                 * BK  |   | x |   |   |   1
+                 * ALC | x | x | t |   |   2
+                 * IDO |   |   | x | x |   n/a
+                 * ID  |   |   |   | x |   2
+                 */
+                new GenericAttackSelectorConfig { ID = "GAS", GoName = "Mage Lord", FsmName = "Mage Lord" }, // GAS
+                new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Reversible = false }, // manual phase changer
+                new GoKillerConfig { ID = "boss killer", L = 1, GoName = "Mage Lord", FsmName = "Mage Lord" }, // boss killer
+                new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = "Mage Lord Phase2", FsmName = "Mage Lord 2", OnEnterState = "Arrive Pause", TargetL = 2 }, // auto level changer
+                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Reversible = true }, // infinite dive option
+                new EventEmitterConfig { ID = "infinite dive", L = 3, StateName = "Shoot?", Index = 1, EventName = "FINISHED" }, // infinite dive
             } },
             { "GG_Soul_Tyrant"       , null },
             { "GG_Traitor_Lord" , new ModuleConfig[] {
