@@ -22,13 +22,13 @@ internal class EventEmitter : SingleStateModule
         _state.InsertMethodWithName(() =>
         {
             _fsm.SendEvent(_config.EventName);
-        }, index, "EventEmitter");
+        }, index, ID);
     }
 
     protected override void OnUnload()
     {
         this.LogMod($"Unloading");
-        _state.RemoveActionByName("EventEmitter");
+        _state.RemoveActionByName(ID);
     }
 
     private Scene _scene;

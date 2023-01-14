@@ -25,7 +25,7 @@ internal class PrintStates : SingleFsmModule
             state.InsertMethodWithName(() =>
             {
                 this.LogModFine($"Boss entering state {state.Name}");
-            }, 0, "PrintStates");
+            }, 0, ID);
         }
 
         //// DEBUG DEBUG DEBUG
@@ -38,7 +38,7 @@ internal class PrintStates : SingleFsmModule
 
         foreach (var state in _fsm.FsmStates)
         {
-            state.RemoveActionByName("PrintStates");
+            state.RemoveActionByName(ID);
         }
     }
 

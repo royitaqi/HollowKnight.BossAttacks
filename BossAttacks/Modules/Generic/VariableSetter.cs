@@ -35,13 +35,13 @@ internal class VariableSetter : SingleStateModule
                     _fsm.FsmVariables.GetFsmInt(kv.Key).Value = kv.Value;
                 }
             }
-        }, index, "VariableSetter");
+        }, index, ID);
     }
 
     protected override void OnUnload()
     {
         this.LogMod($"Unloading");
-        _state.RemoveActionByName("VariableSetter");
+        _state.RemoveActionByName(ID);
     }
 
     private Scene _scene;
