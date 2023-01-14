@@ -12,6 +12,11 @@ internal class AutoLevelChangerConfig : SingleFsmModuleConfig
     public int TargetL { get; set; }
 
     /**
+     * Condition: when this module is loaded
+     */
+    public bool OnLoaded { get; set; }
+
+    /**
      * Condition: when an FSM state is entered.
      */
     public string OnEnterState { get; set; }

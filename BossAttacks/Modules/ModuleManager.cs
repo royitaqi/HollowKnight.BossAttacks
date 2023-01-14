@@ -163,7 +163,7 @@ internal class ModuleManager {
             .ToArray();
 
         return names
-            .Select(s =>
+            .Select((s, i) =>
             {
                 var parts = s.Split('-');
                 return new PrintStatesConfig
@@ -172,7 +172,7 @@ internal class ModuleManager {
                     H = h,
                     GoName = parts[0],
                     FsmName = parts[1],
-                    ID = names.Length > 1 ? s : null,
+                    ID = names.Length > 1 ? $"{typeof(PrintStates).Name} #{i}" : null,
                 };
             });
     }

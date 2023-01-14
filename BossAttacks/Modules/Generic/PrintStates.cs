@@ -24,7 +24,7 @@ internal class PrintStates : SingleFsmModule
         {
             state.InsertMethod(() =>
             {
-                this.LogModFine($"{ID} Boss entering state {state.Name}");
+                this.LogModFine($"Boss entering state {state.Name}");
             }, 0);
         }
     }

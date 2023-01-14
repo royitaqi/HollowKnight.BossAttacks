@@ -53,7 +53,7 @@ namespace BossAttacks
             {
                 if (Input.GetKeyDown(KeyCode.Alpha0 + ++i) && opt.Interactive)
                 {
-                    this.LogModDebug($"Changing option {opt.Display}");
+                    this.LogModDebug($"User is changing option {opt.Display}");
                     opt.Interact();
                     break;
                 }
@@ -97,7 +97,8 @@ namespace BossAttacks
                 string hotkey = opt.Interactive ? $"\"{++i}\" - " : "";
                 sb.AppendLine(hotkey + opt.Display);
             }
-            this.LogModDebug(sb.ToString());
+            this.LogModDebug("Updating option display");
+            //this.LogModFine(sb.ToString());
 
             ModDisplay.Instance.Display(sb.ToString());
         }
