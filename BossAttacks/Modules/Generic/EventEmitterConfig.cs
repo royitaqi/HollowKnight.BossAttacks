@@ -6,4 +6,5 @@ internal class EventEmitterConfig : SingleStateModuleConfig
 {
     public override Type ModuleType => typeof(EventEmitter);
     public string EventName { get; set; }
+    public int Index { get; set; }
 }
