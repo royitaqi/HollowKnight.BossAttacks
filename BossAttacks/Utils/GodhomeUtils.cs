@@ -179,7 +179,16 @@ namespace BossAttacks.Utils
                     },
                 },
             } },
-            { "GG_Gruz_Mother_V"     , null },
+            { "GG_Gruz_Mother_V"     , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Slams In A Row", 0),
+                        new("Charges In A Row", 0),
+                    },
+                },
+            } },
             { "GG_Hive_Knight"       , new ModuleConfig[] {
                 new GenericAttackSelectorConfig { GoName = "Battle Scene/Hive Knight", FsmName = "Control", StateName = "Phase 3", IgnoreEvents = new() { "JUMP" } },
                 new EventEmitterConfig { StateName = "Phase Check", EventName = "P3" },
@@ -260,7 +269,7 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
                 new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
             } },
-            { "GG_Traitor_Lord" , new ModuleConfig[] {
+            { "GG_Traitor_Lord"      , new ModuleConfig[] {
                 new GenericAttackSelectorConfig { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis", IgnoreEvents = new() { "SLAM" } },
             } },
             { "GG_Uumuu"             , null },
