@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BossAttacks.Modules;
 using BossAttacks.Modules.Generic;
+using HutongGames.PlayMaker.Actions;
 
 namespace BossAttacks.Utils
 {
@@ -228,13 +229,15 @@ namespace BossAttacks.Utils
                  * ALC | x | x | t |   |   2
                  * IDO |   |   | x | x |   n/a
                  * ID  |   |   |   | x |   2
+                 * ID2 |   |   |   | x |   2
                  */
                 new GenericAttackSelectorConfig { ID = "GAS", GoName = "Mage Lord", FsmName = "Mage Lord" }, // GAS
                 new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Reversible = false }, // manual phase changer
                 new GoKillerConfig { ID = "boss killer", L = 1, GoName = "Mage Lord", FsmName = "Mage Lord" }, // boss killer
                 new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = "Mage Lord Phase2", FsmName = "Mage Lord 2", OnEnterState = "Arrive Pause", TargetL = 2 }, // auto level changer
                 new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Reversible = true }, // infinite dive option
-                new EventEmitterConfig { ID = "infinite dive", L = 3, StateName = "Shoot?", Index = 1, EventName = "FINISHED" }, // infinite dive
+                new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
+                new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
             } },
             { "GG_Soul_Tyrant"       , null },
             { "GG_Traitor_Lord" , new ModuleConfig[] {
