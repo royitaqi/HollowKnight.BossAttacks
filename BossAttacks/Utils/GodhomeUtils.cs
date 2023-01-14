@@ -305,7 +305,10 @@ namespace BossAttacks.Utils
                 new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
             } },
             { "GG_Watcher_Knights"   , null },
-            { "GG_White_Defender"    , null },
+            { "GG_White_Defender"    , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
+                new BothDefender_TrimRollJump_Config(), // custom module
+            } },
         };
     }
 }
