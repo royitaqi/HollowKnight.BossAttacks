@@ -26,7 +26,6 @@ namespace BossAttacks
 
         private static Menu PrepareMenu()
         {
-            MenuRef.LogModTEMP("PrepareMenu");
             return new Menu("Boss Attacks", new Element[]
             {
                 new HorizontalOption(
