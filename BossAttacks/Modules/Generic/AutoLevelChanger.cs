@@ -22,11 +22,10 @@ internal class AutoLevelChanger : SingleFsmModule
         if (_config.OnEnterState != null)
         {
             var state = _fsm.GetState(_config.OnEnterState);
-            state.InsertMethod(() =>
+            state.InsertMethodWithName(() =>
             {
                 _mgr.ChangeLevel(_config.TargetL);
-            }, 0);
-            state.Actions[0].Name = "AutoLevelChanger";
+            }, 0, "AutoLevelChanger");
         }
     }
 

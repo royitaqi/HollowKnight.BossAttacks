@@ -22,16 +22,21 @@ internal class PrintStates : SingleFsmModule
         // Putting it here at the end of the method, because the method body can be adding states, which should also generate such log.
         foreach (var state in _fsm.FsmStates)
         {
-            state.InsertMethod(() =>
+            state.InsertMethodWithName(() =>
             {
                 this.LogModFine($"Boss entering state {state.Name}");
-            }, 0);
+            }, 0, "PrintStates");
         }
     }
 
     protected override void OnUnload()
     {
         this.LogMod($"Unloading");
+
+        foreach (var state in _fsm.FsmStates)
+        {
+            state.RemoveActionByName("PrintStates");
+        }
     }
 
     private Scene _scene;

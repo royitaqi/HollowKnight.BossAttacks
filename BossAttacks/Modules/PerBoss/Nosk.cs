@@ -109,11 +109,10 @@ internal class Nosk : SingleFsmModule
             {
                 // Turned on
                 _idle.ChangeTransition("ROAR", "RS Jump Antic");
-                _idle.InsertMethod(() =>
+                _idle.InsertMethodWithName(() =>
                 {
                     _fsm.SendEvent("ROAR");
-                }, 0);
-                _idle.Actions[0].Name = "ROAR Emittor";
+                }, 0, "ROAR Emittor");
                 
                 // Turn off all other attacks
                 foreach (var opt in new[] { chargeOpt, spitOpt, jumpOpt })

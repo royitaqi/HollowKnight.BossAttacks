@@ -7,13 +7,23 @@ namespace BossAttacks.Utils
 {
     internal static class FsmUtils
     {
-        public static void RemoveActionByName(this FsmState state, string actionName)
+        public static void InsertMethodWithName(this FsmState state, Action method, int index, string name)
+        {
+            state.InsertMethod(method, index);
+            state.Actions[index].Name = name;
+        }
+
+        public static void RemoveActionByName(this FsmState state, string name)
         {
             for (int i = 0; i < state.Actions.Length; i++)
             {
-                if (state.Actions[i].Name == actionName)
+                if (state.Actions[i].Name == name)
                 {
-                    state.RemoveAction(i);
+                    // Replace the specified action with an no-op action instead of remove it out right.
+                    // This is so that the indices of the trailing actions remain the same.
+                    // Otherwise, if this removal is called during a middle of a loop through of the actions, some of the trailing actions won't be executed.
+                    state.Actions[i] = new Noop();
+                    state.Actions[i].Init(state);
                     return;
                 }
             }
@@ -29,6 +39,14 @@ namespace BossAttacks.Utils
     internal class ShortCircuitProtectionAction : FsmStateAction
     {
         public override void OnUpdate()
+        {
+            base.Finish();
+        }
+    }
+
+    internal class Noop : FsmStateAction
+    {
+        public override void OnEnter()
         {
             base.Finish();
         }
