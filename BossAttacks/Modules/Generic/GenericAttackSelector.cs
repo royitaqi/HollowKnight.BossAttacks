@@ -1,3 +1,4 @@
+using System.Linq;
 using BossAttacks.Utils;
 using SFCore.Utils;
 using UnityEngine.SceneManagement;
@@ -47,6 +48,7 @@ internal class GenericAttackSelector : SingleStateModule
             };
             _options.Add(opt);
         }
+        _options.Sort((a, b) => string.Compare(a.Display, b.Display));
     }
 
     protected override void OnUnload()
