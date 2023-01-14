@@ -18,15 +18,36 @@ internal class TransitionRewirer : SingleStateModule
 
         LoadSingleStateObjects(_scene, _config);
 
-        _originalToState = _state.GetTransition(_config.EventName).ToState;
-        _state.ChangeTransition(_config.EventName, _config.ToState);
+        var trans = _state.GetTransition(_config.EventName);
+        if (trans == null)
+        {
+            // Add new transition
+            _originalToState = null;
+            _state.AddTransition(_config.EventName, _config.ToState);
+        }
+        else
+        {
+            // Change existing transition
+            _originalToState = _state.GetTransition(_config.EventName).ToState;
+            _state.ChangeTransition(_config.EventName, _config.ToState);
+        }
     }
 
     protected override void OnUnload()
     {
         this.LogMod($"Unloading");
-        _state.ChangeTransition(_config.EventName, _originalToState);
-        _originalToState = null;
+
+        if (_originalToState == null)
+        {
+            // Remove new transition
+            _state.RemoveTransition(_config.EventName);
+        }
+        else
+        {
+            // Change transition back to original
+            _state.ChangeTransition(_config.EventName, _originalToState);
+            _originalToState = null;
+        }
     }
 
     private Scene _scene;
