@@ -19,11 +19,6 @@ internal class AutoLevelChanger : SingleFsmModule
 
         LoadSingleFsmObjects(_scene, _config);
 
-        if (_config.OnLoaded)
-        {
-            _mgr.ChangeLevel(_config.TargetL);
-        }
-
         if (_config.OnEnterState != null)
         {
             var state = _fsm.GetState(_config.OnEnterState);

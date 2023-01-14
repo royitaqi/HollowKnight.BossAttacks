@@ -254,10 +254,10 @@ namespace BossAttacks.Utils
             //} },
             { "GG_Radiance"          , new ModuleConfig[] {
                 // Map phase transit to levels
-                new AutoLevelChangerConfig { ID = "transit 0->1", GoName = "Boss Control/Absolute Radiance", FsmName = "Phase Control", TargetL = 1, OnLoaded = true },
+                new AutoLevelChangerConfig { ID = "transit 0->1", GoName = "Boss Control/Absolute Radiance", FsmName = "Control", TargetL = 1, OnEnterState = "Arena 1 Start" }, // this state sends "ARENA 1 START"
                 new AutoLevelChangerConfig { ID = "transit 1->2", H = 1, FsmName = "Phase Control", TargetL = 2, OnEnterState = "Set Phase 2" },
                 new AutoLevelChangerConfig { ID = "transit 2->3", H = 2, FsmName = "Phase Control", TargetL = 3, OnEnterState = "Set Phase 3" },
-                new AutoLevelChangerConfig { ID = "transit 3->4", H = 3, FsmName = "Control", TargetL = 4, OnEnterState = "Tele Cast?" }, // this state follows A1 Tele 3, which sends "ARENA 2 START"
+                new AutoLevelChangerConfig { ID = "transit 3->4", H = 3, FsmName = "Control", TargetL = 4, OnEnterState = "A1 Tele 3" }, // this state sends "ARENA 2 START"
                 new AutoLevelChangerConfig { ID = "transit 4->5", H = 4, FsmName = "Phase Control", TargetL = 5, OnEnterState = "Set Ascend" },
                 // Attack selections
                 new GenericAttackSelectorConfig { ID = "AS in 1 and 2", L = 1, H = 2, FsmName = "Attack Choices", StateName = "A1 Choice" },
