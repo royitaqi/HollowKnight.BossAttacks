@@ -36,7 +36,7 @@ namespace BossAttacks.Utils
         }
     }
 
-    internal class ShortCircuitProtectionAction : FsmStateAction
+    internal class ShortCircuitProtection : FsmStateAction
     {
         public override void OnUpdate()
         {

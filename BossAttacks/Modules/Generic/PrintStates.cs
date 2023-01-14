@@ -27,6 +27,9 @@ internal class PrintStates : SingleFsmModule
                 this.LogModFine($"Boss entering state {state.Name}");
             }, 0, "PrintStates");
         }
+
+        //// DEBUG DEBUG DEBUG
+        //_fsm.MakeLog();
     }
 
     protected override void OnUnload()

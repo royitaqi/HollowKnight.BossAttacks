@@ -25,7 +25,7 @@ internal class Nosk : SingleFsmModule
 
         // SCP on Idle
         var scpState = _fsm.AddState(IDLE_SCP_STATE_NAME);
-        scpState.AddAction(new ShortCircuitProtectionAction());
+        scpState.AddAction(new ShortCircuitProtection());
         scpState.AddTransition("FINISHED", "Idle");
 
         // All options

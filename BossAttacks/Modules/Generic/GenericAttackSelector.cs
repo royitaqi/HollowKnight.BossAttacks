@@ -25,12 +25,13 @@ internal class GenericAttackSelector : SingleStateModule
         // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
         var scpStateName = _state.Name + SHORT_CIRCUIT_PROTECTION_SUFFIX;
         var scpState = _fsm.AddState(scpStateName);
-        scpState.AddAction(new ShortCircuitProtectionAction());
+        scpState.AddAction(new ShortCircuitProtection());
         scpState.AddTransition("FINISHED", _state.Name);
 
         foreach (var tran in _state.Transitions)
         {
             var eventName = tran.EventName;
+            var attackName = _config.MapEvent(eventName);
             // Ignore specified events
             if (_config.IgnoreEvent(eventName))
             {
@@ -38,13 +39,13 @@ internal class GenericAttackSelector : SingleStateModule
             }
 
             var originalToStateName = tran.ToState;
-            var opt = new BooleanOption { Display = _config.MapEvent(eventName) };
+            var opt = new BooleanOption { Display = attackName };
             opt.Interact(); // set value to true
             opt.Interacted += () =>
             {
                 var toStateName = opt.Value ? originalToStateName : scpStateName;
                 _state.ChangeTransition(eventName, toStateName);
-                this.LogModDebug($"Changing transition: {_state.Name}.{eventName} -> {toStateName}");
+                this.LogModDebug($"Turning attack {attackName} to {(opt.Value ? "ON" : "OFF")} ({_state.Name}.{eventName} -> {toStateName})");
             };
             _options.Add(opt);
         }
