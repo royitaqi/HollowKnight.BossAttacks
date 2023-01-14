@@ -7,7 +7,7 @@ namespace BossAttacks.Modules.Generic;
 
 internal class Nosk : SingleFsmModule
 {
-    private const string IDLE_SCP_STATE_NAME = "Idle" + GenericAttackSelector.SHORT_CIRCUIT_PROTECTION_SUFFIX;
+    private const string IDLE_SCP_STATE_NAME = "Idle" + AttackSelector.SHORT_CIRCUIT_PROTECTION_SUFFIX;
 
     public Nosk(Scene scene, NoskConfig config, ModuleManager mgr)
     {

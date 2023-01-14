@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace BossAttacks.Modules.Generic;
 
-internal class GenericAttackSelectorConfig : SingleStateModuleConfig
+internal class AttackSelectorConfig : SingleStateModuleConfig
 {
-    public override Type ModuleType => typeof(GenericAttackSelector);
+    public override Type ModuleType => typeof(AttackSelector);
     public HashSet<string> IgnoreEvents { get; set; }
     public Dictionary<string, string> MapEvents { get; set; }
 

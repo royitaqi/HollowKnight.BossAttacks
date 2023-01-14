@@ -75,7 +75,7 @@ namespace BossAttacks.Utils
         public static readonly Dictionary<string, ModuleConfig[]> SceneToModuleConfigs = new()
         {
             { "GG_Broken_Vessel"     , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Infected Knight", FsmName = "IK Control" },
+                new AttackSelectorConfig { GoName = "Infected Knight", FsmName = "IK Control" },
                 new LevelChangerConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Reversible = true },
                 new VariableSetterConfig { L = 1, H = 1, StateName = "Idle",
                     BoolVariables = new KeyValuePair<string, bool>[]
@@ -85,7 +85,7 @@ namespace BossAttacks.Utils
                 },
             } },
             { "GG_Brooding_Mawlek"   , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
+                new AttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
                     MapEvents = new() {
                         { "TRUE", "SPIT" },
                         { "FALSE", "JUMP" },
@@ -100,7 +100,7 @@ namespace BossAttacks.Utils
                 },
             } },
             { "GG_Brooding_Mawlek_V" , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
+                new AttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
                     MapEvents = new() {
                         { "TRUE", "SPIT" },
                         { "FALSE", "JUMP" },
@@ -117,18 +117,18 @@ namespace BossAttacks.Utils
             { "GG_Collector"         , null },
             { "GG_Collector_V"       , null },
             { "GG_Crystal_Guardian"  , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
+                new AttackSelectorConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
             } },
             { "GG_Crystal_Guardian_2", new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Battle Scene/Zombie Beam Miner Rematch", FsmName = "Beam Miner" },
+                new AttackSelectorConfig { GoName = "Battle Scene/Zombie Beam Miner Rematch", FsmName = "Beam Miner" },
             } },
             { "GG_Dung_Defender"     , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { L = 0, H = 1, GoName = "Dung Defender", FsmName = "Dung Defender" },
+                new AttackSelectorConfig { L = 0, H = 1, GoName = "Dung Defender", FsmName = "Dung Defender" },
                 new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Reversible = true },
                 new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
             } },
             { "GG_Failed_Champion"   , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "False Knight Dream", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
+                new AttackSelectorConfig { GoName = "False Knight Dream", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
                 new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[] {
                         new("JA In A Row", 0), // row count for JUMP ATTACK
@@ -139,7 +139,7 @@ namespace BossAttacks.Utils
                 },
             } },
             { "GG_False_Knight"      , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Battle Scene/False Knight New", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
+                new AttackSelectorConfig { GoName = "Battle Scene/False Knight New", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
                 new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[] {
                         new("JA In A Row", 0), // row count for JUMP ATTACK
@@ -163,16 +163,16 @@ namespace BossAttacks.Utils
             { "GG_Ghost_Xero"        , null }, // X not interesting
             { "GG_Ghost_Xero_V"      , null }, // X not interesting
             { "GG_God_Tamer"         , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Entry Object/Lobster", FsmName = "Control", StateName = "Attack Choice", IgnoreEvents = new() { "FINISHED" } },
+                new AttackSelectorConfig { GoName = "Entry Object/Lobster", FsmName = "Control", StateName = "Attack Choice", IgnoreEvents = new() { "FINISHED" } },
             } },
             { "GG_Grey_Prince_Zote"  , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Grey Prince", FsmName = "Control", StateName = "Move Choice 3" },
+                new AttackSelectorConfig { GoName = "Grey Prince", FsmName = "Control", StateName = "Move Choice 3" },
                 new EventEmitterConfig { StateName = "Move Level", EventName = "3" },
                 new TransitionRewirerConfig { StateName = "Spit Antic", EventName = "CANCEL", ToState = "Idle Start" },
             } },
             { "GG_Grimm"             , null },
             { "GG_Grimm_Nightmare"   , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Grimm Control/Nightmare Grimm Boss", FsmName = "Control", StateName = "Move Choice", IgnoreEvents = new() { "BALLOON" } },
+                new AttackSelectorConfig { GoName = "Grimm Control/Nightmare Grimm Boss", FsmName = "Control", StateName = "Move Choice", IgnoreEvents = new() { "BALLOON" } },
                 new EventEmitterConfig { StateName = "After Evade", EventName = "SLASH" }, // Skip possible firebats after evade in SLASH
                 new VariableSetterConfig {
                     BoolVariables = new KeyValuePair<string, bool>[]
@@ -184,7 +184,7 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { L = 1, H = 1, EventName = "BALLOON" }, // enable BALLOON
             } },
             { "GG_Gruz_Mother"       , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
+                new AttackSelectorConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
                 new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[]
                     {
@@ -194,7 +194,7 @@ namespace BossAttacks.Utils
                 },
             } },
             { "GG_Gruz_Mother_V"     , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
+                new AttackSelectorConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
                 new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[]
                     {
@@ -204,39 +204,39 @@ namespace BossAttacks.Utils
                 },
             } },
             { "GG_Hive_Knight"       , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Battle Scene/Hive Knight", FsmName = "Control", StateName = "Phase 3", IgnoreEvents = new() { "JUMP" } },
+                new AttackSelectorConfig { GoName = "Battle Scene/Hive Knight", FsmName = "Control", StateName = "Phase 3", IgnoreEvents = new() { "JUMP" } },
                 new EventEmitterConfig { StateName = "Phase Check", EventName = "P3" },
             } },
             { "GG_Hollow_Knight"     , new ModuleConfig[] {
                 new EventEmitterConfig { GoName = "HK Prime", FsmName = "Control", StateName = "Phase?", EventName = "PHASE3" },
-                new GenericAttackSelectorConfig { StateName = "Choice P3" },
+                new AttackSelectorConfig { StateName = "Choice P3" },
             } },
             { "GG_Hornet_1"          , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Boss Holder/Hornet Boss 1", FsmName = "Control", StateName = "Move Choice A" },
+                new AttackSelectorConfig { GoName = "Boss Holder/Hornet Boss 1", FsmName = "Control", StateName = "Move Choice A" },
                 new EventEmitterConfig { StateName = "Can Throw?", EventName = "CAN THROW" },
             } },
             { "GG_Hornet_2"          , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Boss Holder/Hornet Boss 2", FsmName = "Control", StateName = "Move Choice A" },
+                new AttackSelectorConfig { GoName = "Boss Holder/Hornet Boss 2", FsmName = "Control", StateName = "Move Choice A" },
                 new EventEmitterConfig { StateName = "Can Throw?", EventName = "CAN THROW" },
             } },
             { "GG_Lost_Kin"          , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Lost Kin", FsmName = "IK Control" },
+                new AttackSelectorConfig { GoName = "Lost Kin", FsmName = "IK Control" },
             } },
             { "GG_Mage_Knight"       , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision" },
+                new AttackSelectorConfig { GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision" },
             } },
             { "GG_Mage_Knight_V"     , null },
             { "GG_Mantis_Lords"      , null },
             { "GG_Mantis_Lords_V"    , null },
             { "GG_Mega_Moss_Charger" , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Mega Moss Charger", FsmName = "Mossy Control" },
+                new AttackSelectorConfig { GoName = "Mega Moss Charger", FsmName = "Mossy Control" },
             } },
             { "GG_Nailmasters"       , null },
             { "GG_Nosk"              , new ModuleConfig[] {
                 new NoskConfig { GoName = "Mimic Spider", FsmName = "Mimic Spider" }, // custom module
             } },
             { "GG_Nosk_Hornet"       , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Battle Scene/Hornet Nosk", FsmName = "Hornet Nosk", StateName = "Choose Attack 2" },
+                new AttackSelectorConfig { GoName = "Battle Scene/Hornet Nosk", FsmName = "Hornet Nosk", StateName = "Choose Attack 2" },
                 new EventEmitterConfig { StateName = "Choose Attack", EventName = "HALF" },
             } },
             { "GG_Oblobbles"         , null }, // X not interesting
@@ -260,15 +260,15 @@ namespace BossAttacks.Utils
                 new AutoLevelChangerConfig { ID = "transit 3->4", H = 3, FsmName = "Control", TargetL = 4, OnEnterState = "A1 Tele 3" }, // this state sends "ARENA 2 START"
                 new AutoLevelChangerConfig { ID = "transit 4->5", H = 4, FsmName = "Phase Control", TargetL = 5, OnEnterState = "Set Ascend" },
                 // Attack selections
-                new GenericAttackSelectorConfig { ID = "AS in 1 and 2", L = 1, H = 2, FsmName = "Attack Choices", StateName = "A1 Choice" },
-                new GenericAttackSelectorConfig { ID = "AS in 4", L = 4, FsmName = "Attack Choices", StateName = "A2 Choice" },
+                new AttackSelectorConfig { ID = "AS in 1 and 2", L = 1, H = 2, FsmName = "Attack Choices", StateName = "A1 Choice" },
+                new AttackSelectorConfig { ID = "AS in 4", L = 4, FsmName = "Attack Choices", StateName = "A2 Choice" },
             } },
             { "GG_Sly"               , null },
             { "GG_Soul_Master"       , new ModuleConfig[] {
                 /**
                  *     | 0 | 1 | 2 | 3 |   GO/FSM
                  * --------------------------------
-                 * GAS | x |   |   |   |   1
+                 * AS  | x |   |   |   |   1
                  * MPC | x | t |   |   |   n/a
                  * BK  |   | x |   |   |   1
                  * ALC | x | x | t |   |   2
@@ -276,7 +276,7 @@ namespace BossAttacks.Utils
                  * ID  |   |   |   | x |   2
                  * ID2 |   |   |   | x |   2
                  */
-                new GenericAttackSelectorConfig { ID = "GAS", GoName = "Mage Lord", FsmName = "Mage Lord" }, // GAS
+                new AttackSelectorConfig { ID = "AS", GoName = "Mage Lord", FsmName = "Mage Lord" }, // AS
                 new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Reversible = false }, // manual phase changer
                 new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
                 new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = "Mage Lord Phase2", FsmName = "Mage Lord 2", OnEnterState = "Arrive Pause", TargetL = 2 }, // auto level changer
@@ -285,7 +285,7 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
             } },
             { "GG_Soul_Tyrant"       , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { ID = "GAS", GoName = "Dream Mage Lord", FsmName = "Mage Lord" }, // GAS
+                new AttackSelectorConfig { ID = "AS", GoName = "Dream Mage Lord", FsmName = "Mage Lord" }, // AS
                 new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Reversible = false }, // manual phase changer
                 new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
                 new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = "Dream Mage Lord Phase2", FsmName = "Mage Lord 2", OnEnterState = "Wait", TargetL = 2 }, // auto level changer
@@ -294,12 +294,12 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
             } },
             { "GG_Traitor_Lord"      , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis", IgnoreEvents = new() { "SLAM" } },
+                new AttackSelectorConfig { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis", IgnoreEvents = new() { "SLAM" } },
             } },
             { "GG_Uumuu"             , null },
             { "GG_Uumuu_V"           , null },
             { "GG_Vengefly"          , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
+                new AttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
                     MapEvents = new()
                     {
                         { "SUMMON", "SUMMON (up to 15 roars)" },
@@ -316,7 +316,7 @@ namespace BossAttacks.Utils
                 new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
             } },
             { "GG_Vengefly_V"        , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
+                new AttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
                     MapEvents = new()
                     {
                         { "SWOOP", "Boss #1 SWOOP " },
@@ -332,7 +332,7 @@ namespace BossAttacks.Utils
                 },
                 new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
                 new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
-                new GenericAttackSelectorConfig { GoName = "Giant Buzzer Col (1)", FsmName = "Big Buzzer", StateName = "Choose Attack",
+                new AttackSelectorConfig { GoName = "Giant Buzzer Col (1)", FsmName = "Big Buzzer", StateName = "Choose Attack",
                     MapEvents = new()
                     {
                         { "SWOOP", "Boss #2 SWOOP" },
@@ -351,7 +351,7 @@ namespace BossAttacks.Utils
             } },
             { "GG_Watcher_Knights"   , null },
             { "GG_White_Defender"    , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { L = 0, H = 1, GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
+                new AttackSelectorConfig { L = 0, H = 1, GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
                 new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Reversible = true },
                 new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
                 new EventEmitterConfig { L = 1, StateName = "Air Dive?", ActionType = typeof(SendRandomEvent), IndexDelta = 2, EventName = "FINISHED" }, // trim tail dive

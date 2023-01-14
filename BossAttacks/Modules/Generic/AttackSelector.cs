@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 namespace BossAttacks.Modules.Generic;
 
-internal class GenericAttackSelector : SingleStateModule
+internal class AttackSelector : SingleStateModule
 {
     public const string SHORT_CIRCUIT_PROTECTION_SUFFIX = " SCP";
 
-    public GenericAttackSelector(Scene scene, GenericAttackSelectorConfig config, ModuleManager mgr)
+    public AttackSelector(Scene scene, AttackSelectorConfig config, ModuleManager mgr)
     {
         _scene = scene;
         _config = config;
@@ -73,5 +73,5 @@ internal class GenericAttackSelector : SingleStateModule
     }
 
     private Scene _scene;
-    private GenericAttackSelectorConfig _config;
+    private AttackSelectorConfig _config;
 }

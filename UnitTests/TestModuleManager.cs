@@ -9,13 +9,13 @@ namespace UnitTests
         public void TestPropagateConfig()
         {
             var dict = new Dictionary<string, object>();
-            var configs = new GenericAttackSelectorConfig[] {
-                new GenericAttackSelectorConfig { }, // null start
-                new GenericAttackSelectorConfig { GoName = "go" }, // provide one
-                new GenericAttackSelectorConfig { FsmName = "fsm" }, // accept one, provide another
-                new GenericAttackSelectorConfig { H = 1 }, // accept two, provide int (which should not propagate because it's non-null)
-                new GenericAttackSelectorConfig { FsmName = "fsm1" }, // override one
-                new GenericAttackSelectorConfig { }, // null
+            var configs = new AttackSelectorConfig[] {
+                new AttackSelectorConfig { }, // null start
+                new AttackSelectorConfig { GoName = "go" }, // provide one
+                new AttackSelectorConfig { FsmName = "fsm" }, // accept one, provide another
+                new AttackSelectorConfig { H = 1 }, // accept two, provide int (which should not propagate because it's non-null)
+                new AttackSelectorConfig { FsmName = "fsm1" }, // override one
+                new AttackSelectorConfig { }, // null
             };
 
             foreach (var c in configs)
@@ -35,9 +35,9 @@ namespace UnitTests
         public void TestCreatePrintStatesModules()
         {
             var configs = new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "go1", FsmName = "fsm1" },
-                new GenericAttackSelectorConfig { L = 0, H = 1, GoName = "go1", FsmName = "fsm1" },
-                new GenericAttackSelectorConfig { L = 1, H = 1, GoName = "go2", FsmName = "fsm2" },
+                new AttackSelectorConfig { GoName = "go1", FsmName = "fsm1" },
+                new AttackSelectorConfig { L = 0, H = 1, GoName = "go1", FsmName = "fsm1" },
+                new AttackSelectorConfig { L = 1, H = 1, GoName = "go2", FsmName = "fsm2" },
             };
 
             var ret = ModuleManager.GetPrintStatesModuleConfigs(configs).ToArray();
@@ -57,7 +57,7 @@ namespace UnitTests
         public void TestCreatePrintStatesModules2()
         {
             var configs = new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Mage Lord", FsmName = "Mage Lord" },
+                new AttackSelectorConfig { GoName = "Mage Lord", FsmName = "Mage Lord" },
                 new LevelChangerConfig { L = 0, H = 1, Display = "Phase 2: Infinite QUAKE (irreversible)", TargetL = 1, Reversible = false },
                 new EventEmitterConfig { L = 1, H = 1, GoName = "Mage Lord Phase2", FsmName = "Mage Lord 2", StateName = "Shoot?", EventName = "FINISHED" },
             };
