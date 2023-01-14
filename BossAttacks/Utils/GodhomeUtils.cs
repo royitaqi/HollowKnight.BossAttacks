@@ -99,7 +99,21 @@ namespace BossAttacks.Utils
                     },
                 },
             } },
-            { "GG_Brooding_Mawlek_V" , null },
+            { "GG_Brooding_Mawlek_V" , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
+                    MapEvents = new() {
+                        { "TRUE", "SPIT" },
+                        { "FALSE", "JUMP" },
+                    },
+                },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Jumps In A Row", 0),
+                        new("Spits In A Row", 0),
+                    },
+                },
+            } },
             { "GG_Collector"         , null },
             { "GG_Collector_V"       , null },
             { "GG_Crystal_Guardian"  , new ModuleConfig[] {
