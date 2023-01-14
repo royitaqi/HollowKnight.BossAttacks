@@ -14,7 +14,7 @@ internal class LevelChangerModule : SingleFsmModule
 
     protected override void OnLoad()
     {
-        this.LogMod($"Loading (L = {L}..{H})");
+        this.LogMod($"Loading");
 
         Option opt = _config.Reversible ? new BooleanOption() : new MonoOption();
         opt.Display = _config.Display;

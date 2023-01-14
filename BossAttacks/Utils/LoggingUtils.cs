@@ -14,8 +14,7 @@ namespace BossAttacks.Utils
         public static void LogModTEMP<T>(this T logger, string message)
         {
 #if DEBUG
-            var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
-            BossAttacks.Instance.Log($"{time} [TEMP] [{logger?.GetType()?.Name}] {message}");
+            DoLog(logger, "TEMP", message);
 #endif
         }
 
@@ -25,8 +24,7 @@ namespace BossAttacks.Utils
         {
             if (LogLevel <= Modding.LogLevel.Error)
             {
-                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
-                BossAttacks.Instance.LogError($"{time} [E] [{logger?.GetType()?.Name}] {message}");
+                DoLog(logger, "E", message);
                 throw new ModException(message);
             }
         }
@@ -37,8 +35,7 @@ namespace BossAttacks.Utils
         {
             if (LogLevel <= Modding.LogLevel.Warn)
             {
-                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
-                BossAttacks.Instance.LogWarn($"{time} [W] [{logger?.GetType()?.Name}] {message}");
+                DoLog(logger, "W", message);
             }
         }
 
@@ -49,8 +46,7 @@ namespace BossAttacks.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Info)
             {
-                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
-                BossAttacks.Instance.Log($"{time} [I] [{logger?.GetType()?.Name}] {message}");
+                DoLog(logger, "I", message);
             }
 #endif
         }
@@ -63,8 +59,7 @@ namespace BossAttacks.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Debug)
             {
-                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
-                BossAttacks.Instance.Log($"{time} [D] [{logger?.GetType()?.Name}] {message}");
+                DoLog(logger, "D", message);
             }
 #endif
         }
@@ -77,10 +72,18 @@ namespace BossAttacks.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Fine)
             {
-                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
-                BossAttacks.Instance.Log($"{time} [F] [{logger?.GetType()?.Name}] {message}");
+                DoLog(logger, "F", message);
             }
 #endif
+        }
+
+        private static void DoLog<T>(T logger, string flag, string message)
+        {
+            var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
+            var type = logger.GetType();
+            var id = type.GetProperty("ID")?.GetValue(logger) as string ?? type.Name;
+            
+            BossAttacks.Instance.Log($"{time} [{flag}] [{id}] {message}");
         }
     }
 }

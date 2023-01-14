@@ -30,6 +30,17 @@ internal class ModuleManager {
         var dict = new Dictionary<string, object>();
         foreach (var config in GodhomeUtils.SceneToModuleConfigs[scene.name])
         {
+            // Use L as default if H wasn't specified
+            ModAssert.AllBuilds(config.L >= 0, "Config.L should be zero or positive");
+            if (config.H == 0)
+            {
+                config.H = config.L;
+            }
+            else
+            {
+                ModAssert.AllBuilds(config.L <= config.H, "Config.L should be <= config.H");
+            }
+
             // Propagate values between dict and config
             PropagateConfig(dict, config);
 
@@ -42,11 +53,6 @@ internal class ModuleManager {
         var printConfigs = GetPrintStatesModuleConfigs(GodhomeUtils.SceneToModuleConfigs[scene.name]).ToArray();
         foreach (var config in printConfigs)
         {
-            // Turn on verbose logging (prints GO and FSM names) if there are multiple GO/FSM pairs
-            if (printConfigs.Length > 1)
-            {
-                config.Verbose = true;
-            }
             var module = CreateModule(scene, config);
             _modules.Add(module);
         }
@@ -80,6 +86,7 @@ internal class ModuleManager {
 
     public int ChangeLevel(int level)
     {
+        this.LogModDebug($"Changing level from {_level} to {level}");
         int originalLevel = _level;
         _level = level;
         foreach (var m in _modules)
@@ -95,12 +102,16 @@ internal class ModuleManager {
             }
         }
         OptionsChanged?.Invoke();
+        this.LogModDebug($"Level is now {_level}");
         return originalLevel;
     }
 
     private Module CreateModule(Scene scene, ModuleConfig config)
     {
         var module = Activator.CreateInstance(config.ModuleType, scene, config, this) as Module;
+
+        // Copy the config's ID, L, H over to the module
+        module.ID = (config.ID != null ? config.ID : config.ModuleType.Name) + $" {config.L}-{config.H}";
         module.L = config.L;
         module.H = config.H;
         return module;
@@ -144,14 +155,25 @@ internal class ModuleManager {
     {
         int l = configs.Select(c => c.L).Min();
         int h = configs.Select(c => c.H).Max();
-        return configs
+        var names = configs
             .Select(c => c as SingleFsmModuleConfig)
             .Where(c => c != null)
-            .Select(c => c.GoName + ":" + c.FsmName)
+            .Select(c => c.GoName + "-" + c.FsmName)
             .Distinct()
-            .Select(s => {
-                var parts = s.Split(':');
-                return new PrintStatesModuleConfig { L = l, H = h, GoName = parts[0], FsmName = parts[1] };
+            .ToArray();
+
+        return names
+            .Select(s =>
+            {
+                var parts = s.Split('-');
+                return new PrintStatesModuleConfig
+                {
+                    L = l,
+                    H = h,
+                    GoName = parts[0],
+                    FsmName = parts[1],
+                    ID = names.Length > 1 ? s : null,
+                };
             });
     }
 

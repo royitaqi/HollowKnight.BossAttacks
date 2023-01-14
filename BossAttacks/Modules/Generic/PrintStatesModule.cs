@@ -14,7 +14,7 @@ internal class PrintStatesModule : SingleFsmModule
 
     protected override void OnLoad()
     {
-        this.LogMod($"Loading for scene {_scene.name} (L = {L}..{H})");
+        this.LogMod($"Loading for scene {_scene.name}");
 
         LoadSingleFsmObjects(_scene, _config);
 
@@ -24,14 +24,7 @@ internal class PrintStatesModule : SingleFsmModule
         {
             state.InsertMethod(() =>
             {
-                if (_config.Verbose)
-                {
-                    this.LogModFine($"{_config.GoName}-{_config.FsmName}: Boss entering state {state.Name}");
-                }
-                else
-                {
-                    this.LogModFine($"Boss entering state {state.Name}");
-                }
+                this.LogModFine($"{ID} Boss entering state {state.Name}");
             }, 0);
         }
     }

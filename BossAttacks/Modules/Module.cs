@@ -9,13 +9,9 @@ namespace BossAttacks.Modules;
  * Can be loaded/unloaded.
  */
 internal abstract class Module {
-    //public virtual string Name => GetType().Name;
     public virtual int Priority => 0;
 
-    /**
-     * The level range where this module should be loaded.
-     * Low (L) and high (H) are both inclusive.
-     */
+    public string ID { get; set; }
     public int L { get; set; }
     public int H { get; set; }
 

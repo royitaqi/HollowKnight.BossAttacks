@@ -14,7 +14,7 @@ internal class GoKiller : SingleFsmModule
 
     protected override void OnLoad()
     {
-        this.LogMod($"Loading for scene {_scene.name} (L = {L}..{H})");
+        this.LogMod($"Loading for scene {_scene.name}");
 
         LoadSingleFsmObjects(_scene, _config);
 
