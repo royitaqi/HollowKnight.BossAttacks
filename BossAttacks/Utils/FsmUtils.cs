@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using HutongGames.PlayMaker;
 using SFCore.Utils;
 
@@ -16,6 +18,11 @@ namespace BossAttacks.Utils
                 }
             }
             ModAssert.AllBuilds(false, "Should never arrive here");
+        }
+
+        public static int FindActionIndexByType(this FsmState state, Type actionType)
+        {
+            return state.Actions.Select((a, i) => new { a, i }).First(ai => ai.a.GetType() == actionType).i;
         }
     }
 

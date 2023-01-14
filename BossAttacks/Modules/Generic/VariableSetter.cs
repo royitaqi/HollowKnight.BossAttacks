@@ -18,6 +18,7 @@ internal class VariableSetter : SingleStateModule
 
         LoadSingleStateObjects(_scene, _config);
 
+        int index = (_config.ActionType != null ? _state.FindActionIndexByType(_config.ActionType) : 0) + _config.IndexDelta;
         _state.InsertMethod(() =>
         {
             if (_config.BoolVariables != null)
@@ -34,8 +35,8 @@ internal class VariableSetter : SingleStateModule
                     _fsm.FsmVariables.GetFsmInt(kv.Key).Value = kv.Value;
                 }
             }
-        }, 0);
-        _state.Actions[0].Name = "VariableSetter";
+        }, index);
+        _state.Actions[index].Name = "VariableSetter";
     }
 
     protected override void OnUnload()

@@ -18,11 +18,12 @@ internal class EventEmitter : SingleStateModule
 
         LoadSingleStateObjects(_scene, _config);
 
+        int index = (_config.ActionType != null ? _state.FindActionIndexByType(_config.ActionType) : 0) + _config.IndexDelta;
         _state.InsertMethod(() =>
         {
             _fsm.SendEvent(_config.EventName);
-        }, _config.Index);
-        _state.Actions[_config.Index].Name = "EventEmitter";
+        }, index);
+        _state.Actions[index].Name = "EventEmitter";
     }
 
     protected override void OnUnload()
