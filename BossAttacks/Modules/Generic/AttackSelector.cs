@@ -25,7 +25,7 @@ internal class AttackSelector : SingleStateModule
         // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
         var scpStateName = _state.Name + SHORT_CIRCUIT_PROTECTION_SUFFIX;
         var scpState = _fsm.AddState(scpStateName);
-        scpState.AddAction(new ShortCircuitProtection());
+        scpState.AddAction(new ShortCircuitProtectionAction());
         scpState.AddTransition("FINISHED", _state.Name);
 
         foreach (var tran in _state.Transitions)

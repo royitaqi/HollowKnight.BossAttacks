@@ -22,7 +22,7 @@ namespace BossAttacks.Utils
                     // Replace the specified action with an no-op action instead of remove it out right.
                     // This is so that the indices of the trailing actions remain the same.
                     // Otherwise, if this removal is called during a middle of a loop through of the actions, some of the trailing actions won't be executed.
-                    state.Actions[i] = new Noop();
+                    state.Actions[i] = new NoopAction();
                     state.Actions[i].Init(state);
                     return;
                 }
@@ -36,7 +36,7 @@ namespace BossAttacks.Utils
         }
     }
 
-    internal class ShortCircuitProtection : FsmStateAction
+    internal class ShortCircuitProtectionAction : FsmStateAction
     {
         public override void OnUpdate()
         {
@@ -44,7 +44,7 @@ namespace BossAttacks.Utils
         }
     }
 
-    internal class Noop : FsmStateAction
+    internal class NoopAction : FsmStateAction
     {
         public override void OnEnter()
         {

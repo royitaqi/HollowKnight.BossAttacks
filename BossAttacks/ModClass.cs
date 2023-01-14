@@ -51,7 +51,7 @@ namespace BossAttacks
             // Order MATTERS
             foreach (var opt in ModuleManager.Instance.GetOptions().ToArray())
             {
-                if (Input.GetKeyDown(KeyCode.Alpha0 + ++i) && opt.Interactive)
+                if (opt.Interactive && Input.GetKeyDown(KeyCode.Alpha0 + ++i))
                 {
                     this.LogModDebug($"User is changing option {opt.Display}");
                     opt.Interact();

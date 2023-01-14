@@ -12,8 +12,7 @@ internal abstract class Module {
     public virtual int Priority => 0;
 
     public string ID { get; set; }
-    public int L { get; set; }
-    public int H { get; set; }
+    public HashSet<int> Levels { get; set; }
 
     /**
      * Mod the fight.

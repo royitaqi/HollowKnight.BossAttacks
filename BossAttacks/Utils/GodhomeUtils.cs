@@ -76,7 +76,7 @@ namespace BossAttacks.Utils
         {
             { "GG_Broken_Vessel"     , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Infected Knight", FsmName = "IK Control" },
-                new LevelChangerConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Reversible = true },
+                new LevelChangerConfig { L = 0, H = 1, Display = "SHAKE (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new VariableSetterConfig { L = 1, H = 1, StateName = "Idle",
                     BoolVariables = new KeyValuePair<string, bool>[]
                     {
@@ -124,7 +124,7 @@ namespace BossAttacks.Utils
             } },
             { "GG_Dung_Defender"     , new ModuleConfig[] {
                 new AttackSelectorConfig { L = 0, H = 1, GoName = "Dung Defender", FsmName = "Dung Defender" },
-                new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Reversible = true },
+                new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
             } },
             { "GG_Failed_Champion"   , new ModuleConfig[] {
@@ -180,7 +180,7 @@ namespace BossAttacks.Utils
                         new("First Move", true), // Remove the constraint that "first attack must be SLASH", because the user could have already unselected SLASH
                     },
                 },
-                new LevelChangerConfig { L = 0, H = 1, Display = "BALLOON (exclusive)", TargetL = 1, Reversible = true },
+                new LevelChangerConfig { L = 0, H = 1, Display = "BALLOON (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new EventEmitterConfig { L = 1, H = 1, EventName = "BALLOON" }, // enable BALLOON
             } },
             { "GG_Gruz_Mother"       , new ModuleConfig[] {
@@ -223,7 +223,43 @@ namespace BossAttacks.Utils
                 new AttackSelectorConfig { GoName = "Lost Kin", FsmName = "IK Control" },
             } },
             { "GG_Mage_Knight"       , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision" },
+                /**
+                 *                         All Attacks
+                 *                        /    SHOOT
+                 *                       |    /    SLASH
+                 *                       |   |    /    STOMP
+                 *                       |   |   |    /
+                 *                     | 0 | 1 | 2 | 3 |
+                 * -------------------------------------
+                 * label all           | t ----------- |
+                 * label SHOOT         | --- t ------- |
+                 * label SLASH         | ------- t --- |
+                 * label STOMP         | ----------- t |
+                 * option all          | t ----------- |
+                 * option SHOOT        | --- t ------- |
+                 * option SLASH        | ------- t --- |
+                 * option STOMP        | ----------- t |
+                 * SCP                 | ------------- |
+                 * block SHOOT in MD   |   |   | ----- |
+                 * block SHOOT in AST  |   |   | ----- |
+                 * block SLASH in MD   |   | - |   | - |
+                 * block SLASH in AST  |   | - |   | - |
+                 * block STOMP         |   | ----- |   |
+                 */
+                new LabelConfig { ID = "label all", L = 0, Display = "Current attacks: All" },
+                new LabelConfig { ID = "label SHOOT", L = 1, Display = "Current attacks: SHOOT" },
+                new LabelConfig { ID = "label SLASH", L = 2, Display = "Current attacks: SLASH" },
+                new LabelConfig { ID = "label STOMP", L = 3, Display = "Current attacks: STOMP" },
+                new LevelChangerConfig { ID = "option all", H = 3, Display = "All", TargetL = 0, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option SHOOT", H = 3, Display = "SHOOT (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option SLASH", H = 3, Display = "SLASH (exclusive)", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP (exclusive)", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
+                new ShortCircuitProtectionConfig { ID = "SCP", H = 3, GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision", ScpStateName = "Move Decision SCP" },
+                new TransitionRewirerConfig { ID = "block SHOOT in MD", L = 2, H = 3, StateName = "Move Decision", EventName = "SHOOT", ToState = "Move Decision SCP" },
+                new TransitionRewirerConfig { ID = "block SHOOT in AST", L = 2, H = 3, StateName = "After Side Tele", EventName = "SHOOT", ToState = "Idle" },
+                new TransitionRewirerConfig { ID = "block SLASH in MD", Levels = new() { 1, 3 }, StateName = "Move Decision", EventName = "SLASH", ToState = "Move Decision SCP" },
+                new TransitionRewirerConfig { ID = "block SLASH in AST", Levels = new() { 1, 3 }, StateName = "After Side Tele", EventName = "SLASH", ToState = "Idle" },
+                new EventEmitterConfig { ID = "block STOMP", L = 1, H = 2, StateName = "Up Tele Aim", EventName = "CANCEL" },
             } },
             { "GG_Mage_Knight_V"     , null },
             { "GG_Mantis_Lords"      , null },
@@ -277,19 +313,19 @@ namespace BossAttacks.Utils
                  * ID2 |   |   |   | x |   2
                  */
                 new AttackSelectorConfig { ID = "AS", GoName = "Mage Lord", FsmName = "Mage Lord" }, // AS
-                new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Reversible = false }, // manual phase changer
+                new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime }, // manual phase changer
                 new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
                 new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = "Mage Lord Phase2", FsmName = "Mage Lord 2", OnEnterState = "Arrive Pause", TargetL = 2 }, // auto level changer
-                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Reversible = true }, // infinite dive option
+                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
                 new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
                 new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
             } },
             { "GG_Soul_Tyrant"       , new ModuleConfig[] {
                 new AttackSelectorConfig { ID = "AS", GoName = "Dream Mage Lord", FsmName = "Mage Lord" }, // AS
-                new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Reversible = false }, // manual phase changer
+                new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime }, // manual phase changer
                 new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
                 new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = "Dream Mage Lord Phase2", FsmName = "Mage Lord 2", OnEnterState = "Wait", TargetL = 2 }, // auto level changer
-                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Reversible = true }, // infinite dive option
+                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
                 new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
                 new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
             } },
@@ -352,7 +388,7 @@ namespace BossAttacks.Utils
             { "GG_Watcher_Knights"   , null },
             { "GG_White_Defender"    , new ModuleConfig[] {
                 new AttackSelectorConfig { L = 0, H = 1, GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
-                new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Reversible = true },
+                new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
                 new EventEmitterConfig { L = 1, StateName = "Air Dive?", ActionType = typeof(SendRandomEvent), IndexDelta = 2, EventName = "FINISHED" }, // trim tail dive
             } },

@@ -16,8 +16,11 @@ internal class LevelChangerConfig : ModuleConfig
      */
     public int TargetL { get; set; }
 
-    /**
-     * Whether or not the level can be changed back to the original by a second interaction.
-     */
-    public bool Reversible { get; set; }
+    public enum Modes
+    {
+        OneTime, // Only one interaction allowed. Jumps to target L.
+        OneDirection, // Multiple interactions allowed. Always jumps to target L.
+        Bidirection, // Multiple interactions allowed. Jumps between target L and original L (noted every time it goes to the target L).
+    }
+    public Modes Mode { get; set; }
 }

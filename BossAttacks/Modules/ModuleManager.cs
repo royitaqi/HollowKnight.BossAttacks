@@ -97,7 +97,7 @@ internal class ModuleManager {
         _level = level;
         foreach (var m in _modules)
         {
-            bool shouldBeLoaded = m.L <= _level && _level <= m.H;
+            bool shouldBeLoaded = m.Levels.Contains(_level);
             if (shouldBeLoaded && !m.Loaded)
             {
                 m.Load();
@@ -116,10 +116,19 @@ internal class ModuleManager {
     {
         var module = Activator.CreateInstance(config.ModuleType, scene, config, this) as Module;
 
-        // Copy the config's ID, L, H over to the module
-        module.ID = (config.ID != null ? config.ID : config.ModuleType.Name) + $" | {config.L}/{config.H}";
-        module.L = config.L;
-        module.H = config.H;
+        if (config.Levels != null)
+        {
+            module.Levels = config.Levels;
+        }
+        else
+        {
+            module.Levels = new HashSet<int>(Enumerable.Range(config.L, config.H - config.L + 1));
+        }
+
+        var mainID = (config.ID != null ? config.ID : config.ModuleType.Name);
+        var levels = String.Join("", module.Levels.Select(l => l.ToString()));
+        module.ID = $"{mainID} | {levels}";
+
         return module;
     }
 
@@ -136,6 +145,12 @@ internal class ModuleManager {
     {
         foreach (var prop in config.GetType().GetProperties())
         {
+            // Can only propagate properies which are on the list
+            if (!CanPropagate.Contains(prop.Name))
+            {
+                continue;
+            }
+
             // Cannot propagate to something whose state cannot be verified
             if (!prop.CanRead)
             {
@@ -156,6 +171,8 @@ internal class ModuleManager {
             }
         }
     }
+
+    private static readonly HashSet<string> CanPropagate = new() { "GoName", "FsmName", "StateName" };
 
     internal static IEnumerable<PrintStatesConfig> GetPrintStatesModuleConfigs(ModuleConfig[] configs)
     {

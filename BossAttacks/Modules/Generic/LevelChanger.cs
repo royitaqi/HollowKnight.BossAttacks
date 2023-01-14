@@ -16,18 +16,21 @@ internal class LevelChanger : SingleFsmModule
     {
         this.LogMod($"Loading");
 
-        Option opt = _config.Reversible ? new BooleanOption() : new MonoOption();
+        Option opt = _config.Mode == LevelChangerConfig.Modes.Bidirection ? new BooleanOption() : new MonoOption();
         opt.Display = _config.Display;
         _targetL = _config.TargetL;
         opt.Interacted += () =>
         {
             this.LogModDebug($"Changing level to {_targetL}");
-            _targetL = _mgr.ChangeLevel(_targetL);
+            var originalL = _mgr.ChangeLevel(_targetL);
 
-            if (!_config.Reversible)
+            if (_config.Mode == LevelChangerConfig.Modes.OneTime)
             {
-                // Stop interaction if irreversible
                 opt.Interactive = false;
+            }
+            else if (_config.Mode == LevelChangerConfig.Modes.Bidirection)
+            {
+                _targetL = originalL;
             }
         };
         _options.Add(opt);

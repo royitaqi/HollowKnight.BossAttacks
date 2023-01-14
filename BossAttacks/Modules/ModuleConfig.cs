@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace BossAttacks.Modules;
 
@@ -10,4 +11,5 @@ internal class ModuleConfig {
     public string ID { get; set; }
     public int L { get; set; }
     public int H { get; set; }
+    public HashSet<int> Levels { get; set; }
 }
