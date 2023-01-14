@@ -57,13 +57,13 @@ internal class ModuleManager {
             _modules.Add(module);
         }
 
-        ModAssert.AllBuilds(_modules.Count == _modules.Select(m => m.ID).Distinct().Count(), "All modules should have unique IDs");
-
         this.LogModDebug($"Modules: ({_modules.Count})");
         foreach (var m in _modules)
         {
             this.LogModDebug($"    {m.GetType().Name}: {m.ID}");
         }
+
+        ModAssert.AllBuilds(_modules.Count == _modules.Select(m => m.ID).Distinct().Count(), "All modules should have unique IDs");
 
         ChangeLevel(0);
     }

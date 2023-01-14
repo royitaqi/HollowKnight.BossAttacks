@@ -224,27 +224,29 @@ namespace BossAttacks.Utils
             } },
             { "GG_Mage_Knight"       , new ModuleConfig[] {
                 /**
-                 *                         All Attacks
-                 *                        /    SHOOT
-                 *                       |    /    SLASH
-                 *                       |   |    /    STOMP
-                 *                       |   |   |    /
-                 *                     | 0 | 1 | 2 | 3 |
-                 * -------------------------------------
-                 * label all           | t ----------- |
-                 * label SHOOT         | --- t ------- |
-                 * label SLASH         | ------- t --- |
-                 * label STOMP         | ----------- t |
-                 * option all          | t ----------- |
-                 * option SHOOT        | --- t ------- |
-                 * option SLASH        | ------- t --- |
-                 * option STOMP        | ----------- t |
-                 * SCP                 | ------------- |
-                 * block SHOOT in MD   |   |   | ----- |
-                 * block SHOOT in AST  |   |   | ----- |
-                 * block SLASH in MD   |   | - |   | - |
-                 * block SLASH in AST  |   | - |   | - |
-                 * block STOMP         |   | ----- |   |
+                 *                             All Attacks
+                 *                            /    SHOOT
+                 *                           |    /    SLASH
+                 *                           |   |    /    STOMP
+                 *                           |   |   |    /
+                 *                         | 0 | 1 | 2 | 3 |
+                 * -----------------------------------------
+                 * label all               | t ----------- |
+                 * label SHOOT             | --- t ------- |
+                 * label SLASH             | ------- t --- |
+                 * label STOMP             | ----------- t |
+                 * option all              | t ----------- |
+                 * option SHOOT            | --- t ------- |
+                 * option SLASH            | ------- t --- |
+                 * option STOMP            | ----------- t |
+                 * SCP                     | ------------- |
+                 * force SHOOT after tele  |   | - |   |   |
+                 * force side tele         |   | ----- |   |
+                 * cancel up tele          |   | ----- |   |
+                 * force SLASH after tele  |   |   | - |   |
+                 * block SHOOT in MD       |   |   | ----- |
+                 * force STOMP tele        |   |   |   | - |
+                 * block SLASH in MD       |   | - |   | - |
                  */
                 new LabelConfig { ID = "label all", L = 0, Display = "Current attacks: All" },
                 new LabelConfig { ID = "label SHOOT", L = 1, Display = "Current attacks: SHOOT" },
@@ -255,11 +257,17 @@ namespace BossAttacks.Utils
                 new LevelChangerConfig { ID = "option SLASH", H = 3, Display = "SLASH (exclusive)", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
                 new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP (exclusive)", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
                 new ShortCircuitProtectionConfig { ID = "SCP", H = 3, GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision", ScpStateName = "Move Decision SCP" },
-                new TransitionRewirerConfig { ID = "block SHOOT in MD", L = 2, H = 3, StateName = "Move Decision", EventName = "SHOOT", ToState = "Move Decision SCP" },
-                new TransitionRewirerConfig { ID = "block SHOOT in AST", L = 2, H = 3, StateName = "After Side Tele", EventName = "SHOOT", ToState = "Idle" },
+                // SHOOT & SLASH
+                new EventEmitterConfig { ID = "force side tele", Levels = new() { 1, 2 }, StateName = "Tele Choice", EventName = "SIDE" },
+                new TransitionRewirerConfig { ID = "cancel up tele", Levels = new() { 1, 2 }, StateName = "Up Tele Aim", EventName = "FINISHED", ToState = "Idle" },
+                // SHOOT
                 new TransitionRewirerConfig { ID = "block SLASH in MD", Levels = new() { 1, 3 }, StateName = "Move Decision", EventName = "SLASH", ToState = "Move Decision SCP" },
-                new TransitionRewirerConfig { ID = "block SLASH in AST", Levels = new() { 1, 3 }, StateName = "After Side Tele", EventName = "SLASH", ToState = "Idle" },
-                new EventEmitterConfig { ID = "block STOMP", L = 1, H = 2, StateName = "Up Tele Aim", EventName = "CANCEL" },
+                new EventEmitterConfig { ID = "force SHOOT after tele", Levels = new() { 1 }, StateName = "After Side Tele", EventName = "SHOOT" },
+                // SLASH
+                new TransitionRewirerConfig { ID = "block SHOOT in MD", Levels = new() { 2, 3 }, StateName = "Move Decision", EventName = "SHOOT", ToState = "Move Decision SCP" },
+                new EventEmitterConfig { ID = "force SLASH after tele", Levels = new() { 2 }, StateName = "After Side Tele", EventName = "SLASH" },
+                // STOMP
+                new EventEmitterConfig { ID = "force STOMP tele", Levels = new() { 3 }, StateName = "Tele Choice", EventName = "STOMP" },
             } },
             { "GG_Mage_Knight_V"     , null },
             { "GG_Mantis_Lords"      , null },
