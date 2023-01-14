@@ -2,7 +2,7 @@ using System;
 
 namespace BossAttacks.Modules.Generic;
 
-internal class PrintStatesModuleConfig : SingleFsmModuleConfig
+internal class PrintStatesConfig : SingleFsmModuleConfig
 {
-    public override Type ModuleType => typeof(PrintStatesModule);
+    public override Type ModuleType => typeof(PrintStates);
 }

@@ -4,9 +4,9 @@ using UnityEngine.SceneManagement;
 
 namespace BossAttacks.Modules.Generic;
 
-internal class PrintStatesModule : SingleFsmModule
+internal class PrintStates : SingleFsmModule
 {
-    public PrintStatesModule(Scene scene, PrintStatesModuleConfig config, ModuleManager mgr)
+    public PrintStates(Scene scene, PrintStatesConfig config, ModuleManager mgr)
     {
         _scene = scene;
         _config = config;
@@ -35,5 +35,5 @@ internal class PrintStatesModule : SingleFsmModule
     }
 
     private Scene _scene;
-    private PrintStatesModuleConfig _config;
+    private PrintStatesConfig _config;
 }

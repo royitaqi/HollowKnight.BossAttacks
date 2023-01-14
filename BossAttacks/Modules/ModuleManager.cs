@@ -111,7 +111,7 @@ internal class ModuleManager {
         var module = Activator.CreateInstance(config.ModuleType, scene, config, this) as Module;
 
         // Copy the config's ID, L, H over to the module
-        module.ID = (config.ID != null ? config.ID : config.ModuleType.Name) + $" {config.L}-{config.H}";
+        module.ID = (config.ID != null ? config.ID : config.ModuleType.Name) + $" | {config.L}/{config.H}";
         module.L = config.L;
         module.H = config.H;
         return module;
@@ -151,7 +151,7 @@ internal class ModuleManager {
         }
     }
 
-    internal static IEnumerable<PrintStatesModuleConfig> GetPrintStatesModuleConfigs(ModuleConfig[] configs)
+    internal static IEnumerable<PrintStatesConfig> GetPrintStatesModuleConfigs(ModuleConfig[] configs)
     {
         int l = configs.Select(c => c.L).Min();
         int h = configs.Select(c => c.H).Max();
@@ -166,7 +166,7 @@ internal class ModuleManager {
             .Select(s =>
             {
                 var parts = s.Split('-');
-                return new PrintStatesModuleConfig
+                return new PrintStatesConfig
                 {
                     L = l,
                     H = h,
