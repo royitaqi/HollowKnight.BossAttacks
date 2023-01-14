@@ -109,7 +109,9 @@ namespace BossAttacks.Utils
                 new GenericAttackSelectorConfig { GoName = "Battle Scene/Zombie Beam Miner Rematch", FsmName = "Beam Miner" },
             } },
             { "GG_Dung_Defender"     , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "Dung Defender", FsmName = "Dung Defender" },
+                new GenericAttackSelectorConfig { L = 0, H = 1, GoName = "Dung Defender", FsmName = "Dung Defender" },
+                new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Reversible = true },
+                new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
             } },
             { "GG_Failed_Champion"   , new ModuleConfig[] {
                 new GenericAttackSelectorConfig { GoName = "False Knight Dream", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
@@ -306,8 +308,10 @@ namespace BossAttacks.Utils
             } },
             { "GG_Watcher_Knights"   , null },
             { "GG_White_Defender"    , new ModuleConfig[] {
-                new GenericAttackSelectorConfig { GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
-                new BothDefender_TrimRollJump_Config(), // custom module
+                new GenericAttackSelectorConfig { L = 0, H = 1, GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
+                new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Reversible = true },
+                new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
+                new EventEmitterConfig { L = 1, StateName = "Air Dive?", ActionType = typeof(SendRandomEvent), IndexDelta = 2, EventName = "FINISHED" }, // trim tail dive
             } },
         };
     }
