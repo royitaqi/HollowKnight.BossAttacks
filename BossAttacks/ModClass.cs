@@ -49,12 +49,13 @@ namespace BossAttacks
 
             int i = 0;
             // Order MATTERS
-            foreach (var opt in ModuleManager.Instance.GetOptions())
+            foreach (var opt in ModuleManager.Instance.GetOptions().ToArray())
             {
                 if (Input.GetKeyDown(KeyCode.Alpha0 + ++i) && opt.Interactive)
                 {
                     this.LogModDebug($"Changing option {opt.Display}");
                     opt.Interact();
+                    break;
                 }
             }
         }
