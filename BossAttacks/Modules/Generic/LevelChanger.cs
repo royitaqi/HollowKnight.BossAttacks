@@ -3,9 +3,9 @@ using UnityEngine.SceneManagement;
 
 namespace BossAttacks.Modules.Generic;
 
-internal class LevelChangerModule : SingleFsmModule
+internal class LevelChanger : SingleFsmModule
 {
-    public LevelChangerModule(Scene scene, LevelChangerModuleConfig config, ModuleManager mgr)
+    public LevelChanger(Scene scene, LevelChangerConfig config, ModuleManager mgr)
     {
         _scene = scene;
         _config = config;
@@ -40,7 +40,7 @@ internal class LevelChangerModule : SingleFsmModule
     }
 
     private Scene _scene;
-    private LevelChangerModuleConfig _config;
+    private LevelChangerConfig _config;
     private ModuleManager _mgr;
     private int _targetL;
 }

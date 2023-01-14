@@ -2,9 +2,9 @@ using System;
 
 namespace BossAttacks.Modules.Generic;
 
-internal class LevelChangerModuleConfig : ModuleConfig
+internal class LevelChangerConfig : ModuleConfig
 {
-    public override Type ModuleType => typeof(LevelChangerModule);
+    public override Type ModuleType => typeof(LevelChanger);
 
     /**
      * Text to display as option.
