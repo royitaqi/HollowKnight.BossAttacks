@@ -117,14 +117,24 @@ namespace BossAttacks.Utils
                 new GenericAttackSelectorConfig { GoName = "False Knight Dream", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
                 new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[] {
-                        new("JA In A Row", 0),
-                        new("Slam In A Row", 0),
-                        new("Jump Count", 0),
-                        new("Stunned Amount", -9),
+                        new("JA In A Row", 0), // row count for JUMP ATTACK
+                        new("Slam In A Row", 0), // row count for SMASH
+                        new("Jump Count", 0), // row check for JUMP
+                        new("Stunned Amount", -9), // Needed for JUMP. See Determine Jump-1.
                     },
                 },
             } },
-            { "GG_False_Knight"      , null },
+            { "GG_False_Knight"      , new ModuleConfig[] {
+                new GenericAttackSelectorConfig { GoName = "Battle Scene/False Knight New", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[] {
+                        new("JA In A Row", 0), // row count for JUMP ATTACK
+                        new("Slam In A Row", 0), // row count for SMASH
+                        new("Jump Count", 0), // row check for JUMP
+                        new("Stunned Amount", -9), // Needed for JUMP. See Determine Jump-1.
+                    },
+                },
+            } },
             { "GG_Flukemarm"         , null }, // X not interesting
             { "GG_Ghost_Galien"      , null }, // X not interesting
             { "GG_Ghost_Gorb"        , null }, // X not interesting
