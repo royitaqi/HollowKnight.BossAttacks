@@ -222,54 +222,8 @@ namespace BossAttacks.Utils
             { "GG_Lost_Kin"          , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Lost Kin", FsmName = "IK Control" },
             } },
-            { "GG_Mage_Knight"       , new ModuleConfig[] {
-                /**
-                 *                             All Attacks
-                 *                            /    SHOOT
-                 *                           |    /    SLASH
-                 *                           |   |    /    STOMP
-                 *                           |   |   |    /
-                 *                         | 0 | 1 | 2 | 3 |
-                 * -----------------------------------------
-                 * label all               | t ----------- |
-                 * label SHOOT             | --- t ------- |
-                 * label SLASH             | ------- t --- |
-                 * label STOMP             | ----------- t |
-                 * option all              | t ----------- |
-                 * option SHOOT            | --- t ------- |
-                 * option SLASH            | ------- t --- |
-                 * option STOMP            | ----------- t |
-                 * SCP                     | ------------- |
-                 * force SHOOT after tele  |   | - |   |   |
-                 * force side tele         |   | ----- |   |
-                 * cancel up tele          |   | ----- |   |
-                 * force SLASH after tele  |   |   | - |   |
-                 * block SHOOT in MD       |   |   | ----- |
-                 * force STOMP tele        |   |   |   | - |
-                 * block SLASH in MD       |   | - |   | - |
-                 */
-                new LabelConfig { ID = "label all", L = 0, Display = "Current attacks: All" },
-                new LabelConfig { ID = "label SHOOT", L = 1, Display = "Current attacks: SHOOT" },
-                new LabelConfig { ID = "label SLASH", L = 2, Display = "Current attacks: SLASH" },
-                new LabelConfig { ID = "label STOMP", L = 3, Display = "Current attacks: STOMP" },
-                new LevelChangerConfig { ID = "option all", H = 3, Display = "All", TargetL = 0, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option SHOOT", H = 3, Display = "SHOOT (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option SLASH", H = 3, Display = "SLASH (exclusive)", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP (exclusive)", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
-                new ShortCircuitProtectionConfig { ID = "SCP", H = 3, GoName = "Mage Knight", FsmName = "Mage Knight", StateName = "Move Decision", ScpStateName = "Move Decision SCP" },
-                // SHOOT & SLASH
-                new EventEmitterConfig { ID = "force side tele", Levels = new() { 1, 2 }, StateName = "Tele Choice", EventName = "SIDE" },
-                new TransitionRewirerConfig { ID = "cancel up tele", Levels = new() { 1, 2 }, StateName = "Up Tele Aim", EventName = "FINISHED", ToState = "Idle" },
-                // SHOOT
-                new TransitionRewirerConfig { ID = "block SLASH in MD", Levels = new() { 1, 3 }, StateName = "Move Decision", EventName = "SLASH", ToState = "Move Decision SCP" },
-                new EventEmitterConfig { ID = "force SHOOT after tele", Levels = new() { 1 }, StateName = "After Side Tele", EventName = "SHOOT" },
-                // SLASH
-                new TransitionRewirerConfig { ID = "block SHOOT in MD", Levels = new() { 2, 3 }, StateName = "Move Decision", EventName = "SHOOT", ToState = "Move Decision SCP" },
-                new EventEmitterConfig { ID = "force SLASH after tele", Levels = new() { 2 }, StateName = "After Side Tele", EventName = "SLASH" },
-                // STOMP
-                new EventEmitterConfig { ID = "force STOMP tele", Levels = new() { 3 }, StateName = "Tele Choice", EventName = "STOMP" },
-            } },
-            { "GG_Mage_Knight_V"     , null },
+            { "GG_Mage_Knight"       , GetSoulWarriorConfigs("Mage Knight", "Mage Knight") },
+            { "GG_Mage_Knight_V"     , GetSoulWarriorConfigs("Mage Knight", "Mage Knight") },
             { "GG_Mantis_Lords"      , null },
             { "GG_Mantis_Lords_V"    , null },
             { "GG_Mega_Moss_Charger" , new ModuleConfig[] {
@@ -401,5 +355,56 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { L = 1, StateName = "Air Dive?", ActionType = typeof(SendRandomEvent), IndexDelta = 2, EventName = "FINISHED" }, // trim tail dive
             } },
         };
+
+        private static ModuleConfig[] GetSoulWarriorConfigs(string goName, string fsmName)
+        {
+            return new ModuleConfig[] {
+                /**
+                 *                             All Attacks
+                 *                            /    SHOOT
+                 *                           |    /    SLASH
+                 *                           |   |    /    STOMP
+                 *                           |   |   |    /
+                 *                         | 0 | 1 | 2 | 3 |
+                 * -----------------------------------------
+                 * label all               | t ----------- |
+                 * label SHOOT             | --- t ------- |
+                 * label SLASH             | ------- t --- |
+                 * label STOMP             | ----------- t |
+                 * option all              | t ----------- |
+                 * option SHOOT            | --- t ------- |
+                 * option SLASH            | ------- t --- |
+                 * option STOMP            | ----------- t |
+                 * SCP                     | ------------- |
+                 * force SHOOT after tele  |   | - |   |   |
+                 * force side tele         |   | ----- |   |
+                 * cancel up tele          |   | ----- |   |
+                 * force SLASH after tele  |   |   | - |   |
+                 * block SHOOT in MD       |   |   | ----- |
+                 * force STOMP tele        |   |   |   | - |
+                 * block SLASH in MD       |   | - |   | - |
+                 */
+                new LabelConfig { ID = "label all", L = 0, Display = "Current attacks: All" },
+                new LabelConfig { ID = "label SHOOT", L = 1, Display = "Current attacks: SHOOT" },
+                new LabelConfig { ID = "label SLASH", L = 2, Display = "Current attacks: SLASH" },
+                new LabelConfig { ID = "label STOMP", L = 3, Display = "Current attacks: STOMP" },
+                new LevelChangerConfig { ID = "option all", H = 3, Display = "All", TargetL = 0, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option SHOOT", H = 3, Display = "SHOOT (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option SLASH", H = 3, Display = "SLASH (exclusive)", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP (exclusive)", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
+                new ShortCircuitProtectionConfig { ID = "SCP", H = 3, GoName = goName, FsmName = fsmName, StateName = "Move Decision", ScpStateName = "Move Decision SCP" },
+                // SHOOT & SLASH
+                new EventEmitterConfig { ID = "force side tele", Levels = new() { 1, 2 }, StateName = "Tele Choice", EventName = "SIDE" },
+                new TransitionRewirerConfig { ID = "cancel up tele", Levels = new() { 1, 2 }, StateName = "Up Tele Aim", EventName = "FINISHED", ToState = "Idle" },
+                // SHOOT
+                new TransitionRewirerConfig { ID = "block SLASH in MD", Levels = new() { 1, 3 }, StateName = "Move Decision", EventName = "SLASH", ToState = "Move Decision SCP" },
+                new EventEmitterConfig { ID = "force SHOOT after tele", Levels = new() { 1 }, StateName = "After Side Tele", EventName = "SHOOT" },
+                // SLASH
+                new TransitionRewirerConfig { ID = "block SHOOT in MD", Levels = new() { 2, 3 }, StateName = "Move Decision", EventName = "SHOOT", ToState = "Move Decision SCP" },
+                new EventEmitterConfig { ID = "force SLASH after tele", Levels = new() { 2 }, StateName = "After Side Tele", EventName = "SLASH" },
+                // STOMP
+                new EventEmitterConfig { ID = "force STOMP tele", Levels = new() { 3 }, StateName = "Tele Choice", EventName = "STOMP" },
+            };
+        }
     }
 }
