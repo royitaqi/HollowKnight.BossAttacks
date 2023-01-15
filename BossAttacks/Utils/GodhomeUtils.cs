@@ -294,8 +294,12 @@ namespace BossAttacks.Utils
             { "GG_Traitor_Lord"      , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis", IgnoreEvents = new() { "SLAM" } },
             } },
-            { "GG_Uumuu"             , null },
-            { "GG_Uumuu_V"           , null },
+            { "GG_Uumuu"             , new ModuleConfig[] {
+                new AttackSelectorConfig { GoName = "Mega Jellyfish GG", FsmName = "Mega Jellyfish", StateName = "Choice" },
+            } },
+            { "GG_Uumuu_V"           , new ModuleConfig[] {
+                new AttackSelectorConfig { GoName = "Mega Jellyfish GG", FsmName = "Mega Jellyfish", StateName = "Choice" },
+            } },
             { "GG_Vengefly"          , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
                     MapEvents = new()
