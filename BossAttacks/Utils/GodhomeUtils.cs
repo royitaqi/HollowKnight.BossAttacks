@@ -85,36 +85,8 @@ namespace BossAttacks.Utils
                     },
                 },
             } },
-            { "GG_Brooding_Mawlek"   , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
-                    MapEvents = new() {
-                        { "TRUE", "SPIT" },
-                        { "FALSE", "JUMP" },
-                    },
-                },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Jumps In A Row", 0),
-                        new("Spits In A Row", 0),
-                    },
-                },
-            } },
-            { "GG_Brooding_Mawlek_V" , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
-                    MapEvents = new() {
-                        { "TRUE", "SPIT" },
-                        { "FALSE", "JUMP" },
-                    },
-                },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Jumps In A Row", 0),
-                        new("Spits In A Row", 0),
-                    },
-                },
-            } },
+            { "GG_Brooding_Mawlek"   , GetBroodingMawlekConfigs() },
+            { "GG_Brooding_Mawlek_V" , GetBroodingMawlekConfigs() },
             { "GG_Collector"         , null },
             { "GG_Collector_V"       , null },
             { "GG_Crystal_Guardian"  , new ModuleConfig[] {
@@ -128,28 +100,8 @@ namespace BossAttacks.Utils
                 new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
             } },
-            { "GG_Failed_Champion"   , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "False Knight Dream", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[] {
-                        new("JA In A Row", 0), // row count for JUMP ATTACK
-                        new("Slam In A Row", 0), // row count for SMASH
-                        new("Jump Count", 0), // row check for JUMP
-                        new("Stunned Amount", -9), // Needed for JUMP. See Determine Jump-1.
-                    },
-                },
-            } },
-            { "GG_False_Knight"      , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "Battle Scene/False Knight New", FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[] {
-                        new("JA In A Row", 0), // row count for JUMP ATTACK
-                        new("Slam In A Row", 0), // row count for SMASH
-                        new("Jump Count", 0), // row check for JUMP
-                        new("Stunned Amount", -9), // Needed for JUMP. See Determine Jump-1.
-                    },
-                },
-            } },
+            { "GG_Failed_Champion"   , GetFalseKnightAndFailedChampionConfigs(true) },
+            { "GG_False_Knight"      , GetFalseKnightAndFailedChampionConfigs(false) },
             { "GG_Flukemarm"         , null }, // X not interesting
             { "GG_Ghost_Galien"      , null }, // X not interesting
             { "GG_Ghost_Gorb"        , null }, // X not interesting
@@ -197,26 +149,8 @@ namespace BossAttacks.Utils
                 new LevelChangerConfig { L = 0, H = 1, Display = "BALLOON (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new EventEmitterConfig { L = 1, H = 1, EventName = "BALLOON" }, // enable BALLOON
             } },
-            { "GG_Gruz_Mother"       , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Slams In A Row", 0),
-                        new("Charges In A Row", 0),
-                    },
-                },
-            } },
-            { "GG_Gruz_Mother_V"     , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Slams In A Row", 0),
-                        new("Charges In A Row", 0),
-                    },
-                },
-            } },
+            { "GG_Gruz_Mother"       , GetGruzMotherConfigs() },
+            { "GG_Gruz_Mother_V"     , GetGruzMotherConfigs() },
             { "GG_Hive_Knight"       , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Battle Scene/Hive Knight", FsmName = "Control", StateName = "Phase 3", IgnoreEvents = new() { "JUMP" } },
                 new EventEmitterConfig { StateName = "Phase Check", EventName = "P3" },
@@ -443,6 +377,66 @@ namespace BossAttacks.Utils
                 },
                 new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
                 new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
+            };
+        }
+
+        private static ModuleConfig[] GetGruzMotherConfigs()
+        {
+            return new ModuleConfig[] {
+                new AttackSelectorConfig { GoName = "_Enemies/Giant Fly", FsmName = "Big Fly Control", StateName = "Super Choose" },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Slams In A Row", 0),
+                        new("Charges In A Row", 0),
+                    },
+                },
+            };
+        }
+
+        private static ModuleConfig[] GetFalseKnightAndFailedChampionConfigs(bool v)
+        {
+            var falseKnight = new Dictionary<string, string>
+            {
+                { "GoName", "False Knight Dream" },
+            };
+            var failedChampion = new Dictionary<string, string>
+            {
+                { "GoName", "Battle Scene/False Knight New" },
+            };
+            var boss = v ? failedChampion : falseKnight;
+
+            return new ModuleConfig[] {
+                new AttackSelectorConfig { GoName = boss["GoName"], FsmName = "FalseyControl", IgnoreEvents = new() { "RUN", "TEST" } },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[] {
+                        new("JA In A Row", 0), // row count for JUMP ATTACK
+                        new("Slam In A Row", 0), // row count for SMASH
+                        new("Jump Count", 0), // row check for JUMP
+                        new("Stunned Amount", -9), // Needed for JUMP. See Determine Jump-1.
+                    },
+                },
+            };
+        }
+
+        private static ModuleConfig[] GetBroodingMawlekConfigs()
+        {
+            return new ModuleConfig[]
+            {
+                new AttackSelectorConfig { GoName = "Battle Scene/Mawlek Body", FsmName = "Mawlek Control", StateName = "Super Select",
+                    MapEvents = new() {
+                        { "TRUE", "SPIT" },
+                        { "FALSE", "JUMP" },
+                    },
+                },
+                new VariableSetterConfig
+                {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Jumps In A Row", 0),
+                        new("Spits In A Row", 0),
+                    },
+                },
             };
         }
     }
