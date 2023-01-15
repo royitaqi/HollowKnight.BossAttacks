@@ -172,7 +172,33 @@ namespace BossAttacks.Utils
             } },
             { "GG_Mage_Knight"       , GetSoulWarriorConfigs() },
             { "GG_Mage_Knight_V"     , GetSoulWarriorConfigs() },
-            { "GG_Mantis_Lords"      , null },
+            { "GG_Mantis_Lords"      , new ModuleConfig[] {
+                /**
+                 *                             Phase 1 normal fight
+                 *                            /    Phase 1 kill boss
+                 *                           |    /    Phase 2 coordinated fight
+                 *                           |   |    /    Phase 2 uncoordinated fight
+                 *                           |   |   |    /
+                 *                         | 0 | 1 | 2 | 3 |
+                 * -----------------------------------------
+                 * phase 1 AS              | - |   |   |   |
+                 * phase 1->2 manual       | - | t |   |   |
+                 * phase 1 boss killer     |   | - |   |   |
+                 * phase 1->2 auto         | ----- | t |   |
+                 * phase 2c AS             |   |   | - |   |
+                 * phase 2c<->2u           |   |   | t - T |
+                 * phase 2u s1             |   |   |   | - |
+                 * phase 2u s2             |   |   |   | - |
+                 */
+                new AttackSelectorConfig { ID = "phase 1 AS", GoName = "Mantis Battle/Battle Main/Mantis Lord", FsmName = "Mantis Lord", MapEvents = new() { { "HIGH THROW", "HIGH THROW (only when hero is off platform or too high)" } } },
+                new LevelChangerConfig { ID = "phase 1->2 manual", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime },
+                new GoKillerConfig { ID = "phase 1 boss killer", L = 1 },
+                new AutoLevelChangerConfig { ID = "phase 1->2 auto", L = 0, H = 1, GoName = "Mantis Battle/Battle Sub", FsmName = "Start", OnEnterState = "Start", TargetL = 2 },
+                new AttackSelectorConfig { ID = "phase 2c AS", L = 2, StateName = "Choose Move" },
+                new LevelChangerConfig { ID = "phase 2c<->2u", L = 2, H = 3, Display = "Extra: Uncoordinated Attacks", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection },
+                new ActionEnablerConfig { ID = "phase 2u s1", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S1", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
+                new ActionEnablerConfig { ID = "phase 2u s2", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S2", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
+            } },
             { "GG_Mantis_Lords_V"    , null },
             { "GG_Mega_Moss_Charger" , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Mega Moss Charger", FsmName = "Mossy Control" },
