@@ -29,8 +29,21 @@ namespace BossAttacks
             Log("Initializing mod");
 
             Instance = this;
-            ModuleManager.Instance = new ModuleManager();
+
             ModDisplay.Instance = new ModDisplay();
+
+            ModuleManager.Instance = new ModuleManager();
+            ModuleManager.Instance.OptionsChanged += () =>
+            {
+                UpdateOptionDisplay();
+                foreach (var opt in ModuleManager.Instance.GetOptions())
+                {
+                    if (opt.Interactive)
+                    {
+                        opt.Interacted += UpdateOptionDisplay;
+                    }
+                }
+            };
 
             USceneManager.activeSceneChanged += SceneManager_OnActiveSceneChanged;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
@@ -62,9 +75,11 @@ namespace BossAttacks
 
         private void SceneManager_OnActiveSceneChanged(Scene from, Scene to)
         {
-            if (!ModuleManager.IsBossScene(to))
+            ModuleManager.Instance.Unload();
+
+            if (!ModuleManager.IsBossScene(to) || (from != null && from.name != "GG_Workshop"))
             {
-                ModDisplay.Instance.Display("Enter a boss fight to see boss attacks.");
+                ModDisplay.Instance.Display("Enter a boss fight in Hall of Gods to see boss attacks.");
                 return;
             }
             if (!ModuleManager.IsSupportedBossScene(to))
@@ -72,19 +87,8 @@ namespace BossAttacks
                 ModDisplay.Instance.Display("This boss is not supported.");
                 return;
             }
-            // Now it's a supported boss scene
 
-            ModuleManager.Instance.OptionsChanged += () =>
-            {
-                UpdateOptionDisplay();
-                foreach (var opt in ModuleManager.Instance.GetOptions())
-                {
-                    if (opt.Interactive)
-                    {
-                        opt.Interacted += UpdateOptionDisplay;
-                    }
-                }
-            };
+            // Now it's a supported boss scene in HoG
             ModuleManager.Instance.Load(to);
         }
 
@@ -101,11 +105,6 @@ namespace BossAttacks
             //this.LogModFine(sb.ToString());
 
             ModDisplay.Instance.Display(sb.ToString());
-        }
-
-        private void UpdateOptionDisplayWithError()
-        {
-            ModDisplay.Instance.Notify("Cannot make change. Most commonly because there needs to be one active attack.");
         }
 
         ///

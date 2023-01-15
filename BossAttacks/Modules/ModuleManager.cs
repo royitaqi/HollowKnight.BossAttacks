@@ -28,7 +28,7 @@ internal class ModuleManager {
 
         ModAssert.AllBuilds(IsSupportedBossScene(scene), "The current scene should be a supported boss scene.");
 
-        this.LogModDebug($"Modules: ({_modules.Count})");
+        this.LogModDebug($"Modules");
         var propagationDict = new Dictionary<string, object>();
         var countDict = new Dictionary<Type, int>();
         foreach (var config in GodhomeUtils.SceneToModuleConfigs[scene.name])
