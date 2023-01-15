@@ -253,6 +253,7 @@ namespace BossAttacks.Utils
             } },
             { "GG_Oblobbles"         , null }, // X not interesting
             { "GG_Painter"           , new ModuleConfig[] {
+                new LabelConfig { Display = "Attacks:" },
                 new AttackSelectorConfig { GoName = "Battle Scene/Sheo Boss", FsmName = "nailmaster_sheo", StateName = "Choice", IgnoreEvents = new() { "GREAT SLASH" } },
                 new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[]
@@ -260,6 +261,7 @@ namespace BossAttacks.Utils
                         new("Art Counter", 1),
                     },
                 },
+                new LabelConfig { Display = "After Evade:" },
                 new AttackSelectorConfig { StateName = "Evade Choice", IgnoreEvents = new() { "GREAT SLASH" } },
                 new VariableSetterConfig {
                     IntVariables = new KeyValuePair<string, int>[]
@@ -267,7 +269,8 @@ namespace BossAttacks.Utils
                         new("Art Counter", 1),
                     },
                 },
-                new LevelChangerConfig { L = 0, H = 1, Display = "GREAT SLASH (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
+                new LabelConfig { Display = "Exclusive:" },
+                new LevelChangerConfig { L = 0, H = 1, Display = "GREAT SLASH", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new VariableSetterConfig { L = 1, H = 1, StateName = "Choice",
                     IntVariables = new KeyValuePair<string, int>[]
                     {
