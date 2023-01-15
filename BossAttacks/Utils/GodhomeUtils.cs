@@ -409,11 +409,15 @@ namespace BossAttacks.Utils
             var m = v ? soulTyrant : soulMaster;
 
             return new ModuleConfig[] {
-                new AttackSelectorConfig { ID = "AS", GoName = m["phase 1 GoName"], FsmName = m["phase 1 FsmName"] }, // AS
+                new AttackSelectorConfig { ID = "AS", GoName = m["phase 1 GoName"], FsmName = m["phase 1 FsmName"],
+                    MapEvents = new() {
+                        { "QUAKE", "DIVE" },
+                    },
+                }, // AS
                 new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime }, // manual phase changer
                 new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
-                new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = m["phase 2 FsmName"], FsmName = m["phase 2 FsmName"], OnEnterState = m["phase 2 OnEnterState"], TargetL = 2 }, // auto level changer
-                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
+                new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = m["phase 2 GoName"], FsmName = m["phase 2 FsmName"], OnEnterState = m["phase 2 OnEnterState"], TargetL = 2 }, // auto level changer
+                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite DIVE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
                 new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
                 new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
             };
