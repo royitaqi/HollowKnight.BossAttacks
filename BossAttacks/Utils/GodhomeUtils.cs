@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using BossAttacks.Modules;
 using BossAttacks.Modules.Generic;
 using HutongGames.PlayMaker.Actions;
@@ -222,8 +223,8 @@ namespace BossAttacks.Utils
             { "GG_Lost_Kin"          , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Lost Kin", FsmName = "IK Control" },
             } },
-            { "GG_Mage_Knight"       , GetSoulWarriorConfigs("Mage Knight", "Mage Knight") },
-            { "GG_Mage_Knight_V"     , GetSoulWarriorConfigs("Mage Knight", "Mage Knight") },
+            { "GG_Mage_Knight"       , GetSoulWarriorConfigs() },
+            { "GG_Mage_Knight_V"     , GetSoulWarriorConfigs() },
             { "GG_Mantis_Lords"      , null },
             { "GG_Mantis_Lords_V"    , null },
             { "GG_Mega_Moss_Charger" , new ModuleConfig[] {
@@ -262,35 +263,8 @@ namespace BossAttacks.Utils
                 new AttackSelectorConfig { ID = "AS in 4", L = 4, FsmName = "Attack Choices", StateName = "A2 Choice" },
             } },
             { "GG_Sly"               , null },
-            { "GG_Soul_Master"       , new ModuleConfig[] {
-                /**
-                 *     | 0 | 1 | 2 | 3 |   GO/FSM
-                 * --------------------------------
-                 * AS  | x |   |   |   |   1
-                 * MPC | x | t |   |   |   n/a
-                 * BK  |   | x |   |   |   1
-                 * ALC | x | x | t |   |   2
-                 * IDO |   |   | x | x |   n/a
-                 * ID  |   |   |   | x |   2
-                 * ID2 |   |   |   | x |   2
-                 */
-                new AttackSelectorConfig { ID = "AS", GoName = "Mage Lord", FsmName = "Mage Lord" }, // AS
-                new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime }, // manual phase changer
-                new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
-                new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = "Mage Lord Phase2", FsmName = "Mage Lord 2", OnEnterState = "Arrive Pause", TargetL = 2 }, // auto level changer
-                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
-                new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
-                new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
-            } },
-            { "GG_Soul_Tyrant"       , new ModuleConfig[] {
-                new AttackSelectorConfig { ID = "AS", GoName = "Dream Mage Lord", FsmName = "Mage Lord" }, // AS
-                new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime }, // manual phase changer
-                new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
-                new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = "Dream Mage Lord Phase2", FsmName = "Mage Lord 2", OnEnterState = "Wait", TargetL = 2 }, // auto level changer
-                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
-                new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
-                new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
-            } },
+            { "GG_Soul_Master"       , GetSoulMasterAndTyrantConfigs(false) },
+            { "GG_Soul_Tyrant"       , GetSoulMasterAndTyrantConfigs(true) },
             { "GG_Traitor_Lord"      , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Battle Scene/Wave 3/Mantis Traitor Lord", FsmName = "Mantis", IgnoreEvents = new() { "SLAM" } },
             } },
@@ -300,57 +274,12 @@ namespace BossAttacks.Utils
             { "GG_Uumuu_V"           , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Mega Jellyfish GG", FsmName = "Mega Jellyfish", StateName = "Choice" },
             } },
-            { "GG_Vengefly"          , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
-                    MapEvents = new()
-                    {
-                        { "SUMMON", "SUMMON (up to 15 roars)" },
-                    },
-                },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Summons In A Row", 0),
-                        new("Swoops in A Row", 0),
-                    },
-                },
-                new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
-                new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
-            } },
-            { "GG_Vengefly_V"        , new ModuleConfig[] {
-                new AttackSelectorConfig { GoName = "Giant Buzzer Col", FsmName = "Big Buzzer", StateName = "Choose Attack",
-                    MapEvents = new()
-                    {
-                        { "SWOOP", "Boss #1 SWOOP " },
-                        { "SUMMON", "Boss #1 SUMMON (up to 15 roars)" },
-                    },
-                },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Summons In A Row", 0),
-                        new("Swoops in A Row", 0),
-                    },
-                },
-                new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
-                new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
-                new AttackSelectorConfig { GoName = "Giant Buzzer Col (1)", FsmName = "Big Buzzer", StateName = "Choose Attack",
-                    MapEvents = new()
-                    {
-                        { "SWOOP", "Boss #2 SWOOP" },
-                        { "SUMMON", "Boss #2 SUMMON (up to 15 roars)" },
-                    },
-                },
-                new VariableSetterConfig {
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Summons In A Row", 0),
-                        new("Swoops in A Row", 0),
-                    },
-                },
-                new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
-                new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
-            } },
+            { "GG_Vengefly"          , GetVengeflyConfigs("Giant Buzzer Col", "Big Buzzer", "SWOOP", "SUMMON") },
+            { "GG_Vengefly_V"        , new[] {
+                    GetVengeflyConfigs("Giant Buzzer Col", "Big Buzzer", "Boss #1 SWOOP", "Boss #1 SUMMON"),
+                    GetVengeflyConfigs("Giant Buzzer Col (1)", "Big Buzzer", "Boss #2 SWOOP", "Boss #2 SUMMON"),
+                }.SelectMany(c => c).ToArray()
+            },
             { "GG_Watcher_Knights"   , null },
             { "GG_White_Defender"    , new ModuleConfig[] {
                 new AttackSelectorConfig { L = 0, H = 1, GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
@@ -360,34 +289,38 @@ namespace BossAttacks.Utils
             } },
         };
 
-        private static ModuleConfig[] GetSoulWarriorConfigs(string goName, string fsmName)
+        private static ModuleConfig[] GetSoulWarriorConfigs()
         {
+            /**
+             *                             All Attacks
+             *                            /    SHOOT
+             *                           |    /    SLASH
+             *                           |   |    /    STOMP
+             *                           |   |   |    /
+             *                         | 0 | 1 | 2 | 3 |
+             * -----------------------------------------
+             * label all               | t ----------- |
+             * label SHOOT             | --- t ------- |
+             * label SLASH             | ------- t --- |
+             * label STOMP             | ----------- t |
+             * option all              | t ----------- |
+             * option SHOOT            | --- t ------- |
+             * option SLASH            | ------- t --- |
+             * option STOMP            | ----------- t |
+             * SCP                     | ------------- |
+             * force SHOOT after tele  |   | - |   |   |
+             * force side tele         |   | ----- |   |
+             * cancel up tele          |   | ----- |   |
+             * force SLASH after tele  |   |   | - |   |
+             * block SHOOT in MD       |   |   | ----- |
+             * force STOMP tele        |   |   |   | - |
+             * block SLASH in MD       |   | - |   | - |
+             */
+
+            // for both non-V and V
+            var goName = "Mage Knight";
+            var fsmName = "Mage Knight";
             return new ModuleConfig[] {
-                /**
-                 *                             All Attacks
-                 *                            /    SHOOT
-                 *                           |    /    SLASH
-                 *                           |   |    /    STOMP
-                 *                           |   |   |    /
-                 *                         | 0 | 1 | 2 | 3 |
-                 * -----------------------------------------
-                 * label all               | t ----------- |
-                 * label SHOOT             | --- t ------- |
-                 * label SLASH             | ------- t --- |
-                 * label STOMP             | ----------- t |
-                 * option all              | t ----------- |
-                 * option SHOOT            | --- t ------- |
-                 * option SLASH            | ------- t --- |
-                 * option STOMP            | ----------- t |
-                 * SCP                     | ------------- |
-                 * force SHOOT after tele  |   | - |   |   |
-                 * force side tele         |   | ----- |   |
-                 * cancel up tele          |   | ----- |   |
-                 * force SLASH after tele  |   |   | - |   |
-                 * block SHOOT in MD       |   |   | ----- |
-                 * force STOMP tele        |   |   |   | - |
-                 * block SLASH in MD       |   | - |   | - |
-                 */
                 new LabelConfig { ID = "label all", L = 0, Display = "Current attacks: All" },
                 new LabelConfig { ID = "label SHOOT", L = 1, Display = "Current attacks: SHOOT" },
                 new LabelConfig { ID = "label SLASH", L = 2, Display = "Current attacks: SLASH" },
@@ -408,6 +341,71 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { ID = "force SLASH after tele", Levels = new() { 2 }, StateName = "After Side Tele", EventName = "SLASH" },
                 // STOMP
                 new EventEmitterConfig { ID = "force STOMP tele", Levels = new() { 3 }, StateName = "Tele Choice", EventName = "STOMP" },
+            };
+        }
+
+        private static ModuleConfig[] GetSoulMasterAndTyrantConfigs(bool v)
+        {
+            /**
+             *     | 0 | 1 | 2 | 3 |   GO/FSM
+             * --------------------------------
+             * AS  | x |   |   |   |   1
+             * MPC | x | t |   |   |   n/a
+             * BK  |   | x |   |   |   1
+             * ALC | x | x | t |   |   2
+             * IDO |   |   | x | x |   n/a
+             * ID  |   |   |   | x |   2
+             * ID2 |   |   |   | x |   2
+             */
+            var soulMaster = new Dictionary<string, string>
+            {
+                { "phase 1 GoName", "Mage Lord" },
+                { "phase 1 FsmName", "Mage Lord" },
+                { "phase 2 GoName", "Mage Lord Phase2" },
+                { "phase 2 FsmName", "Mage Lord 2" },
+                { "phase 2 OnEnterState", "Arrive Pause" },
+            };
+            var soulTyrant = new Dictionary<string, string>
+            {
+                { "phase 1 GoName", "Dream Mage Lord" },
+                { "phase 1 FsmName", "Mage Lord" },
+                { "phase 2 GoName", "Dream Mage Lord Phase2" },
+                { "phase 2 FsmName", "Mage Lord 2" },
+                { "phase 2 OnEnterState", "Wait" },
+            };
+            var m = v ? soulTyrant : soulMaster;
+
+            return new ModuleConfig[] {
+                new AttackSelectorConfig { ID = "AS", GoName = m["phase 1 GoName"], FsmName = m["phase 1 FsmName"] }, // AS
+                new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime }, // manual phase changer
+                new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
+                new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = m["phase 2 FsmName"], FsmName = m["phase 2 FsmName"], OnEnterState = m["phase 2 OnEnterState"], TargetL = 2 }, // auto level changer
+                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite QUAKE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
+                new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
+                new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
+            };
+        }
+
+        private static ModuleConfig[] GetVengeflyConfigs(string goName, string fsmName, string swoopName, string summonName)
+        {
+            return new ModuleConfig[] {
+                new AttackSelectorConfig { GoName = goName, FsmName = fsmName, StateName = "Choose Attack",
+                    MapEvents = new()
+                    {
+                        { "SWOOP", swoopName },
+                        { "SUMMON", summonName + " (up to 15 roars)" },
+                    },
+                },
+                new VariableSetterConfig
+                {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Summons In A Row", 0),
+                        new("Swoops in A Row", 0),
+                    },
+                },
+                new TransitionRewirerConfig { StateName = "Check Summon", EventName = "CANCEL", ToState = "Idle" },
+                new TransitionRewirerConfig { StateName = "Check Summon GG", EventName = "CANCEL", ToState = "Idle" },
             };
         }
     }

@@ -29,7 +29,8 @@ internal class ModuleManager {
         ModAssert.AllBuilds(IsSupportedBossScene(scene), "The current scene should be a supported boss scene.");
 
         this.LogModDebug($"Modules: ({_modules.Count})");
-        var dict = new Dictionary<string, object>();
+        var propagationDict = new Dictionary<string, object>();
+        var countDict = new Dictionary<Type, int>();
         foreach (var config in GodhomeUtils.SceneToModuleConfigs[scene.name])
         {
             // Use L as default if H wasn't specified
@@ -44,10 +45,10 @@ internal class ModuleManager {
             }
 
             // Propagate values between dict and config
-            PropagateConfig(dict, config);
+            PropagateConfig(propagationDict, config);
 
             // Create module
-            var module = CreateModule(scene, config);
+            var module = CreateModule(scene, config, countDict);
             _modules.Add(module);
         }
 
@@ -55,7 +56,7 @@ internal class ModuleManager {
         var printConfigs = GetPrintStatesModuleConfigs(GodhomeUtils.SceneToModuleConfigs[scene.name]).ToArray();
         foreach (var config in printConfigs)
         {
-            var module = CreateModule(scene, config);
+            var module = CreateModule(scene, config, countDict);
             _modules.Add(module);
         }
 
@@ -114,7 +115,7 @@ internal class ModuleManager {
         return originalLevel;
     }
 
-    private Module CreateModule(Scene scene, ModuleConfig config)
+    private Module CreateModule(Scene scene, ModuleConfig config, Dictionary<Type, int> counts)
     {
         var module = Activator.CreateInstance(config.ModuleType, scene, config, this) as Module;
 
@@ -127,7 +128,17 @@ internal class ModuleManager {
             module.Levels = new HashSet<int>(Enumerable.Range(config.L, config.H - config.L + 1));
         }
 
-        var mainID = (config.ID != null ? config.ID : config.ModuleType.Name);
+        if (!counts.ContainsKey(config.ModuleType))
+        {
+            counts[config.ModuleType] = 0;
+        }
+
+        var mainID = config.ID != null
+            ? config.ID
+            : (counts[config.ModuleType]++ == 0
+                ? config.ModuleType.Name
+                : $"{config.ModuleType.Name} #{counts[config.ModuleType]}"
+              );
         var levels = String.Join("", module.Levels.Select(l => l.ToString()));
         module.ID = $"{mainID} | {levels}";
 
@@ -200,14 +211,11 @@ internal class ModuleManager {
     {
         int l = configs.Select(c => c.L).Min();
         int h = configs.Select(c => c.H).Max();
-        var names = configs
+        return configs
             .Select(c => c as SingleFsmModuleConfig)
             .Where(c => c != null)
             .Select(c => c.GoName + "-" + c.FsmName)
             .Distinct()
-            .ToArray();
-
-        return names
             .Select((s, i) =>
             {
                 var parts = s.Split('-');
@@ -217,7 +225,6 @@ internal class ModuleManager {
                     H = h,
                     GoName = parts[0],
                     FsmName = parts[1],
-                    ID = names.Length > 1 ? $"{typeof(PrintStates).Name} #{i}" : null,
                 };
             });
     }
