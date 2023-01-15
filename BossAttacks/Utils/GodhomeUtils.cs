@@ -154,7 +154,20 @@ namespace BossAttacks.Utils
             { "GG_Ghost_Galien"      , null }, // X not interesting
             { "GG_Ghost_Gorb"        , null }, // X not interesting
             { "GG_Ghost_Gorb_V"      , null }, // X not interesting
-            { "GG_Ghost_Hu"          , null },
+            { "GG_Ghost_Hu"          , new ModuleConfig[] {
+                new LabelConfig { ID = "label all", Display = "Current attack: All" },
+                new LabelConfig { ID = "label RING", L = 1, Display = "Current attack: RING" },
+                new LabelConfig { ID = "label MEGA", L = 2, Display = "Current attack: META" },
+                // all
+                new LevelChangerConfig { ID = "option all", L = 0, H = 2, Display = "All", Mode = LevelChangerConfig.Modes.OneDirection, TargetL = 0 },
+                // RING
+                new LevelChangerConfig { ID = "option RING", L = 0, H = 2, Display = "RING (exclusive)", Mode = LevelChangerConfig.Modes.OneDirection, TargetL = 1 },
+                new EventEmitterConfig { ID = "skip MEGA event", L = 1, GoName = "Ghost Warrior Hu", FsmName = "Attacking", StateName = "Mega Warp Out", EventName = "SKIP" },
+                new TransitionRewirerConfig { ID = "skip MEGA route", L = 1, ToState = "Choice 2" },
+                // MEGA
+                new LevelChangerConfig { ID = "option MEGA", L = 0, H = 2, Display = "MEGA (exclusive)", Mode = LevelChangerConfig.Modes.OneDirection, TargetL = 2 },
+                new EventEmitterConfig { ID = "force MEGA in C2", L = 2, StateName = "Choice 2", EventName = "MEGA" },
+            } },
             { "GG_Ghost_Markoth"     , null }, // X not interesting
             { "GG_Ghost_Markoth_V"   , null }, // X not interesting
             { "GG_Ghost_Marmu"       , null }, // X not interesting
@@ -321,10 +334,10 @@ namespace BossAttacks.Utils
             var goName = "Mage Knight";
             var fsmName = "Mage Knight";
             return new ModuleConfig[] {
-                new LabelConfig { ID = "label all", L = 0, Display = "Current attacks: All" },
-                new LabelConfig { ID = "label SHOOT", L = 1, Display = "Current attacks: SHOOT" },
-                new LabelConfig { ID = "label SLASH", L = 2, Display = "Current attacks: SLASH" },
-                new LabelConfig { ID = "label STOMP", L = 3, Display = "Current attacks: STOMP" },
+                new LabelConfig { ID = "label all", L = 0, Display = "Current attack: All" },
+                new LabelConfig { ID = "label SHOOT", L = 1, Display = "Current attack: SHOOT" },
+                new LabelConfig { ID = "label SLASH", L = 2, Display = "Current attack: SLASH" },
+                new LabelConfig { ID = "label STOMP", L = 3, Display = "Current attack: STOMP" },
                 new LevelChangerConfig { ID = "option all", H = 3, Display = "All", TargetL = 0, Mode = LevelChangerConfig.Modes.OneDirection },
                 new LevelChangerConfig { ID = "option SHOOT", H = 3, Display = "SHOOT (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
                 new LevelChangerConfig { ID = "option SLASH", H = 3, Display = "SLASH (exclusive)", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
