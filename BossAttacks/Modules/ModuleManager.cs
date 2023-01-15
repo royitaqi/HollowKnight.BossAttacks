@@ -67,7 +67,7 @@ internal class ModuleManager {
     public void Unload()
     {
         this.LogMod("Unload");
-        foreach (var module in _modules)
+        foreach (var module in _modules.Reverse<Module>())
         {
             if (module.Loaded)
             {
@@ -91,16 +91,22 @@ internal class ModuleManager {
         this.LogModDebug($"Changing level from {_level} to {level}");
         int originalLevel = _level;
         _level = level;
+        // Unload in reverse order
+        foreach (var m in _modules.Reverse<Module>())
+        {
+            bool shouldBeLoaded = m.Levels.Contains(_level);
+            if (!shouldBeLoaded && m.Loaded)
+            {
+                m.Unload();
+            }
+        }
+        // Load in order
         foreach (var m in _modules)
         {
             bool shouldBeLoaded = m.Levels.Contains(_level);
             if (shouldBeLoaded && !m.Loaded)
             {
                 m.Load();
-            }
-            else if (!shouldBeLoaded && m.Loaded)
-            {
-                m.Unload();
             }
         }
         OptionsChanged?.Invoke();
