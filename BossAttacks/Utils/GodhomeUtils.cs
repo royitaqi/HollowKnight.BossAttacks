@@ -252,18 +252,35 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { StateName = "Choose Attack", EventName = "HALF" },
             } },
             { "GG_Oblobbles"         , null }, // X not interesting
-            { "GG_Painter"           , null }, // Complex. Need more understanding.
-            //{ "GG_Painter"           , new ModuleConfig[] {
-            //    new DefaultConfig { GoName = "Battle Scene/Sheo Boss", FsmName = "nailmaster_sheo", StateName = "Choice" },
-            //    new GenericAttackSelectorConfig { IgnoreEvents = new() { "GREAT SLASH" } },
-            //    new LevelChangerModuleConfig { L = 0, H = 1, Display = "GREAT SLASH (exclusive)", TargetL = 1, Reversable = true },
-            //    new VariableSetterConfig { L = 1, H = 1,
-            //        IntVariables = new KeyValuePair<string, int>[]
-            //        {
-            //            new("Art Counter", 0),
-            //        },
-            //    },
-            //} },
+            { "GG_Painter"           , new ModuleConfig[] {
+                new AttackSelectorConfig { GoName = "Battle Scene/Sheo Boss", FsmName = "nailmaster_sheo", StateName = "Choice", IgnoreEvents = new() { "GREAT SLASH" } },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Art Counter", 1),
+                    },
+                },
+                new AttackSelectorConfig { StateName = "Evade Choice", IgnoreEvents = new() { "GREAT SLASH" } },
+                new VariableSetterConfig {
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Art Counter", 1),
+                    },
+                },
+                new LevelChangerConfig { L = 0, H = 1, Display = "GREAT SLASH (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
+                new VariableSetterConfig { L = 1, H = 1, StateName = "Choice",
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Art Counter", 0),
+                    },
+                },
+                new VariableSetterConfig { L = 1, H = 1, StateName = "Evade Choice",
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Art Counter", 0),
+                    },
+                },
+            } },
             { "GG_Radiance"          , new ModuleConfig[] {
                 // Map phase transit to levels
                 new AutoLevelChangerConfig { ID = "transit 0->1", GoName = "Boss Control/Absolute Radiance", FsmName = "Control", TargetL = 1, OnEnterState = "Arena 1 Start" }, // this state sends "ARENA 1 START"
