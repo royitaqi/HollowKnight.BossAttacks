@@ -39,6 +39,12 @@ internal abstract class Module {
     protected abstract void OnUnload();
     internal bool Loaded { get; private set; }
 
-    public List<Option> Options { get => _options; }
+    /**
+     * Can be overridden to manipulate the given option list in any way.
+     */
+    public virtual void GetOptions(List<Option> options)
+    {
+        options.AddRange(_options);
+    }
     protected readonly List<Option> _options = new();
 }

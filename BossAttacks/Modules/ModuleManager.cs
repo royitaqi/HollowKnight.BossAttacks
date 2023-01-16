@@ -76,13 +76,28 @@ internal class ModuleManager {
             }
         }
         _modules.Clear();
+        _options.Clear();
         _level = 0;
     }
 
-    public IEnumerable<Option> GetOptions()
+    private void GetOptions()
     {
-        return _modules.SelectMany(m => m.Options);
+        _options.Clear();
+        foreach (var m in _modules)
+        {
+            m.GetOptions(_options);
+        }
+
+        this.LogModFine("Options are:");
+        foreach (var opt in _options)
+        {
+            this.LogModFine($"    {opt.Display}");
+        }
+
+        OptionsChanged?.Invoke();
     }
+
+    public List<Option> Options { get => _options; }
 
     public delegate void OptionsChangedHandler();
     public event OptionsChangedHandler OptionsChanged;
@@ -110,7 +125,7 @@ internal class ModuleManager {
                 m.Load();
             }
         }
-        OptionsChanged?.Invoke();
+        GetOptions();
         this.LogModDebug($"Level is now {_level}");
         return originalLevel;
     }
@@ -230,5 +245,6 @@ internal class ModuleManager {
     }
 
     private List<Module> _modules = new();
+    private List<Option> _options = new();
     private int _level;
 }

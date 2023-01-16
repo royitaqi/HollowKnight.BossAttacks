@@ -273,9 +273,9 @@ namespace BossAttacks.Utils
             } },
             { "GG_Vengefly"          , GetVengeflyConfigs("Giant Buzzer Col", "Big Buzzer", "SWOOP", "SUMMON") },
             { "GG_Vengefly_V"        , new[] {
-                    GetVengeflyConfigs("Giant Buzzer Col", "Big Buzzer", "Boss #1 SWOOP", "Boss #1 SUMMON"),
-                    GetVengeflyConfigs("Giant Buzzer Col (1)", "Big Buzzer", "Boss #2 SWOOP", "Boss #2 SUMMON"),
-                }.SelectMany(c => c).ToArray()
+                    GetVengeflyConfigs("Giant Buzzer Col", "Big Buzzer", "SWOOP", "SUMMON"),
+                    GetVengeflyConfigs("Giant Buzzer Col (1)", "Big Buzzer", "SWOOP", "SUMMON"),
+                }.SelectMany(c => c).Concat(new[] { new OptionCombinerConfig() }).ToArray()
             },
             { "GG_Watcher_Knights"   , null },
             { "GG_White_Defender"    , new ModuleConfig[] {

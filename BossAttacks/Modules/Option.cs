@@ -17,6 +17,11 @@ internal abstract class Option
     {
         Interacted?.Invoke();
     }
+
+    /**
+     * Should clone the Option entirely, except the hooks on the existing events.
+     */
+    public abstract Option Clone();
 }
 
 internal class MonoOption : Option
@@ -33,6 +38,11 @@ internal class MonoOption : Option
         {
             ModAssert.AllBuilds(false, "An non-interactive MonoOption should not be interacted");
         }
+    }
+
+    public override Option Clone()
+    {
+        return new MonoOption { Display = Display, Interactive = Interactive };
     }
 }
 
@@ -57,5 +67,12 @@ internal class BooleanOption : Option
         {
             ModAssert.AllBuilds(false, "An non-interactive BooleanOption should not be interacted");
         }
+    }
+
+    public override Option Clone()
+    {
+        var ret = new BooleanOption { Interactive = Interactive, Value = Value };
+        ret._display = _display;
+        return ret;
     }
 }
