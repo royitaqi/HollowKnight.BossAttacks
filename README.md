@@ -35,7 +35,7 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Hornet (Sentinel) | ✅ | � THROW (needle) can go out of screen |
 | Hu | ✅ | ✅ Trim ROLL JUMP (no throw balls before; no dive after) |
 | Lost Kin | ✅ |  |
-| Mantis Lords | ✅ | ✅ Fast jump to Phase 2<br>✅ Uncoordinated Attacks mode in Phase 2 |
+| Mantis Lords | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Uncoordinated Attacks |
 | Markoth | n/a | Only does one attack |
 | Marmu | n/a | Only does one attack |
 | Mega Moss Charger | ✅ | |
@@ -45,10 +45,10 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Oblobbles | n/a | Only does one attack |
 | Paint Master Sheo | ✅ | |
 | Pure Vessel | ✅ | ✅ Unlock all attacks |
-| Sisters of Battle | ✅ | ✅ Fast jump to Phase 2<br>✅ Uncoordinated Attacks mode in Phase 2 |
+| Sisters of Battle | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Uncoordinated Attacks |
 | Sly | ✅ | |
-| Soul Master | ✅ | ✅ Fast jump to Phase 2<br>✅ Infinite DIVE in Phase 2 |
-| Soul Tyrant | ✅ | ✅ Fast jump to Phase 2<br>✅ Infinite DIVE in Phase 2 |
+| Soul Master | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
+| Soul Tyrant | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
 | Soul Warrior | ✅ | |
 | The Collector | ✖️ |  |
 | Traitor Lord | ✅ | |
