@@ -199,7 +199,17 @@ namespace BossAttacks.Utils
                 new ActionEnablerConfig { ID = "phase 2u s1", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S1", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
                 new ActionEnablerConfig { ID = "phase 2u s2", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S2", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
             } },
-            { "GG_Mantis_Lords_V"    , null },
+            { "GG_Mantis_Lords_V"    , new ModuleConfig[] {
+                new AttackSelectorConfig { ID = "phase 1 AS", GoName = "Mantis Battle/Battle Main/Mantis Lord", FsmName = "Mantis Lord", MapEvents = new() { { "HIGH THROW", "HIGH THROW (only when hero is off platform or too high)" } } },
+                new LevelChangerConfig { ID = "phase 1->2 manual", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime },
+                new GoKillerConfig { ID = "phase 1 boss killer", L = 1 },
+                new AutoLevelChangerConfig { ID = "phase 1->2 auto", L = 0, H = 1, GoName = "Mantis Battle/Battle Sub", FsmName = "Start", OnEnterState = "Start", TargetL = 2 },
+                new AttackSelectorConfig { ID = "phase 2c AS", L = 2, StateName = "Choose Move Triple" },
+                new LevelChangerConfig { ID = "phase 2c<->2u", L = 2, H = 3, Display = "Extra: Uncoordinated Attacks", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection },
+                new ActionEnablerConfig { ID = "phase 2u s1", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S1", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
+                new ActionEnablerConfig { ID = "phase 2u s2", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S2", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
+                new ActionEnablerConfig { ID = "phase 2u s3", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S3", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
+            } },
             { "GG_Mega_Moss_Charger" , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Mega Moss Charger", FsmName = "Mossy Control" },
             } },
