@@ -16,14 +16,14 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Boss | Hall of Gods | Extra |
 | --- | :---: | --- |
 | Absolute Radiance | ✅ | ✅ Show different attacks in different phases |
-| Broken Vessel | ✅ |  |
+| Broken Vessel | ✅ | ✅ Unlock all attacks |
 | Brooding Mawlek | ✅ | ✅ Allow repeated attacks of the same type |
 | Brothers Mato & Oro | ✖️ | |
 | Crystal Guardian | ✅ |  |
 | Dung Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before) |
 | Enraged Guardian | ✅ |  |
-| Failed Champion | ✅ | ✅ Allow repeated attacks of the same type |
-| False Knight | ✅ | ✅ Allow repeated attacks of the same type |
+| Failed Champion | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
+| False Knight | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
 | Flukemarm | n/a | Only does one attack |
 | Galien | n/a | Only does one attack |
 | God Tamer | ✅ | |
@@ -33,7 +33,7 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Hive Knight | ✅ | ✅ Unlock all attacks |
 | Hornet (Protector) | ✅ | � THROW (needle) can go out of screen |
 | Hornet (Sentinel) | ✅ | � THROW (needle) can go out of screen |
-| Hu | ✅ | ✅ Trim ROLL JUMP (no throw balls before; no dive after) |
+| Hu | ✅ | |
 | Lost Kin | ✅ |  |
 | Mantis Lords | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Uncoordinated Attacks |
 | Markoth | n/a | Only does one attack |
