@@ -200,7 +200,66 @@ namespace BossAttacks.Utils
                 new AttackSelectorConfig { ID = "AS in 1 and 2", L = 1, H = 2, FsmName = "Attack Choices", StateName = "A1 Choice" },
                 new AttackSelectorConfig { ID = "AS in 4", L = 4, FsmName = "Attack Choices", StateName = "A2 Choice" },
             } },
-            { "GG_Sly"               , null },
+            { "GG_Sly"               , new ModuleConfig[] {
+                /**
+                 *                             All Attacks
+                 *                            /    COMBO only
+                 *                           |    /    STOMP only
+                 *                           |   |    /    NA only (can select)
+                 *                           |   |   |    /    Phase 2
+                 *                           |   |   |   |    /
+                 *                         | 0 | 1 | 2 | 3 | 4 |
+                 * ---------------------------------------------
+                 * label all               | - |   |   |   |   |
+                 * label COMBO             |   | - |   |   |   |
+                 * label STOMP             |   |   | - |   |   |
+                 * label NA                |   |   |   | - |   |
+                 * option all              | T ----------- |   |
+                 * option COMBO            | --- T ------- |   |
+                 * option STOMP            | ------- T --- |   |
+                 * option NA               | ----------- T |   |
+                 * block COMBO             |   |   | - |   |   |
+                 * block STOMP             |   | - |   |   |   |
+                 * block NA                |   | ----- |   |   |
+                 * force NA                |   |   |   | - |   |
+                 * force NA no evade       |   |   |   | - |   |
+                 * NA attack selector      |   |   |   | - |   |
+                 * phase 1->2              | --------------- t |
+                 */
+                new LabelConfig { ID = "label all", Display = "Current attack: All" },
+                new LabelConfig { ID = "label COMBO", L = 1, Display = "Current attack: COMBO" },
+                new LabelConfig { ID = "label STOMP", L = 2, Display = "Current attack: STOMP" },
+                new LabelConfig { ID = "label NA", L = 3, Display = "Current attack: Nail Arts" },
+                new LevelChangerConfig { ID = "option all", H = 3, Display = "All", TargetL = 0, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option COMBO", H = 3, Display = "COMBO (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP (exclusive)", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option NA", H = 3, Display = "Nail Arts (exclusive)", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
+                // block COMBO
+                new TransitionRewirerConfig { ID = "block COMBO near", L = 2, GoName = "Battle Scene/Sly Boss", FsmName = "Control", StateName = "Near", EventName = "COMBO", ToState = "Idle" },
+                new TransitionRewirerConfig { ID = "block COMBO mid", L = 2, StateName = "Mid", EventName = "COMBO", ToState = "Idle" },
+                new TransitionRewirerConfig { ID = "block COMBO far", L = 2, StateName = "Far", EventName = "CHASE", ToState = "Idle" },
+                // block STOMP
+                new TransitionRewirerConfig { ID = "block COMBO near", L = 1, StateName = "Near", EventName = "STOMP", ToState = "Idle" },
+                new TransitionRewirerConfig { ID = "block COMBO mid", L = 1, StateName = "Mid", EventName = "STOMP", ToState = "Idle" },
+                new TransitionRewirerConfig { ID = "block COMBO far", L = 1, StateName = "Far", EventName = "STOMP", ToState = "Idle" },
+                // block NA
+                new VariableSetterConfig { ID = "block NA", L = 1, H = 2, StateName = "Idle",
+                    IntVariables = new KeyValuePair<string, int>[] {
+                        new("Art Counter", 1), // larger than 0 to not trigger NAIL ART
+                    },
+                },
+                // force NA
+                new VariableSetterConfig { ID = "force NA", L = 3, StateName = "Idle",
+                    IntVariables = new KeyValuePair<string, int>[] {
+                        new("Art Counter", 0), // equal 0 to trigger NAIL ART
+                    },
+                },
+                new TransitionRewirerConfig { ID = "force NA no evade", L = 3, StateName = "Evade Cancel", EventName = "FINISHED", ToState = "Idle" },
+                // NA AS
+                new AttackSelectorConfig { ID = "NA attack selector", L = 3, StateName = "NA Choice" },
+                // phase 1->2
+                new AutoLevelChangerConfig { ID = "phase 1->2", H = 4, OnEnterState = "Death Reset", TargetL = 4 },
+            } },
             { "GG_Soul_Master"       , GetSoulMasterAndTyrantConfigs(false) },
             { "GG_Soul_Tyrant"       , GetSoulMasterAndTyrantConfigs(true) },
             { "GG_Traitor_Lord"      , new ModuleConfig[] {
