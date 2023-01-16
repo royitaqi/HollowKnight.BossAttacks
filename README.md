@@ -18,9 +18,10 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Absolute Radiance | ✅ | ✅ Show different attacks in different phases |
 | Broken Vessel | ✅ | ✅ Unlock all attacks |
 | Brooding Mawlek | ✅ | ✅ Allow repeated attacks of the same type |
-| Brothers Mato & Oro | ✖️ | |
+| Brothers Oro & Mato | ✖️ | |
 | Crystal Guardian | ✅ |  |
 | Dung Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before) |
+| Elder Hu | ✅ | |
 | Enraged Guardian | ✅ |  |
 | Failed Champion | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
 | False Knight | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
@@ -28,25 +29,24 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Galien | n/a | Only does one attack |
 | God Tamer | ✅ | |
 | Gorb | n/a | Only does one attack |
+| Great Nailsage Sly | ✅ | |
 | Grey Prince Zote | ✅ | ✅ Unlock all attacks |
 | Gruz Mother | ✅ | ✅ Allow repeated attacks of the same type |
 | Hive Knight | ✅ | ✅ Unlock all attacks |
 | Hornet (Protector) | ✅ | � THROW (needle) can go out of screen |
 | Hornet (Sentinel) | ✅ | � THROW (needle) can go out of screen |
-| Hu | ✅ | |
 | Lost Kin | ✅ |  |
 | Mantis Lords | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Uncoordinated Attacks |
 | Markoth | n/a | Only does one attack |
 | Marmu | n/a | Only does one attack |
-| Mega Moss Charger | ✅ | |
+| Massive Moss Charger | ✅ | |
 | Nightmare King Grimm | ✅ | ✅ Infinite BALLOON |
 | No Eyes | n/a | Only does one attack |
 | Nosk | ✅ | |
 | Oblobbles | n/a | Only does one attack |
-| Paint Master Sheo | ✅ | |
+| Paintmaster Sheo | ✅ | |
 | Pure Vessel | ✅ | ✅ Unlock all attacks |
 | Sisters of Battle | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Uncoordinated Attacks |
-| Sly | ✅ | |
 | Soul Master | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
 | Soul Tyrant | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
 | Soul Warrior | ✅ | |
@@ -54,8 +54,8 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Traitor Lord | ✅ | |
 | Troupe Master Grimm | ✖️ | |
 | Uumuu | ✅ | |
-| Vengefly | ✅ | ✅ Allow repeated attacks of the same type |
-| Watcher Knights | ✖️ | |
+| Vengefly King | ✅ | ✅ Allow repeated attacks of the same type |
+| Watcher Knight | ✖️ | |
 | White Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before; no dive after) |
 | Winged Nosk | ✅ | ✅ Unlock all attacks |
 | Xero | n/a | Only does one attack |
