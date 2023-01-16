@@ -32,7 +32,7 @@ namespace BossAttacks.Utils
             } },
             { "GG_Dung_Defender"     , new ModuleConfig[] {
                 new AttackSelectorConfig { L = 0, H = 1, GoName = "Dung Defender", FsmName = "Dung Defender" },
-                new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
+                new LevelChangerConfig { L = 0, H = 1, Display = "Extra: Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
             } },
             { "GG_Failed_Champion"   , GetFalseKnightAndFailedChampionConfigs(true) },
@@ -280,7 +280,7 @@ namespace BossAttacks.Utils
             { "GG_Watcher_Knights"   , null },
             { "GG_White_Defender"    , new ModuleConfig[] {
                 new AttackSelectorConfig { L = 0, H = 1, GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
-                new LevelChangerConfig { L = 0, H = 1, Display = "Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
+                new LevelChangerConfig { L = 0, H = 1, Display = "Extra: Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
                 new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
                 new EventEmitterConfig { L = 1, StateName = "Air Dive?", ActionType = typeof(SendRandomEvent), IndexDelta = 2, EventName = "FINISHED" }, // trim tail dive
             } },
@@ -380,7 +380,7 @@ namespace BossAttacks.Utils
                 new LevelChangerConfig { ID = "manual phase changer", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime }, // manual phase changer
                 new GoKillerConfig { ID = "boss killer", L = 1 }, // boss killer
                 new AutoLevelChangerConfig { ID = "auto level changer", L = 0, H = 1, GoName = m["phase 2 GoName"], FsmName = m["phase 2 FsmName"], OnEnterState = m["phase 2 OnEnterState"], TargetL = 2 }, // auto level changer
-                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Infinite DIVE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
+                new LevelChangerConfig { ID = "infinite dive option", L = 2, H = 3, Display = "Extra: Infinite DIVE", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection }, // infinite dive option
                 new EventEmitterConfig { ID = "infinite dive dive", L = 3, StateName = "Shoot?", ActionType = typeof(IntCompare), EventName = "FINISHED" }, // infinite dive dive
                 new EventEmitterConfig { ID = "infinite dive orb", L = 3, StateName = "Orb Check", EventName = "END" }, // infinite dive orb
             };
