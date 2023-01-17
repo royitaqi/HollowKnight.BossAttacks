@@ -21,12 +21,20 @@ internal class AttackSelector : SingleStateModule
 
         LoadSingleStateObjects(_scene, _config);
 
-        // Short circuit protection (SCP).
-        // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
-        var scpStateName = _state.Name + SHORT_CIRCUIT_PROTECTION_SUFFIX;
-        var scpState = _fsm.AddState(scpStateName);
-        scpState.AddAction(new ShortCircuitProtectionAction());
-        scpState.AddTransition("FINISHED", _state.Name);
+        string skipToState = null;
+        if (_config.SkipToState != null)
+        {
+            skipToState = _config.SkipToState;
+        }
+        else
+        {
+            // Short circuit protection (SCP).
+            // * Short circuit is when the Choice state has all the events connected back to itself, causing an infinite loop where the boss takes no action.
+            skipToState = _state.Name + SHORT_CIRCUIT_PROTECTION_SUFFIX;
+            var scpState = _fsm.AddState(skipToState);
+            scpState.AddAction(new ShortCircuitProtectionAction());
+            scpState.AddTransition("FINISHED", _state.Name);
+        }
 
         foreach (var tran in _state.Transitions)
         {
@@ -43,7 +51,7 @@ internal class AttackSelector : SingleStateModule
             opt.Interact(); // set value to true
             opt.Interacted += () =>
             {
-                var toStateName = opt.Value ? originalToStateName : scpStateName;
+                var toStateName = opt.Value ? originalToStateName : skipToState;
                 _state.ChangeTransition(eventName, toStateName);
                 this.LogModDebug($"Turning attack {attackName} to {(opt.Value ? "ON" : "OFF")} ({_state.Name}.{eventName} -> {toStateName})");
             };

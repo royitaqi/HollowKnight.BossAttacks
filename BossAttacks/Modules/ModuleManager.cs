@@ -47,7 +47,11 @@ internal class ModuleManager {
             // Propagate values between dict and config
             PropagateConfig(propagationDict, config);
 
-            // Create module
+            // Create module if a module type is specified
+            if (config.ModuleType == null)
+            {
+                continue;
+            }
             var module = CreateModule(scene, config, countDict);
             _modules.Add(module);
         }

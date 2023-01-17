@@ -48,11 +48,11 @@ namespace BossAttacks.Utils
                 // all
                 new LevelChangerConfig { ID = "option all", L = 0, H = 2, Display = "All", Mode = LevelChangerConfig.Modes.OneDirection, TargetL = 0 },
                 // RING
-                new LevelChangerConfig { ID = "option RING", L = 0, H = 2, Display = "RING (exclusive)", Mode = LevelChangerConfig.Modes.OneDirection, TargetL = 1 },
+                new LevelChangerConfig { ID = "option RING", L = 0, H = 2, Display = "RING", Mode = LevelChangerConfig.Modes.OneDirection, TargetL = 1 },
                 new EventEmitterConfig { ID = "skip MEGA event", L = 1, GoName = "Ghost Warrior Hu", FsmName = "Attacking", StateName = "Mega Warp Out", EventName = "SKIP" },
                 new TransitionRewirerConfig { ID = "skip MEGA route", L = 1, ToState = "Choice 2" },
                 // MEGA
-                new LevelChangerConfig { ID = "option MEGA", L = 0, H = 2, Display = "MEGA (exclusive)", Mode = LevelChangerConfig.Modes.OneDirection, TargetL = 2 },
+                new LevelChangerConfig { ID = "option MEGA", L = 0, H = 2, Display = "MEGA", Mode = LevelChangerConfig.Modes.OneDirection, TargetL = 2 },
                 new EventEmitterConfig { ID = "force MEGA in C2", L = 2, StateName = "Choice 2", EventName = "MEGA" },
             } },
             { "GG_Ghost_Markoth"     , null }, // X not interesting
@@ -231,9 +231,9 @@ namespace BossAttacks.Utils
                 new LabelConfig { ID = "label STOMP", L = 2, Display = "Current attack: STOMP" },
                 new LabelConfig { ID = "label NA", L = 3, Display = "Current attack: Nail Arts" },
                 new LevelChangerConfig { ID = "option all", H = 3, Display = "All", TargetL = 0, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option COMBO", H = 3, Display = "COMBO (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP (exclusive)", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option NA", H = 3, Display = "Nail Arts (exclusive)", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option COMBO", H = 3, Display = "COMBO", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option NA", H = 3, Display = "Nail Arts", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
                 // block COMBO
                 new TransitionRewirerConfig { ID = "block COMBO near", L = 2, GoName = "Battle Scene/Sly Boss", FsmName = "Control", StateName = "Near", EventName = "COMBO", ToState = "Idle" },
                 new TransitionRewirerConfig { ID = "block COMBO mid", L = 2, StateName = "Mid", EventName = "COMBO", ToState = "Idle" },
@@ -275,9 +275,19 @@ namespace BossAttacks.Utils
             { "GG_Vengefly_V"        , new[] {
                     GetVengeflyConfigs("Giant Buzzer Col", "Big Buzzer", "SWOOP", "SUMMON"),
                     GetVengeflyConfigs("Giant Buzzer Col (1)", "Big Buzzer", "SWOOP", "SUMMON"),
-                }.SelectMany(c => c).Concat(new[] { new OptionCombinerConfig() }).ToArray()
+                    new[] { new OptionCombinerConfig() },
+                }.SelectMany(c => c).ToArray()
             },
-            { "GG_Watcher_Knights"   , null },
+            { "GG_Watcher_Knights"   , new[] {
+                    GetWatcherKnightConfigs("1"),
+                    GetWatcherKnightConfigs("2"),
+                    GetWatcherKnightConfigs("3"),
+                    GetWatcherKnightConfigs("4"),
+                    GetWatcherKnightConfigs("5"),
+                    GetWatcherKnightConfigs("6"),
+                    new[] { new OptionCombinerConfig() },
+                }.SelectMany(c => c).ToArray()
+            },
             { "GG_White_Defender"    , new ModuleConfig[] {
                 new AttackSelectorConfig { L = 0, H = 1, GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
                 new LevelChangerConfig { L = 0, H = 1, Display = "Extra: Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
@@ -322,9 +332,9 @@ namespace BossAttacks.Utils
                 new LabelConfig { ID = "label SLASH", L = 2, Display = "Current attack: SLASH" },
                 new LabelConfig { ID = "label STOMP", L = 3, Display = "Current attack: STOMP" },
                 new LevelChangerConfig { ID = "option all", H = 3, Display = "All", TargetL = 0, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option SHOOT", H = 3, Display = "SHOOT (exclusive)", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option SLASH", H = 3, Display = "SLASH (exclusive)", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
-                new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP (exclusive)", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option SHOOT", H = 3, Display = "SHOOT", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option SLASH", H = 3, Display = "SLASH", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = "option STOMP", H = 3, Display = "STOMP", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
                 new ShortCircuitProtectionConfig { ID = "SCP", H = 3, GoName = goName, FsmName = fsmName, StateName = "Move Decision", ScpStateName = "Move Decision SCP" },
                 // SHOOT & SLASH
                 new EventEmitterConfig { ID = "force side tele", Levels = new() { 1, 2 }, StateName = "Tele Choice", EventName = "SIDE" },
@@ -466,6 +476,42 @@ namespace BossAttacks.Utils
                         new("Spits In A Row", 0),
                     },
                 },
+            };
+        }
+
+        private static ModuleConfig[] GetWatcherKnightConfigs(string number1to6)
+        {
+            return new ModuleConfig[]
+            {
+                new SingleFsmModuleConfig { GoName = "Battle Control/Black Knight " + number1to6, FsmName = "Black Knight" },
+                new LabelConfig { ID = $"WK{number1to6} label all", L = 0, Display = "Current attack: All" },
+                new LabelConfig { ID = $"WK{number1to6} label SLASH", L = 1, Display = "Current attack: SLASH" },
+                new LabelConfig { ID = $"WK{number1to6} label CHARGE ROLL", L = 2, Display = "Current attack: CHARGE ROLL" },
+                new LabelConfig { ID = $"WK{number1to6} label JUMP ROLL", L = 3, Display = "Current attack: JUMP ROLL" },
+                new LevelChangerConfig { ID = $"WK{number1to6} option all", H = 3, Display = "All", TargetL = 0, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = $"WK{number1to6} option SLASH", H = 3, Display = "SLASH (JUMP ROLL when overhead)", TargetL = 1, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = $"WK{number1to6} option CHARGE ROLL", H = 3, Display = "CHARGE ROLL", TargetL = 2, Mode = LevelChangerConfig.Modes.OneDirection },
+                new LevelChangerConfig { ID = $"WK{number1to6} option JUMP ROLL", H = 3, Display = "JUMP ROLL", TargetL = 3, Mode = LevelChangerConfig.Modes.OneDirection },
+                // SLASH
+                new EventEmitterConfig { ID = $"WK{number1to6} SLASH in range double", L = 1, StateName = "In Range Double", ActionType = typeof(SendRandomEventV2), EventName = "SLASH" },
+                new EventEmitterConfig { ID = $"WK{number1to6} SLASH in range choice", L = 1, StateName = "In Range Choice", ActionType = typeof(SendRandomEventV2), EventName = "SLASH" },
+                new EventEmitterConfig { ID = $"WK{number1to6} SLASH move choice", L = 1, StateName = "Move Choice", ActionType = typeof(SendRandomEventV2), EventName = "SLASH" },
+                new ActionEnablerConfig { ID = $"WK{number1to6} SLASH run to action 6", L = 1, StateName = "Run To", ActionType = typeof(WaitRandom), ToEnabled = false },
+                new ActionEnablerConfig { ID = $"WK{number1to6} SLASH run to action 7", L = 1, StateName = "Run To", ActionType = typeof(WaitRandom), IndexDelta = 1, ToEnabled = false },
+                // CHARGE ROLL
+                new EventEmitterConfig { ID = $"WK{number1to6} CHARGE ROLL in range double", L = 2, StateName = "In Range Double", ActionType = typeof(SendRandomEventV2), EventName = "CHARGE ROLL" },
+                new EventEmitterConfig { ID = $"WK{number1to6} CHARGE ROLL in range choice", L = 2, StateName = "In Range Choice", ActionType = typeof(SendRandomEventV2), EventName = "CHARGE ROLL" },
+                new EventEmitterConfig { ID = $"WK{number1to6} CHARGE ROLL move choice", L = 2, StateName = "Move Choice", ActionType = typeof(SendRandomEventV2), EventName = "CHARGE ROLL" },
+                new ActionEnablerConfig { ID = $"WK{number1to6} CHARGE ROLL run to action 3", L = 2, StateName = "Run To", ActionType = typeof(BoolTestMulti), ToEnabled = false },
+                new ActionEnablerConfig { ID = $"WK{number1to6} CHARGE ROLL run to action 4", L = 2, StateName = "Run To", ActionType = typeof(BoolTestMulti), IndexDelta = 1, ToEnabled = false },
+                new ActionEnablerConfig { ID = $"WK{number1to6} CHARGE ROLL run to action 5", L = 2, StateName = "Run To", ActionType = typeof(BoolTest), ToEnabled = false },
+                new ActionEnablerConfig { ID = $"WK{number1to6} CHARGE ROLL run to action 7", L = 2, StateName = "Run To", ActionType = typeof(WaitRandom), IndexDelta = 1, ToEnabled = false },
+                // JUMP ROLL
+                new EventEmitterConfig { ID = $"WK{number1to6} JUMP ROLL in range double", L = 3, StateName = "In Range Double", ActionType = typeof(SendRandomEventV2), EventName = "JUMP ROLL" },
+                new EventEmitterConfig { ID = $"WK{number1to6} JUMP ROLL in range choice", L = 3, StateName = "In Range Choice", ActionType = typeof(SendRandomEventV2), EventName = "JUMP ROLL" },
+                new EventEmitterConfig { ID = $"WK{number1to6} JUMP ROLL move choice", L = 3, StateName = "Move Choice", ActionType = typeof(SendRandomEventV2), EventName = "JUMP ROLL" },
+                new ActionEnablerConfig { ID = $"WK{number1to6} JUMP ROLL run to action 5", L = 3, StateName = "Run To", ActionType = typeof(BoolTest), ToEnabled = false },
+                new ActionEnablerConfig { ID = $"WK{number1to6} JUMP ROOL run to action 6", L = 3, StateName = "Run To", ActionType = typeof(WaitRandom), ToEnabled = false },
             };
         }
     }

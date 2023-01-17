@@ -6,6 +6,7 @@ namespace BossAttacks.Modules.Generic;
 internal class AttackSelectorConfig : SingleStateModuleConfig
 {
     public override Type ModuleType => typeof(AttackSelector);
+    public string SkipToState { get; set; }
     public HashSet<string> IgnoreEvents { get; set; }
     public Dictionary<string, string> MapEvents { get; set; }
 
