@@ -1,6 +1,8 @@
 ﻿# BossAttacks
 
-A mod for the game Hollow Knight. Train boss fights in Hall of Gods against specific boss attacks.
+A mod for the game Hollow Knight.
+
+Train boss fights in Hall of Gods against specific boss attacks and more.
 
 
 ## How to use
