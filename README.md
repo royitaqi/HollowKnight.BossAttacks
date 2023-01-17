@@ -50,7 +50,7 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Soul Master | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
 | Soul Tyrant | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
 | Soul Warrior | ✅ | |
-| The Collector | ✅ | ✅ Extra: More Jars |
+| The Collector | ✅ | ✅ Enter Phase 2 at start of fight<br>✅ More Jars |
 | Traitor Lord | ✅ | |
 | Troupe Master Grimm | ✖️ | |
 | Uumuu | ✅ | |
