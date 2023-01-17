@@ -14,11 +14,11 @@ namespace BossAttacks
             {
                 toggle!.Value.CreateToggle(
                     "Mod",
-                    "Re-enter fight for change to apply"
+                    "Enter a new fight to apply change"
                 ),
                 new HorizontalOption(
                     "Fade Bottom Left Display",
-                    "Press \"0\" on main keyboard to show display",
+                    "Press \"0\" on main keyboard to bring up the display",
                     new []{ "Off", "On" },
                     selectedIndex => {
                         BossAttacks.Instance.GlobalData.FadeDisplay = selectedIndex == 1;
