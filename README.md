@@ -18,7 +18,7 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Absolute Radiance | ✅ | ✅ Show different attacks in different phases |
 | Broken Vessel | ✅ | ✅ Unlock all attacks |
 | Brooding Mawlek | ✅ | ✅ Allow repeated attacks of the same type |
-| Brothers Oro & Mato | ✖️ | |
+| Brothers Oro & Mato | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Haven't figured out yet |
 | Crystal Guardian | ✅ |  |
 | Dung Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before) |
 | Elder Hu | ✅ | |
@@ -33,8 +33,8 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Grey Prince Zote | ✅ | ✅ Unlock all attacks |
 | Gruz Mother | ✅ | ✅ Allow repeated attacks of the same type |
 | Hive Knight | ✅ | ✅ Unlock all attacks |
-| Hornet (Protector) | ✅ | � THROW (needle) can go out of screen |
-| Hornet (Sentinel) | ✅ | � THROW (needle) can go out of screen |
+| Hornet (Protector) | ✅ | <img src="https://user-images.githubusercontent.com/14790745/212979275-bac4c8e1-a784-44c6-899b-66bfeea1ed41.png" width="22" height="22" /> THROW (needle) can be too close to wall |
+| Hornet (Sentinel) | ✅ | <img src="https://user-images.githubusercontent.com/14790745/212979275-bac4c8e1-a784-44c6-899b-66bfeea1ed41.png" width="22" height="22" /> THROW (needle) can be too close to wall |
 | Lost Kin | ✅ |  |
 | Mantis Lords | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Uncoordinated Attacks |
 | Markoth | n/a | Only does one attack |
@@ -52,7 +52,7 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Soul Warrior | ✅ | |
 | The Collector | ✅ | ✅ Enter Phase 2 at start of fight<br>✅ More Jars |
 | Traitor Lord | ✅ | |
-| Troupe Master Grimm | ✖️ | |
+| Troupe Master Grimm | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Haven't figured out yet |
 | Uumuu | ✅ | |
 | Vengefly King | ✅ | ✅ Allow repeated attacks of the same type |
 | Watcher Knight | ✅ | |
