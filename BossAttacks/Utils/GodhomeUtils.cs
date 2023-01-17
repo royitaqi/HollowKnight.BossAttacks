@@ -22,7 +22,31 @@ namespace BossAttacks.Utils
             } },
             { "GG_Brooding_Mawlek"   , GetBroodingMawlekConfigs() },
             { "GG_Brooding_Mawlek_V" , GetBroodingMawlekConfigs() },
-            { "GG_Collector"         , null },
+            { "GG_Collector"         , new ModuleConfig[] {
+                new SingleFsmModuleConfig { GoName = "Jar Collector", FsmName = "Control" },
+                // Spawn choices
+                new AttackSelectorConfig { H = 1, StateName = "Phase 1", IgnoreEvents = new() { "NONE" } },
+                // Spawn min/max and enemy max
+                new LevelChangerConfig { H = 1, Display = "Extra: More Jars", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
+                new VariableSetterConfig { StateName = "Enemy Count", ActionType = typeof(GetTagCount),
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Spawn Min", 1),
+                        new("Spawn Max", 2),
+                        new("Enemies Max", 8),
+                    },
+                },
+                new VariableSetterConfig { L = 1, StateName = "Enemy Count", ActionType = typeof(GetTagCount),
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Spawns Total", 3),
+                        new("Spawn Min", 8),
+                        new("Spawn Max", 12),
+                        new("Enemies Max", 50),
+                    },
+                },
+                new ActionEnablerConfig { L = 1, StateName = "Summon?", ActionType = typeof(IntCompare), ToEnabled = false }, // never cancel summon
+            } },
             { "GG_Collector_V"       , null },
             { "GG_Crystal_Guardian"  , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
