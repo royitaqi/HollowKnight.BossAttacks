@@ -58,6 +58,7 @@ namespace BossAttacks
             {
                 if (opt.Interactive && Input.GetKeyDown(KeyCode.Alpha0 + ++i))
                 {
+                    ModAssert.AllBuilds(i <= 9, "Cannot have more than 9 interactive options");
                     this.LogModDebug($"User is changing option {opt.Display}");
                     opt.Interact();
                     break;
@@ -113,9 +114,9 @@ namespace BossAttacks
             {
                 string hotkey = opt.Interactive ? $"\"{++i}\" - " : "";
                 sb.AppendLine(hotkey + opt.Display);
+                ModAssert.AllBuilds(i <= 9, "Cannot have more than 9 interactive options");
             }
             this.LogModDebug("Updating option display");
-            //this.LogModFine(sb.ToString());
 
             ModDisplay.Instance.Display(sb.ToString());
         }
