@@ -35,6 +35,13 @@ internal class VariableSetter : SingleStateModule
                     _fsm.FsmVariables.GetFsmInt(kv.Key).Value = kv.Value;
                 }
             }
+            if (_config.FloatVariables != null)
+            {
+                foreach (var kv in _config.FloatVariables)
+                {
+                    _fsm.FsmVariables.GetFsmFloat(kv.Key).Value = kv.Value;
+                }
+            }
         }, index, ID);
     }
 

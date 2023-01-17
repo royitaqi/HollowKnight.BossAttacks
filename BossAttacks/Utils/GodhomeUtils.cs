@@ -22,32 +22,8 @@ namespace BossAttacks.Utils
             } },
             { "GG_Brooding_Mawlek"   , GetBroodingMawlekConfigs() },
             { "GG_Brooding_Mawlek_V" , GetBroodingMawlekConfigs() },
-            { "GG_Collector"         , new ModuleConfig[] {
-                new SingleFsmModuleConfig { GoName = "Jar Collector", FsmName = "Control" },
-                // Spawn choices
-                new AttackSelectorConfig { H = 1, StateName = "Phase 1", IgnoreEvents = new() { "NONE" } },
-                // Spawn min/max and enemy max
-                new LevelChangerConfig { H = 1, Display = "Extra: More Jars", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
-                new VariableSetterConfig { StateName = "Enemy Count", ActionType = typeof(GetTagCount),
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Spawn Min", 1),
-                        new("Spawn Max", 2),
-                        new("Enemies Max", 8),
-                    },
-                },
-                new VariableSetterConfig { L = 1, StateName = "Enemy Count", ActionType = typeof(GetTagCount),
-                    IntVariables = new KeyValuePair<string, int>[]
-                    {
-                        new("Spawns Total", 3),
-                        new("Spawn Min", 8),
-                        new("Spawn Max", 12),
-                        new("Enemies Max", 50),
-                    },
-                },
-                new ActionEnablerConfig { L = 1, StateName = "Summon?", ActionType = typeof(IntCompare), ToEnabled = false }, // never cancel summon
-            } },
-            { "GG_Collector_V"       , null },
+            { "GG_Collector"         , GetTheCollectorConfigs() },
+            { "GG_Collector_V"       , GetTheCollectorConfigs() },
             { "GG_Crystal_Guardian"  , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Mega Zombie Beam Miner (1)", FsmName = "Beam Miner" },
             } },
@@ -536,6 +512,43 @@ namespace BossAttacks.Utils
                 new EventEmitterConfig { ID = $"WK{number1to6} JUMP ROLL move choice", L = 3, StateName = "Move Choice", ActionType = typeof(SendRandomEventV2), EventName = "JUMP ROLL" },
                 new ActionEnablerConfig { ID = $"WK{number1to6} JUMP ROLL run to action 5", L = 3, StateName = "Run To", ActionType = typeof(BoolTest), ToEnabled = false },
                 new ActionEnablerConfig { ID = $"WK{number1to6} JUMP ROOL run to action 6", L = 3, StateName = "Run To", ActionType = typeof(WaitRandom), ToEnabled = false },
+            };
+        }
+
+        private static ModuleConfig[] GetTheCollectorConfigs()
+        {
+            return new ModuleConfig[] {
+                new SingleFsmModuleConfig { GoName = "Jar Collector", FsmName = "Control" },
+                // Enter Phase 2
+                new LabelConfig { H = 1, Display = "Extra: Entered Phase 2" },
+                new VariableSetterConfig { StateName = "Summon?", ActionType = typeof(GetTagCount),
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Enemies Max", 8),
+                        new("Spawn Min", 2),
+                        new("Spawn Max", 3),
+                        new("Spawns Total", 3),
+                    },
+                    FloatVariables = new KeyValuePair<string, float>[]
+                    {
+                        new("Resummon Pause", 0.35f),
+                        new("Spawn Recover Time", 0.75f),
+                    },
+                },
+                new EventEmitterConfig { FsmName = "Damage Control", StateName = "Check", ActionType = typeof(BoolTest), EventName = "DECREMENT" },
+                // Spawn choices
+                new AttackSelectorConfig { H = 1, FsmName = "Control", StateName = "Phase 1", IgnoreEvents = new() { "NONE" } },
+                // More Jars
+                new LevelChangerConfig { H = 1, Display = "Extra: More Jars", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
+                new VariableSetterConfig { L = 1, StateName = "Summon?", ActionType = typeof(GetTagCount),
+                    IntVariables = new KeyValuePair<string, int>[]
+                    {
+                        new("Enemies Max", 50),
+                        new("Spawn Min", 8),
+                        new("Spawn Max", 12),
+                    },
+                },
+                new ActionEnablerConfig { L = 1, StateName = "Summon?", ActionType = typeof(IntCompare), ToEnabled = false }, // never cancel summon
             };
         }
     }
