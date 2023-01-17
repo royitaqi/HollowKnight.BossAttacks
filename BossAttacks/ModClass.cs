@@ -14,7 +14,7 @@ using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace BossAttacks
 {
-    public class BossAttacks : Mod, ICustomMenuMod, IGlobalSettings<GlobalData>
+    public sealed partial class BossAttacks : Mod, ITogglableMod, IGlobalSettings<GlobalData>
     {
         internal static BossAttacks Instance;
         internal GlobalData GlobalData { get; set; } = new GlobalData();
@@ -32,19 +32,6 @@ namespace BossAttacks
 
             ModDisplay.Instance = new ModDisplay();
 
-            ModuleManager.Instance = new ModuleManager();
-            ModuleManager.Instance.OptionsChanged += () =>
-            {
-                UpdateOptionDisplay();
-                foreach (var opt in ModuleManager.Instance.Options)
-                {
-                    if (opt.Interactive)
-                    {
-                        opt.Interacted += UpdateOptionDisplay;
-                    }
-                }
-            };
-
             USceneManager.activeSceneChanged += SceneManager_OnActiveSceneChanged;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
 
@@ -55,6 +42,11 @@ namespace BossAttacks
 
         private void ModHooks_HeroUpdateHook()
         {
+            if (ModuleManager.Instance == null)
+            {
+                return;
+            }
+
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
                 UpdateOptionDisplay();
@@ -75,7 +67,11 @@ namespace BossAttacks
 
         private void SceneManager_OnActiveSceneChanged(Scene from, Scene to)
         {
-            ModuleManager.Instance.Unload();
+            if (ModuleManager.Instance != null)
+            {
+                ModuleManager.Instance.Unload();
+                ModuleManager.Instance = null;
+            }
 
             if (!ModuleManager.IsBossScene(to) || (from != null && from.name != "GG_Workshop"))
             {
@@ -89,11 +85,28 @@ namespace BossAttacks
             }
 
             // Now it's a supported boss scene in HoG
+            ModuleManager.Instance = new ModuleManager();
+            ModuleManager.Instance.OptionsChanged += () =>
+            {
+                UpdateOptionDisplay();
+                foreach (var opt in ModuleManager.Instance.Options)
+                {
+                    if (opt.Interactive)
+                    {
+                        opt.Interacted += UpdateOptionDisplay;
+                    }
+                }
+            };
             ModuleManager.Instance.Load(to);
         }
 
         private void UpdateOptionDisplay()
         {
+            if (ModuleManager.Instance == null)
+            {
+                return;
+            }
+
             var sb = new StringBuilder();
             int i = 0;
             foreach (var opt in ModuleManager.Instance.Options)
@@ -108,10 +121,25 @@ namespace BossAttacks
         }
 
         ///
-        /// ICustomMenuMod
+        /// ITogglableMod
         ///
-        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
-        public bool ToggleButtonInsideMenu => false;
+        public void Unload()
+        {
+            USceneManager.activeSceneChanged -= SceneManager_OnActiveSceneChanged;
+            ModHooks.HeroUpdateHook -= ModHooks_HeroUpdateHook;
+
+            if (ModuleManager.Instance != null)
+            {
+                ModuleManager.Instance.Unload();
+                ModuleManager.Instance = null;
+            }
+
+            if (ModDisplay.Instance != null)
+            {
+                ModDisplay.Instance.Destroy();
+                ModDisplay.Instance = null;
+            }
+        }
 
         ///
         /// IGlobalSettings<GlobalData>

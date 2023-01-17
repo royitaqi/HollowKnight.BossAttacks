@@ -1,53 +1,44 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BossAttacks.Modules;
-using BossAttacks.Utils;
-using Modding;
-using Osmi.Utils;
+﻿using Modding;
 using Satchel.BetterMenus;
-using UnityEngine;
-using UnityEngine.UI;
 using MenuButton = Satchel.BetterMenus.MenuButton;
 
 namespace BossAttacks
 {
-    public static class ModMenu
+    public sealed partial class BossAttacks : ICustomMenuMod
     {
-        public static MenuScreen GetMenu(MenuScreen modListMenu, ModToggleDelegates? toggle)
-        {
-            // Create the mod.
-            // Note that we don't cache this menu instance, because the localization setting may have been updated between two menu invocations.
-            MenuRef = PrepareMenu();
-            MenuRef.SetMenuButtonNameAndDesc(BossAttacks.Instance, "Boss Attacks");
-            var menuScreen = MenuRef.GetMenuScreen(modListMenu);
+        public bool ToggleButtonInsideMenu => true;
 
-            return menuScreen;
-        }
-
-        private static Menu PrepareMenu()
+        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle)
         {
-            return new Menu("Boss Attacks", new Element[]
+            _menuRef = new Menu("Boss Attacks", new Element[]
             {
+                toggle!.Value.CreateToggle(
+                    "Mod",
+                    "Re-enter fight for change to apply"
+                ),
                 new HorizontalOption(
-                    "Display",
-                    "",
-                    new []{ "Off", "Auto-hide", "On" },
+                    "Fade Bottom Left Display",
+                    "Press \"0\" on main keyboard to show display",
+                    new []{ "Off", "On" },
                     selectedIndex => {
-                        BossAttacks.Instance.GlobalData.DisplayMode = selectedIndex;
-                        ModDisplay.Instance.Update();
+                        BossAttacks.Instance.GlobalData.FadeDisplay = selectedIndex == 1;
+                        ModDisplay.Instance?.Update();
                     },
-                    () => BossAttacks.Instance.GlobalData.DisplayMode
+                    () => BossAttacks.Instance.GlobalData.FadeDisplay ? 1 : 0
                 ),
 #if DEBUG
                 new MenuButton(
-                    "DEBUG: Display",
+                    "DEBUG: Move & Resize Display",
                     "",
-                    _ => ModDisplay.Instance.EnableDebugger()
+                    _ => ModDisplay.Instance?.EnableDebugger()
                 ),
 #endif
             });
+
+            _menuRef.SetMenuButtonNameAndDesc(BossAttacks.Instance, "Boss Attacks");
+            return _menuRef.GetMenuScreen(modListMenu);
         }
 
-        public static Menu MenuRef;
+        private Menu _menuRef;
     }
 }

@@ -10,8 +10,6 @@ namespace BossAttacks
     {
         internal static ModDisplay Instance;
 
-        public bool Visible = true;
-
         private string DisplayText = "Boss Attacks";
         private DateTime DisplayExpireTime = DateTime.Now;
         private TimeSpan DisplayDuration = TimeSpan.FromSeconds(6);
@@ -46,7 +44,7 @@ namespace BossAttacks
             ).GetComponent<UnityEngine.UI.Text>();
         }
 
-        private void Destroy()
+        public void Destroy()
         {
             if (_canvas != null) UnityEngine.Object.Destroy(_canvas);
             _canvas = null;
@@ -55,21 +53,15 @@ namespace BossAttacks
 
         public void Update()
         {
-            //this.LogModDebug("Update()");
             Create();
 
-            if (Visible
-                && BossAttacks.Instance.GlobalData.DisplayMode != 0
-                && !(BossAttacks.Instance.GlobalData.DisplayMode == 1 && DateTime.Now >= DisplayExpireTime && DateTime.Now >= NotificationExpireTime)
-            )
+            if (!BossAttacks.Instance.GlobalData.FadeDisplay || DateTime.Now < DisplayExpireTime || DateTime.Now < NotificationExpireTime)
             {
                 _text.text = DateTime.Now >= NotificationExpireTime ? DisplayText : NotificationText;
-                //this.LogModDebug($"Showing text: {_text.text}");
                 _canvas.SetActive(true);
             }
             else
             {
-                //this.LogModDebug("Hiding text");
                 _canvas?.SetActive(false);
             }
         }
@@ -79,7 +71,6 @@ namespace BossAttacks
          */
         public void Display(string text)
         {
-            //this.LogModDebug($"Display(): {text}");
             DisplayText = text.Trim();
             DisplayExpireTime = DateTime.Now + DisplayDuration;
             Update();
@@ -91,7 +82,6 @@ namespace BossAttacks
          */
         public void Notify(string text)
         {
-            //this.LogModDebug($"Notify(): {text}");
             NotificationText = text.Trim();
             NotificationExpireTime = DateTime.Now + NotificationDuration;
             Update();
