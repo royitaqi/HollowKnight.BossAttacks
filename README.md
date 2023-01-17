@@ -50,12 +50,12 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Soul Master | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
 | Soul Tyrant | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
 | Soul Warrior | ✅ | |
-| The Collector | ✖️ |  |
+| The Collector | ✅ | ✅ Extra: More Jars |
 | Traitor Lord | ✅ | |
 | Troupe Master Grimm | ✖️ | |
 | Uumuu | ✅ | |
 | Vengefly King | ✅ | ✅ Allow repeated attacks of the same type |
-| Watcher Knight | ✖️ | |
+| Watcher Knight | ✅ | |
 | White Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before; no dive after) |
 | Winged Nosk | ✅ | ✅ Unlock all attacks |
 | Xero | n/a | Only does one attack |
