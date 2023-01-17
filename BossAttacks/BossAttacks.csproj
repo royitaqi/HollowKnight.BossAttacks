@@ -3,7 +3,7 @@
     <!-- Change this to the path of your modded HK installation -->
     <HollowKnightRefs>D:/XboxGames/Hollow Knight/Content/Hollow Knight_Data/Managed</HollowKnightRefs>
     <!-- Change this to the path where you want the ready-to-upload exports to be -->
-    <ExportDir>D:/GitHubRepositories/HollowKnight.GodhomeWinLossTracker/Exports</ExportDir>
+    <ExportDir>D:/GitHubRepositories/HollowKnight.BossAttacks/Exports</ExportDir>
     <!-- Uncomment this to generate a documentation file to be included with the mod -->
     <!--<DocumentationFile>$(OutputPath)/$(AssemblyTitle).xml</DocumentationFile>-->
   </PropertyGroup>
@@ -22,18 +22,18 @@
     <Version>0.1.0</Version>
   </PropertyGroup>
 
-  <Target Name="CopyModToGame" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
+  <Target Name="ClearModAndExportDir" AfterTargets="PostBuildEvent">
+    <RemoveDir Condition="Exists('$(HollowKnightRefs)/Mods/$(TargetName)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)/" />
+    <RemoveDir Condition="Exists('$(ExportDir)/')" Directories="$(ExportDir)/" />
+  </Target>
+
+  <Target Name="CopyModToGame" AfterTargets="ClearModAndExportDir" Condition="'$(Configuration)' == 'Debug'">
     <MakeDir Condition="!Exists('$(HollowKnightRefs)/Mods/$(TargetName)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)/" />
     <Copy Condition="'$(DocumentationFile)' != ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
     <Copy Condition="'$(DocumentationFile)' == ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
   </Target>
 
-  <Target Name="ClearExportDir" AfterTargets="PostBuildEvent">
-    <RemoveDir Condition="Exists('$(ExportDir)/')" Directories="$(ExportDir)/" />
-  </Target>
-
-
-  <Target Name="ExportMod" AfterTargets="ClearExportDir" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="ExportMod" AfterTargets="ClearModAndExportDir" Condition="'$(Configuration)' == 'Release'">
     <MakeDir Directories="$(ExportDir)/" />
     <MakeDir Directories="$(ExportDir)/$(TargetName)/" />
     <MakeDir Directories="$(ExportDir)/$(TargetName)/zip/" />
