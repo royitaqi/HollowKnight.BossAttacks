@@ -94,6 +94,7 @@ namespace BossAttacks
                 {
                     if (opt.Interactive)
                     {
+                        opt.Interacted -= UpdateOptionDisplay;
                         opt.Interacted += UpdateOptionDisplay;
                     }
                 }
