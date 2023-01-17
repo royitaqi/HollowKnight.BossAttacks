@@ -80,10 +80,17 @@ namespace BossAttacks.Utils
         private static void DoLog<T>(T logger, string flag, string message)
         {
             var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
-            var type = logger.GetType();
-            var id = type.GetProperty("ID")?.GetValue(logger) as string ?? type.Name;
-            
-            BossAttacks.Instance.Log($"{time} [{flag}] [{id}] {message}");
+
+            if (logger != null)
+            {
+                var type = logger.GetType();
+                var id = type.GetProperty("ID")?.GetValue(logger) as string ?? type.Name;
+                BossAttacks.Instance.Log($"{time} [{flag}] [{id}] {message}");
+            }
+            else
+            {
+                BossAttacks.Instance.Log($"{time} [{flag}] [{typeof(T).Name}] {message}");
+            }
         }
     }
 }

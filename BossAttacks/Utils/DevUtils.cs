@@ -13,14 +13,16 @@ namespace BossAttacks.Utils
         }
     }
 
-    public static class ModAssert
+    public class ModAssert
     {
+        private ModAssert() { }
+
         public static void DebugBuild(bool condition, string message)
         {
 #if (DEBUG)
             if (!condition)
             {
-                throw new ModException(message);
+                LoggingUtils.LogModError<ModAssert>(null, message);
             }
 #endif
         }
@@ -29,7 +31,7 @@ namespace BossAttacks.Utils
         {
             if (!condition)
             {
-                throw new ModException(message);
+                LoggingUtils.LogModError<ModAssert>(null, message);
             }
         }
     }
