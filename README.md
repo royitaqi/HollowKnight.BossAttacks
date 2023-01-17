@@ -5,10 +5,11 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 
 ## How to use
 
-1. Enter a boss fight in Hall of Gods to see attacks.
+1. Enter a boss fight in Hall of Gods to see attacks displayed on the bottom left corner of the game.
 2. Press "1" - "9" on main keyboard to select attacks.
 3. Effects only last in the same boss fight.
-4. Best used together with Debug mod for increases boss HP.
+4. Mod and display can be turned off at any time. When turning on the mod, re-enter fight for change to apply.
+5. To make training session last longer, use Debug mod to reduce nail damage or increase boss HP.
 
 
 ## Supported bosses
