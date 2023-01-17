@@ -18,7 +18,7 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Absolute Radiance | ✅ | ✅ Show different attacks in different phases |
 | Broken Vessel | ✅ | ✅ Unlock all attacks |
 | Brooding Mawlek | ✅ | ✅ Allow repeated attacks of the same type |
-| Brothers Oro & Mato | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Haven't figured out yet |
+| Brothers Oro & Mato | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Too Complex to figure out, yet |
 | Crystal Guardian | ✅ |  |
 | Dung Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before) |
 | Elder Hu | ✅ | |
@@ -52,13 +52,18 @@ A mod for the game Hollow Knight. Train boss fights in Hall of Gods against spec
 | Soul Warrior | ✅ | |
 | The Collector | ✅ | ✅ Enter Phase 2 at start of fight<br>✅ More Jars |
 | Traitor Lord | ✅ | |
-| Troupe Master Grimm | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Haven't figured out yet |
+| Troupe Master Grimm | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Too Complex to figure out, yet |
 | Uumuu | ✅ | |
 | Vengefly King | ✅ | ✅ Allow repeated attacks of the same type |
 | Watcher Knight | ✅ | |
 | White Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before; no dive after) |
 | Winged Nosk | ✅ | ✅ Unlock all attacks |
 | Xero | n/a | Only does one attack |
+
+
+## Have a question or report a bug?
+
+Join discord server: https://discord.gg/vqKTF26VGX
 
 
 ## Credits
