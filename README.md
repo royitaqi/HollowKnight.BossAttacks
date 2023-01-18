@@ -12,7 +12,7 @@ Train boss fights in Hall of Gods against specific boss attacks and more.
 3. Effects only last in the same boss fight.
 4. Mod and display can be turned on/off at any time in the "Mods" menu.
 
-![image](https://user-images.githubusercontent.com/14790745/213060835-3cc6a279-de07-46d6-a6d0-e181b9fbc2a9.png)
+![image](https://user-images.githubusercontent.com/14790745/213064649-bff5c817-481b-4eda-b85a-9cf3dec94d68.png)
 
 
 ## Supported bosses
