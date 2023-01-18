@@ -30,11 +30,7 @@ namespace BossAttacks.Utils
             { "GG_Crystal_Guardian_2", new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Battle Scene/Zombie Beam Miner Rematch", FsmName = "Beam Miner" },
             } },
-            { "GG_Dung_Defender"     , new ModuleConfig[] {
-                new AttackSelectorConfig { L = 0, H = 1, GoName = "Dung Defender", FsmName = "Dung Defender" },
-                new LevelChangerConfig { L = 0, H = 1, Display = "Extra: Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
-                new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
-            } },
+            { "GG_Dung_Defender"     , GetDungDefenderAndWhiteDefenderConfigs(false) },
             { "GG_Failed_Champion"   , GetFalseKnightAndFailedChampionConfigs(true) },
             { "GG_False_Knight"      , GetFalseKnightAndFailedChampionConfigs(false) },
             { "GG_Flukemarm"         , null }, // X not interesting
@@ -288,12 +284,7 @@ namespace BossAttacks.Utils
                     new[] { new OptionCombinerConfig() },
                 }.SelectMany(c => c).ToArray()
             },
-            { "GG_White_Defender"    , new ModuleConfig[] {
-                new AttackSelectorConfig { L = 0, H = 1, GoName = "White Defender", FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
-                new LevelChangerConfig { L = 0, H = 1, Display = "Extra: Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
-                new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "Roll Speed" }, // trim head throw
-                new EventEmitterConfig { L = 1, StateName = "Air Dive?", ActionType = typeof(SendRandomEvent), IndexDelta = 2, EventName = "FINISHED" }, // trim tail dive
-            } },
+            { "GG_White_Defender"    , GetDungDefenderAndWhiteDefenderConfigs(true) },
         };
 
         private static ModuleConfig[] GetSoulWarriorConfigs()
@@ -550,6 +541,42 @@ namespace BossAttacks.Utils
                 },
                 new ActionEnablerConfig { L = 1, StateName = "Summon?", ActionType = typeof(IntCompare), ToEnabled = false }, // never cancel summon
             };
+        }
+
+        private static ModuleConfig[] GetDungDefenderAndWhiteDefenderConfigs(bool v)
+        {
+            var dungDefender = new Dictionary<string, string>
+            {
+                { "GoName", "Dung Defender" },
+            };
+            var whiteDefender = new Dictionary<string, string>
+            {
+                { "GoName", "White Defender" },
+            };
+            var boss = v ? whiteDefender : dungDefender;
+
+            var configs = new List<ModuleConfig>
+            {
+                new AttackSelectorConfig { L = 0, H = 1, GoName = boss["GoName"], FsmName = "Dung Defender", IgnoreEvents = new() { "GROUND SLAM" } },
+                new LevelChangerConfig { L = 0, H = 1, Display = "Extra: Trim ROLL JUMP", TargetL = 1, Mode = LevelChangerConfig.Modes.Bidirection },
+                // trim head throw
+                new TransitionRewirerConfig { L = 1, StateName = "RJ Set", EventName = "FINISHED", ToState = "RJ Antic" },
+                // make sure roll speed is 12
+                new VariableSetterConfig { L = 1, StateName = "RJ Antic", ActionType = typeof(FaceObject),
+                    FloatVariables = new KeyValuePair<string, float>[]
+                    {
+                        new("Throw Speed", 12f),
+                    },
+                },
+            };
+
+            if (boss == whiteDefender)
+            {
+                // trim tail dive
+                configs.Add(new EventEmitterConfig { L = 1, StateName = "Air Dive?", ActionType = typeof(SendRandomEvent), IndexDelta = 2, EventName = "FINISHED" });
+            }
+
+            return configs.ToArray();
         }
     }
 }
