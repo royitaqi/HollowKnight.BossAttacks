@@ -39,7 +39,7 @@ internal class PrintStates : SingleFsmModule
         foreach (var state in _fsm.FsmStates)
         {
             // 2nd param "maybe" = true, because another module can be loaded later during a level change and add states, which will not have print actions.
-            state.RemoveActionByName(ID, true);
+            state.RemoveActionByName(ID);
         }
     }
 

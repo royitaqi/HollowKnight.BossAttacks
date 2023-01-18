@@ -19,7 +19,7 @@
     <FileVersion></FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
-    <Version>0.1.3</Version>
+    <Version>0.1.4</Version>
   </PropertyGroup>
 
   <Target Name="ClearModAndExportDir" AfterTargets="PostBuildEvent">

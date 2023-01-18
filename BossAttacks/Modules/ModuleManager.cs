@@ -72,16 +72,16 @@ internal class ModuleManager {
     public void Unload()
     {
         this.LogMod("Unload");
-        foreach (var module in _modules.Reverse<Module>())
-        {
-            if (module.Loaded)
-            {
-                module.Unload();
-            }
-        }
+
+        // Unload modules
+        UnloadModules(_modules.Where(m => m.Loaded));
+
+        // Clean up variables
         _modules.Clear();
         _options.Clear();
         _level = 0;
+        _loadOrder.Clear();
+        _nextLoadId = 0;
     }
 
     private void GetOptions()
@@ -111,24 +111,28 @@ internal class ModuleManager {
         this.LogModDebug($"Changing level from {_level} to {level}");
         int originalLevel = _level;
         _level = level;
-        // Unload in reverse order
-        foreach (var m in _modules.Reverse<Module>())
-        {
-            bool shouldBeLoaded = m.Levels.Contains(_level);
-            if (!shouldBeLoaded && m.Loaded)
-            {
-                m.Unload();
-            }
-        }
-        // Load in order
+
+        // Decide which modules to unload/load
+        var shouldUnload = new List<Module>();
+        var shouldLoad = new List<Module>();
         foreach (var m in _modules)
         {
             bool shouldBeLoaded = m.Levels.Contains(_level);
-            if (shouldBeLoaded && !m.Loaded)
+            if(!shouldBeLoaded && m.Loaded)
             {
-                m.Load();
+                shouldUnload.Add(m);
+            }
+            else if (shouldBeLoaded && !m.Loaded)
+            {
+                shouldLoad.Add(m);
             }
         }
+
+        // Do the actual unload/load
+        UnloadModules(shouldUnload);
+        LoadModules(shouldLoad);
+
+        // Re-gen options after unload/load
         GetOptions();
         this.LogModDebug($"Level is now {_level}");
         return originalLevel;
@@ -163,6 +167,23 @@ internal class ModuleManager {
 
         this.LogModDebug($"    {module.GetType().Name}: {module.ID} -- {ConfigToString(config)}");
         return module;
+    }
+
+    private void LoadModules(IEnumerable<Module> modules)
+    {
+        foreach (var m in modules)
+        {
+            _loadOrder[m] = _nextLoadId++;
+            m.Load();
+        }
+    }
+
+    private void UnloadModules(IEnumerable<Module> modules)
+    {
+        foreach (var m in modules.OrderByDescending(m => _loadOrder[m]))
+        {
+            m.Unload();
+        }
     }
 
     private string ConfigToString(ModuleConfig config)
@@ -251,4 +272,6 @@ internal class ModuleManager {
     private List<Module> _modules = new();
     private List<Option> _options = new();
     private int _level;
+    private Dictionary<Module, int> _loadOrder = new();
+    private int _nextLoadId = 0;
 }

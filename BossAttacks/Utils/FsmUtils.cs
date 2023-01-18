@@ -13,7 +13,7 @@ namespace BossAttacks.Utils
             state.Actions[index].Name = name;
         }
 
-        public static void RemoveActionByName(this FsmState state, string name, bool maybe = false)
+        public static void RemoveActionByName(this FsmState state, string name)
         {
             for (int i = 0; i < state.Actions.Length; i++)
             {
@@ -27,10 +27,7 @@ namespace BossAttacks.Utils
                     return;
                 }
             }
-            if (!maybe)
-            {
-                ModAssert.AllBuilds(false, $"Cannot find action named \"{name}\" in state \"{state.Name}\" (GO = \"{state.Fsm.GameObject.name}\", FSM = \"{state.Fsm.Name}\")");
-            }
+            ModAssert.AllBuilds(false, $"Cannot find action named \"{name}\" in state \"{state.Name}\" (GO = \"{state.Fsm.GameObject.name}\", FSM = \"{state.Fsm.Name}\")");
         }
 
         public static int FindActionIndexByType(this FsmState state, Type actionType)
