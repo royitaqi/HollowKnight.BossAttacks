@@ -103,44 +103,8 @@ namespace BossAttacks.Utils
             } },
             { "GG_Mage_Knight"       , GetSoulWarriorConfigs() },
             { "GG_Mage_Knight_V"     , GetSoulWarriorConfigs() },
-            { "GG_Mantis_Lords"      , new ModuleConfig[] {
-                /**
-                 *                             Phase 1 normal fight
-                 *                            /    Phase 1 kill boss
-                 *                           |    /    Phase 2 coordinated fight
-                 *                           |   |    /    Phase 2 uncoordinated fight
-                 *                           |   |   |    /
-                 *                         | 0 | 1 | 2 | 3 |
-                 * -----------------------------------------
-                 * phase 1 AS              | - |   |   |   |
-                 * phase 1->2 manual       | - | t |   |   |
-                 * phase 1 boss killer     |   | - |   |   |
-                 * phase 1->2 auto         | ----- | t |   |
-                 * phase 2c AS             |   |   | - |   |
-                 * phase 2c<->2u           |   |   | t - T |
-                 * phase 2u s1             |   |   |   | - |
-                 * phase 2u s2             |   |   |   | - |
-                 */
-                new AttackSelectorConfig { ID = "phase 1 AS", GoName = "Mantis Battle/Battle Main/Mantis Lord", FsmName = "Mantis Lord", MapEvents = new() { { "HIGH THROW", "HIGH THROW (only when hero is off platform or too high)" } } },
-                new LevelChangerConfig { ID = "phase 1->2 manual", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime },
-                new GoKillerConfig { ID = "phase 1 boss killer", L = 1 },
-                new AutoLevelChangerConfig { ID = "phase 1->2 auto", L = 0, H = 1, GoName = "Mantis Battle/Battle Sub", FsmName = "Start", OnEnterState = "Start", TargetL = 2 },
-                new AttackSelectorConfig { ID = "phase 2c AS", L = 2, StateName = "Choose Move" },
-                new LevelChangerConfig { ID = "phase 2c<->2u", L = 2, H = 3, Display = "Extra: Uncoordinated Attacks", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection },
-                new ActionEnablerConfig { ID = "phase 2u s1", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S1", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
-                new ActionEnablerConfig { ID = "phase 2u s2", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S2", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
-            } },
-            { "GG_Mantis_Lords_V"    , new ModuleConfig[] {
-                new AttackSelectorConfig { ID = "phase 1 AS", GoName = "Mantis Battle/Battle Main/Mantis Lord", FsmName = "Mantis Lord", MapEvents = new() { { "HIGH THROW", "HIGH THROW (only when hero is off platform or too high)" } } },
-                new LevelChangerConfig { ID = "phase 1->2 manual", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime },
-                new GoKillerConfig { ID = "phase 1 boss killer", L = 1 },
-                new AutoLevelChangerConfig { ID = "phase 1->2 auto", L = 0, H = 1, GoName = "Mantis Battle/Battle Sub", FsmName = "Start", OnEnterState = "Start", TargetL = 2 },
-                new AttackSelectorConfig { ID = "phase 2c AS", L = 2, StateName = "Choose Move Triple" },
-                new LevelChangerConfig { ID = "phase 2c<->2u", L = 2, H = 3, Display = "Extra: Uncoordinated Attacks", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection },
-                new ActionEnablerConfig { ID = "phase 2u s1", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S1", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
-                new ActionEnablerConfig { ID = "phase 2u s2", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S2", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
-                new ActionEnablerConfig { ID = "phase 2u s3", L = 3, GoName = "Mantis Battle/Battle Sub/Mantis Lord S3", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false },
-            } },
+            { "GG_Mantis_Lords"      , GetMantisLordsAndSistersOfBattleConfigs(false) },
+            { "GG_Mantis_Lords_V"    , GetMantisLordsAndSistersOfBattleConfigs(true) },
             { "GG_Mega_Moss_Charger" , new ModuleConfig[] {
                 new AttackSelectorConfig { GoName = "Mega Moss Charger", FsmName = "Mossy Control" },
             } },
@@ -574,6 +538,54 @@ namespace BossAttacks.Utils
             {
                 // trim tail dive
                 configs.Add(new EventEmitterConfig { L = 1, StateName = "Air Dive?", ActionType = typeof(SendRandomEvent), IndexDelta = 2, EventName = "FINISHED" });
+            }
+
+            return configs.ToArray();
+        }
+
+        private static ModuleConfig[] GetMantisLordsAndSistersOfBattleConfigs(bool v)
+        {
+            /**
+             *                             Phase 1 normal fight
+             *                            /    Phase 1 kill boss
+             *                           |    /    Phase 2 coordinated fight
+             *                           |   |    /    Phase 2 uncoordinated fight
+             *                           |   |   |    /
+             *                         | 0 | 1 | 2 | 3 |
+             * -----------------------------------------
+             * phase 1 AS              | - |   |   |   |
+             * phase 1->2 manual       | - | t |   |   |
+             * phase 1 boss killer     |   | - |   |   |
+             * phase 1->2 auto         | ----- | t |   |
+             * phase 2c AS             |   |   | - |   |
+             * phase 2c<->2u           |   |   | t - T |
+             * phase 2u s1             |   |   |   | - |
+             * phase 2u s2             |   |   |   | - |
+             */
+            var mantisLords = new Dictionary<string, string>
+            {
+                { "coordinated AS", "Choose Move" },
+            };
+            var sistersOfBattle = new Dictionary<string, string>
+            {
+                { "coordinated AS", "Choose Move Triple" },
+            };
+            var boss = v ? sistersOfBattle : mantisLords;
+
+            var configs = new List<ModuleConfig>
+            {
+                new AttackSelectorConfig { ID = "phase 1 AS", GoName = "Mantis Battle/Battle Main/Mantis Lord", FsmName = "Mantis Lord", MapEvents = new() { { "HIGH THROW", "HIGH THROW (only when hero is off platform or too high)" } } },
+                new LevelChangerConfig { ID = "phase 1->2 manual", Display = "Advance to Phase 2", TargetL = 1, Mode = LevelChangerConfig.Modes.OneTime },
+                new GoKillerConfig { ID = "phase 1 boss killer", L = 1 },
+                new AutoLevelChangerConfig { ID = "phase 1->2 auto", L = 0, H = 1, GoName = "Mantis Battle/Battle Sub", FsmName = "Start", OnEnterState = "Start", TargetL = 2 },
+                new AttackSelectorConfig { ID = "phase 2c AS", L = 2, StateName = boss["coordinated AS"] },
+                new LevelChangerConfig { ID = "phase 2c<->2u", L = 2, H = 3, Display = "Extra: Uncoordinated Attacks", TargetL = 3, Mode = LevelChangerConfig.Modes.Bidirection },
+            };
+
+            int subs = boss == sistersOfBattle ? 3 : 2;
+            for (int i = 1; i <= subs; i++)
+            {
+                configs.Add(new ActionEnablerConfig { ID = $"phase 2u s{i}", L = 3, GoName = $"Mantis Battle/Battle Sub/Mantis Lord S{i}", FsmName = "Mantis Lord", StateName = "Idle", ActionType = typeof(BoolTest), ToEnabled = false });
             }
 
             return configs.ToArray();
