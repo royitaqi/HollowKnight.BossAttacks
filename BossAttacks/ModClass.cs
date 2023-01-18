@@ -29,6 +29,7 @@ namespace BossAttacks
             Log("Initializing mod");
 
             Instance = this;
+            LoggingUtils.LoggingFunction = this.Log;
 
             ModDisplay.Instance = new ModDisplay();
 
