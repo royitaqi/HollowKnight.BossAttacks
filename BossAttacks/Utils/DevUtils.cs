@@ -13,18 +13,31 @@ namespace BossAttacks.Utils
         }
     }
 
+    /**
+     * Debug build: Log [E] and throw.
+     * Release build: Log [W] and return **true**.
+     *   - Caller can use the return value to recover.
+     *   - E.g. `if (ModAssert.DebugBuild()) { recover(); }`
+     */
     public static class ModAssert
     {
-        public static void DebugBuild(bool condition, string message)
+        public static bool DebugBuild(bool condition, string message)
         {
-#if (DEBUG)
             if (!condition)
             {
+#if (DEBUG)
                 typeof(ModAssert).LogModError(message);
-            }
+#else
+                typeof(ModAssert).LogModWarn(message);
 #endif
+            }
+            return !condition;
         }
 
+        /**
+         * Debug build: Log [E] and throw.
+         * Release build: Log [E] and throw.
+         */
         public static void AllBuilds(bool condition, string message)
         {
             if (!condition)

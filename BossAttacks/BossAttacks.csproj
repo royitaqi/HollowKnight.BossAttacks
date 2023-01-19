@@ -19,7 +19,7 @@
     <FileVersion></FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
   </PropertyGroup>
 
   <Target Name="ClearModAndExportDir" AfterTargets="PostBuildEvent">
@@ -27,7 +27,7 @@
     <RemoveDir Condition="Exists('$(ExportDir)/')" Directories="$(ExportDir)/" />
   </Target>
 
-  <Target Name="CopyModToGame" AfterTargets="ClearModAndExportDir" Condition="'$(Configuration)' == 'Debug'">
+  <Target Name="CopyModToGame" AfterTargets="ClearModAndExportDir">
     <MakeDir Condition="!Exists('$(HollowKnightRefs)/Mods/$(TargetName)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)/" />
     <Copy Condition="'$(DocumentationFile)' != ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
     <Copy Condition="'$(DocumentationFile)' == ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />

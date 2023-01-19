@@ -27,7 +27,7 @@ namespace BossAttacks.Utils
                     return;
                 }
             }
-            ModAssert.AllBuilds(false, $"Cannot find action named \"{name}\" in state \"{state.Name}\" (GO = \"{state.Fsm.GameObject.name}\", FSM = \"{state.Fsm.Name}\")");
+            ModAssert.DebugBuild(false, $"Cannot find action named \"{name}\" in state \"{state.Name}\" (GO = \"{state.Fsm.GameObject.name}\", FSM = \"{state.Fsm.Name}\")");
         }
 
         public static int FindActionIndexByType(this FsmState state, Type actionType)

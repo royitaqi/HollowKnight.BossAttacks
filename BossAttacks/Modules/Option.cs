@@ -36,7 +36,7 @@ internal class MonoOption : Option
         }
         else
         {
-            ModAssert.AllBuilds(false, "An non-interactive MonoOption should not be interacted");
+            ModAssert.DebugBuild(false, "An non-interactive MonoOption should not be interacted");
         }
     }
 
@@ -65,7 +65,7 @@ internal class BooleanOption : Option
         }
         else
         {
-            ModAssert.AllBuilds(false, "An non-interactive BooleanOption should not be interacted");
+            ModAssert.DebugBuild(false, "An non-interactive BooleanOption should not be interacted");
         }
     }
 

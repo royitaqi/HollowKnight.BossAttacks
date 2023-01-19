@@ -22,7 +22,11 @@ namespace BossAttacks
         ///
         /// Mod
         ///
+#if (DEBUG)
+        public override string GetVersion() => VersionUtil.GetVersion<BossAttacks>() + "-DEBUG";
+#else
         public override string GetVersion() => VersionUtil.GetVersion<BossAttacks>();
+#endif
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
@@ -59,7 +63,10 @@ namespace BossAttacks
             {
                 if (opt.Interactive && Input.GetKeyDown(KeyCode.Alpha0 + ++i))
                 {
-                    ModAssert.AllBuilds(i <= 9, "Cannot have more than 9 interactive options");
+                    if (ModAssert.DebugBuild(i <= 9, $"Cannot have more than 9 interactive options (got {i}: {opt.Display})"))
+                    {
+                        continue;
+                    }
                     this.LogModDebug($"User is changing option {opt.Display}");
                     opt.Interact();
                     break;
@@ -115,8 +122,11 @@ namespace BossAttacks
             foreach (var opt in ModuleManager.Instance.Options)
             {
                 string hotkey = opt.Interactive ? $"\"{++i}\" - " : "";
+                if (ModAssert.DebugBuild(i <= 9, $"Cannot have more than 9 interactive options (got {i}: {opt.Display})"))
+                {
+                    continue;
+                }
                 sb.AppendLine(hotkey + opt.Display);
-                ModAssert.AllBuilds(i <= 9, "Cannot have more than 9 interactive options");
             }
             this.LogModDebug("Updating option display");
 
