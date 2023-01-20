@@ -26,12 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Satchel, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(HollowKnightRefs)/Mods/Satchel/Satchel.dll</HintPath>
-    </Reference>
-    <Reference Include="Vasi, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(HollowKnightRefs)/Mods/Vasi/Vasi.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp.dll</HintPath>
     </Reference>

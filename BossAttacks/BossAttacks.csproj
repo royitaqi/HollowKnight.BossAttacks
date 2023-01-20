@@ -19,7 +19,7 @@
     <FileVersion></FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
-    <Version>0.1.5</Version>
+    <Version>0.1.6</Version>
   </PropertyGroup>
 
   <Target Name="ClearModAndExportDir" AfterTargets="PostBuildEvent">
@@ -66,11 +66,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- For l11n and GO.Child() in ModMenu.cs. -->
-    <Reference Include="Osmi">
-      <HintPath>$(HollowKnightRefs)/Mods/Osmi/Osmi.dll</HintPath>
-    </Reference>
-
     <!-- For custom menu. -->
     <Reference Include="Satchel, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(HollowKnightRefs)/Mods/Satchel/Satchel.dll</HintPath>
@@ -79,11 +74,6 @@
     <!-- For fsm.MakeLog(). -->
     <Reference Include="SFCore">
       <HintPath>$(HollowKnightRefs)/Mods/SFCore/SFCore.dll</HintPath>
-    </Reference>
-
-    <!-- For PlayerMakerFSM.GetState() then .AddMethod(). -->
-    <Reference Include="Vasi, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(HollowKnightRefs)/Mods/Vasi/Vasi.dll</HintPath>
     </Reference>
 
     <Reference Include="Assembly-CSharp">

@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using BossAttacks.Modules;
 using BossAttacks.Utils;
 using Modding;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Vasi;
-using UObject = UnityEngine.Object;
 using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace BossAttacks
@@ -23,10 +22,26 @@ namespace BossAttacks
         /// Mod
         ///
 #if (DEBUG)
-        public override string GetVersion() => VersionUtil.GetVersion<BossAttacks>() + "-DEBUG";
+        public override string GetVersion() => version.Value + "-DEBUG";
 #else
-        public override string GetVersion() => VersionUtil.GetVersion<BossAttacks>();
+        public override string GetVersion() => version.Value;
 #endif
+        private static readonly Lazy<string> version = new(() =>
+        {
+            Assembly asm = typeof(BossAttacks).Assembly;
+            string ver = asm.GetName().Version.ToString();
+
+            using var sha1 = SHA256.Create();
+            using FileStream stream = File.OpenRead(asm.Location);
+
+            byte[] hashBytes = sha1.ComputeHash(stream);
+
+            string hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+
+            return $"{ver}-{hash.Substring(0, 6)}";
+        });
+
+
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
