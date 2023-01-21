@@ -73,6 +73,43 @@ namespace BossAttacks
             }
         }
 
+        private Dictionary<object, string> GetFieldNamesGeneric<AxisInputControl>()
+        {
+            var fieldNames = new Dictionary<object, string>();
+            foreach (var field in typeof(HeroActions).GetFields())
+            {
+                if (field.FieldType.IsSubclassOf(typeof(AxisInputControl)))
+                {
+                    fieldNames[field.GetValue(_inputHandler.inputActions)] = field.Name;
+                    this.LogModTEMP($"Found {typeof(AxisInputControl).Name.Substring(0, 7)} field: {field.Name}");
+                }
+            }
+            return fieldNames;
+        }
+
+        private void HookPropertyGeneric<AxisInputControl, T>(Dictionary<object, string> fieldNames)
+        {
+            foreach (var prop in typeof(AxisInputControl).GetProperties())
+            {
+                if (prop.PropertyType == typeof(T))
+                {
+                    var getter = typeof(AxisInputControl).GetMethod($"get_{prop.Name}");
+                    ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
+                    var hook = new Hook(getter, (Func<AxisInputControl, T> orig, AxisInputControl self) =>
+                    {
+                        var ret = orig(self);
+                        if (fieldNames.ContainsKey(self))
+                        {
+                            this.LogModTEMP($"~ {typeof(AxisInputControl).Name.Substring(0, 7)} ~ {fieldNames[self]}.{prop.Name}: {ret}");
+                        }
+                        return ret;
+                    });
+                    _hooks.Add(hook);
+                    this.LogModTEMP($"Hooked {typeof(AxisInputControl).Name.Substring(0, 7)} ~ {prop.Name}");
+                }
+            }
+        }
+
         private void Initialize()
         {
             if (_inputHandler == null)
@@ -85,45 +122,51 @@ namespace BossAttacks
             }
 
             // Get all the input actions in HeroActions. Create a map from action instance to string name. The hook will print the name of the actions being queried.
-            var fieldNames = new Dictionary<OneAxisInputControl, string>();
-            foreach (var field in typeof(HeroActions).GetFields())
-            {
-                if (field.FieldType.IsSubclassOf(typeof(OneAxisInputControl)))
-                {
-                    fieldNames[field.GetValue(_inputHandler.inputActions) as OneAxisInputControl] = field.Name;
-                    this.LogModTEMP($"Found one-axis field: {field.Name}");
-                }
-            }
+            var oneAxisFieldNames = GetFieldNamesGeneric<OneAxisInputControl>();
+            var twoAxisFieldNames = GetFieldNamesGeneric<TwoAxisInputControl>();
+            HookPropertyGeneric<OneAxisInputControl, bool>(oneAxisFieldNames);
+            HookPropertyGeneric<OneAxisInputControl, int>(oneAxisFieldNames);
+            HookPropertyGeneric<OneAxisInputControl, float>(oneAxisFieldNames);
+            HookPropertyGeneric<TwoAxisInputControl, bool>(twoAxisFieldNames);
+            HookPropertyGeneric<TwoAxisInputControl, int>(twoAxisFieldNames);
+            HookPropertyGeneric<TwoAxisInputControl, float>(twoAxisFieldNames);
+            HookPropertyGeneric<TwoAxisInputControl, Vector2>(twoAxisFieldNames);
 
-            foreach (var prop in typeof(OneAxisInputControl).GetProperties())
-            {
-                if (prop.PropertyType == typeof(bool))
-                {
-                    var getter = typeof(OneAxisInputControl).GetMethod($"get_{prop.Name}");
-                    ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
-                    var hook = new Hook(getter, (Func<OneAxisInputControl, bool> orig, OneAxisInputControl self) =>
-                    {
-                        var ret = orig(self);
-                        this.LogModTEMP($"~ {fieldNames[self]}.{prop.Name}: {ret}");
-                        return ret;
-                    });
-                    _hooks.Add(hook);
-                    this.LogModTEMP($"Hooked {prop.Name}");
-                }
-                if (prop.PropertyType == typeof(float))
-                {
-                    var getter = typeof(OneAxisInputControl).GetMethod($"get_{prop.Name}");
-                    ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
-                    var hook = new Hook(getter, (Func<OneAxisInputControl, float> orig, OneAxisInputControl self) =>
-                    {
-                        var ret = orig(self);
-                        this.LogModTEMP($"~ {fieldNames[self]}.{prop.Name}: {ret}");
-                        return ret;
-                    });
-                    _hooks.Add(hook);
-                    this.LogModTEMP($"Hooked {prop.Name}");
-                }
-            }
+            //foreach (var prop in typeof(OneAxisInputControl).GetProperties())
+            //{
+            //    if (prop.PropertyType == typeof(bool))
+            //    {
+            //        var getter = typeof(OneAxisInputControl).GetMethod($"get_{prop.Name}");
+            //        ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
+            //        var hook = new Hook(getter, (Func<OneAxisInputControl, bool> orig, OneAxisInputControl self) =>
+            //        {
+            //            var ret = orig(self);
+            //            if (fieldNames.ContainsKey(self))
+            //            {
+            //                this.LogModTEMP($"~ {fieldNames[self]}.{prop.Name}: {ret}");
+            //            }
+            //            return ret;
+            //        });
+            //        _hooks.Add(hook);
+            //        this.LogModTEMP($"Hooked {prop.Name}");
+            //    }
+            //    if (prop.PropertyType == typeof(float))
+            //    {
+            //        var getter = typeof(OneAxisInputControl).GetMethod($"get_{prop.Name}");
+            //        ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
+            //        var hook = new Hook(getter, (Func<OneAxisInputControl, float> orig, OneAxisInputControl self) =>
+            //        {
+            //            var ret = orig(self);
+            //            if (fieldNames.ContainsKey(self))
+            //            {
+            //                this.LogModTEMP($"~ {fieldNames[self]}.{prop.Name}: {ret}");
+            //            }
+            //            return ret;
+            //        });
+            //        _hooks.Add(hook);
+            //        this.LogModTEMP($"Hooked {prop.Name}");
+            //    }
+            //}
 
             if (_isPressed == null)
             {
