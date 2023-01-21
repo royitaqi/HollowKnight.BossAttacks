@@ -25,30 +25,50 @@ namespace BossAttacks
 
         private void OnHeroUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                if (_isPressed == null)
-                {
-                    var isPressed = typeof(OneAxisInputControl).GetMethod("get_IsPressed");
-                    _isPressed = new Hook(isPressed, MyIsPressed);
-                }
-                if (_wasPressed == null)
-                {
-                    var wasPressed = typeof(OneAxisInputControl).GetMethod("get_WasPressed");
-                    _wasPressed = new Hook(wasPressed, MyWasPressed);
-                }
-                if (_inputHandler == null)
-                {
-                    _inputHandler = typeof(HeroController).GetField("inputHandler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(HeroController.instance) as InputHandler;
-                }
+            var leftKey = KeyCode.Alpha1;
+            var attackKey = KeyCode.Alpha2;
 
-                _down = true;
-                this.LogModTEMP($"1: {_down}");
-            }
-            else if (Input.GetKeyUp(KeyCode.Alpha1))
+            if (Input.GetKeyDown(leftKey))
             {
-                _down = false;
-                this.LogModTEMP($"1: {_down}");
+                Initialize();
+                _leftDown = true;
+                this.LogModTEMP($"fake left: {_leftDown}");
+            }
+            if (Input.GetKeyUp(leftKey))
+            {
+                Initialize();
+                _leftDown = false;
+                this.LogModTEMP($"fake left: {_leftDown}");
+            }
+            if (Input.GetKeyDown(attackKey))
+            {
+                Initialize();
+                _attackDown = true;
+                this.LogModTEMP($"fake attack: {_attackDown}");
+            }
+            if (Input.GetKeyUp(attackKey))
+            {
+                Initialize();
+                _attackDown = false;
+                this.LogModTEMP($"fake attack: {_attackDown}");
+            }
+        }
+
+        private void Initialize()
+        {
+            if (_isPressed == null)
+            {
+                var isPressed = typeof(OneAxisInputControl).GetMethod("get_IsPressed");
+                _isPressed = new Hook(isPressed, MyIsPressed);
+            }
+            if (_wasPressed == null)
+            {
+                var wasPressed = typeof(OneAxisInputControl).GetMethod("get_WasPressed");
+                _wasPressed = new Hook(wasPressed, MyWasPressed);
+            }
+            if (_inputHandler == null)
+            {
+                _inputHandler = typeof(HeroController).GetField("inputHandler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(HeroController.instance) as InputHandler;
             }
         }
 
@@ -56,8 +76,13 @@ namespace BossAttacks
         {
             if (self == _inputHandler?.inputActions?.left)
             {
-                this.LogModTEMP($"left (is): {_down}");
-                return _down;
+                this.LogModTEMP($"attack (is): {_leftDown}");
+                return _leftDown;
+            }
+            if (self == _inputHandler?.inputActions?.attack)
+            {
+                this.LogModTEMP($"attack (is): {_attackDown}");
+                return _attackDown;
             }
             return orig(self);
         }
@@ -66,8 +91,13 @@ namespace BossAttacks
         {
             if (self == _inputHandler?.inputActions?.left)
             {
-                this.LogModTEMP($"left (was): {_down}");
-                return _down;
+                this.LogModTEMP($"attack (is): {_leftDown}");
+                return _leftDown;
+            }
+            if (self == _inputHandler?.inputActions?.attack)
+            {
+                this.LogModTEMP($"attack (was): {_attackDown}");
+                return _attackDown;
             }
             return orig(self);
         }
@@ -75,6 +105,7 @@ namespace BossAttacks
         private InputHandler _inputHandler;
         private Hook _isPressed;
         private Hook _wasPressed;
-        private bool _down;
+        private bool _leftDown;
+        private bool _attackDown;
     }
 }
