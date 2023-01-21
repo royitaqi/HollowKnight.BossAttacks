@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BossAttacks.Utils;
 using InControl;
 using Modding;
@@ -33,6 +34,12 @@ namespace BossAttacks
             _2HasChanged = null;
             _2IsPressed?.Dispose();
             _2IsPressed = null;
+
+            foreach (var hook in _hooks)
+            {
+                hook.Dispose();
+            }
+            _hooks.Clear();
         }
 
         private void OnHeroUpdate()
@@ -68,6 +75,56 @@ namespace BossAttacks
 
         private void Initialize()
         {
+            if (_inputHandler == null)
+            {
+                _inputHandler = typeof(HeroController).GetField("inputHandler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(HeroController.instance) as InputHandler;
+            }
+            if (_inputHandler == null)
+            {
+                return;
+            }
+
+            // Get all the input actions in HeroActions. Create a map from action instance to string name. The hook will print the name of the actions being queried.
+            var fieldNames = new Dictionary<OneAxisInputControl, string>();
+            foreach (var field in typeof(HeroActions).GetFields())
+            {
+                if (field.FieldType.IsSubclassOf(typeof(OneAxisInputControl)))
+                {
+                    fieldNames[field.GetValue(_inputHandler.inputActions) as OneAxisInputControl] = field.Name;
+                    this.LogModTEMP($"Found one-axis field: {field.Name}");
+                }
+            }
+
+            foreach (var prop in typeof(OneAxisInputControl).GetProperties())
+            {
+                if (prop.PropertyType == typeof(bool))
+                {
+                    var getter = typeof(OneAxisInputControl).GetMethod($"get_{prop.Name}");
+                    ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
+                    var hook = new Hook(getter, (Func<OneAxisInputControl, bool> orig, OneAxisInputControl self) =>
+                    {
+                        var ret = orig(self);
+                        this.LogModTEMP($"~ {fieldNames[self]}.{prop.Name}: {ret}");
+                        return ret;
+                    });
+                    _hooks.Add(hook);
+                    this.LogModTEMP($"Hooked {prop.Name}");
+                }
+                if (prop.PropertyType == typeof(float))
+                {
+                    var getter = typeof(OneAxisInputControl).GetMethod($"get_{prop.Name}");
+                    ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
+                    var hook = new Hook(getter, (Func<OneAxisInputControl, float> orig, OneAxisInputControl self) =>
+                    {
+                        var ret = orig(self);
+                        this.LogModTEMP($"~ {fieldNames[self]}.{prop.Name}: {ret}");
+                        return ret;
+                    });
+                    _hooks.Add(hook);
+                    this.LogModTEMP($"Hooked {prop.Name}");
+                }
+            }
+
             if (_isPressed == null)
             {
                 var isPressed = typeof(OneAxisInputControl).GetMethod("get_IsPressed");
@@ -117,14 +174,12 @@ namespace BossAttacks
                 _2IsPressed = new Hook(method, My2IsPressed);
                 this.LogModTEMP("Hooked _2IsPressed");
             }
-            if (_inputHandler == null)
-            {
-                _inputHandler = typeof(HeroController).GetField("inputHandler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(HeroController.instance) as InputHandler;
-            }
         }
 
         private bool MyIsPressed(Func<OneAxisInputControl, bool> orig, OneAxisInputControl self)
         {
+
+
             if (self == _inputHandler?.inputActions?.left)
             {
                 this.LogModTEMP($"left (is): {_leftDown}");
@@ -224,5 +279,6 @@ namespace BossAttacks
         // fake input
         private bool _leftDown;
         private bool _attackDown;
+        private List<Hook> _hooks = new();
     }
 }
