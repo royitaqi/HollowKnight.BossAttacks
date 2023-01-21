@@ -36,40 +36,78 @@ namespace BossAttacks
 
             if (Input.GetKeyDown(leftKey))
             {
-                Initialize();
-                _leftDown = true;
+                InputUtils.Load();
+                InputUtils.ControllerFloatOverrides.Add("left.Value", 1f);
                 this.LogModTEMP($"fake left: {_leftDown}");
             }
             if (Input.GetKeyUp(leftKey))
             {
-                Initialize();
-                _leftDown = false;
+                InputUtils.Load();
+                InputUtils.ControllerFloatOverrides.Remove("left.Value");
                 this.LogModTEMP($"fake left: {_leftDown}");
             }
             if (Input.GetKeyDown(rightKey))
             {
-                Initialize();
-                _rightDown = true;
+                InputUtils.Load();
+                InputUtils.ControllerFloatOverrides.Add("right.Value", 1f);
                 this.LogModTEMP($"fake right: {_rightDown}");
             }
             if (Input.GetKeyUp(rightKey))
             {
-                Initialize();
-                _rightDown = false;
+                InputUtils.Load();
+                InputUtils.ControllerFloatOverrides.Remove("right.Value");
                 this.LogModTEMP($"fake right: {_rightDown}");
             }
             if (Input.GetKeyDown(attackKey))
             {
-                Initialize();
-                _attackDown = true;
+                InputUtils.Load();
+                InputUtils.ControllerBoolOverrides.Add("attack.WasPressed", true);
                 this.LogModTEMP($"fake attack: {_attackDown}");
             }
             if (Input.GetKeyUp(attackKey))
             {
-                Initialize();
-                _attackDown = false;
+                InputUtils.Load();
+                InputUtils.ControllerBoolOverrides.Remove("attack.WasPressed");
                 this.LogModTEMP($"fake attack: {_attackDown}");
             }
+
+
+            //if (Input.GetKeyDown(leftKey))
+            //{
+            //    Initialize();
+            //    _leftDown = true;
+            //    this.LogModTEMP($"fake left: {_leftDown}");
+            //}
+            //if (Input.GetKeyUp(leftKey))
+            //{
+            //    Initialize();
+            //    _leftDown = false;
+            //    this.LogModTEMP($"fake left: {_leftDown}");
+            //}
+            //if (Input.GetKeyDown(rightKey))
+            //{
+            //    Initialize();
+            //    _rightDown = true;
+            //    this.LogModTEMP($"fake right: {_rightDown}");
+            //}
+            //if (Input.GetKeyUp(rightKey))
+            //{
+            //    Initialize();
+            //    _rightDown = false;
+            //    this.LogModTEMP($"fake right: {_rightDown}");
+            //}
+            //if (Input.GetKeyDown(attackKey))
+            //{
+            //    Initialize();
+            //    _attackDown = true;
+            //    this.LogModTEMP($"fake attack: {_attackDown}");
+            //}
+            //if (Input.GetKeyUp(attackKey))
+            //{
+            //    Initialize();
+            //    _attackDown = false;
+            //    this.LogModTEMP($"fake attack: {_attackDown}");
+            //}
         }
 
         private Dictionary<object, string> GetFieldNamesGeneric<AxisInputControl>()
