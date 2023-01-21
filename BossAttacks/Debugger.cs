@@ -66,26 +66,31 @@ namespace BossAttacks
             {
                 var isPressed = typeof(OneAxisInputControl).GetMethod("get_IsPressed");
                 _isPressed = new Hook(isPressed, MyIsPressed);
+                this.LogModTEMP("Hooked _isPressed");
             }
             if (_wasPressed == null)
             {
                 var wasPressed = typeof(OneAxisInputControl).GetMethod("get_WasPressed");
                 _wasPressed = new Hook(wasPressed, MyWasPressed);
+                this.LogModTEMP("Hooked _wasPressed");
             }
             if (_vector == null)
             {
                 var vector = typeof(TwoAxisInputControl).GetMethod("get_Vector");
                 _vector = new Hook(vector, MyVector);
+                this.LogModTEMP("Hooked _vector");
             }
             if (_value == null)
             {
                 var value = typeof(TwoAxisInputControl).GetMethod("get_Value");
                 _value = new Hook(value, MyValue);
+                this.LogModTEMP("Hooked _value");
             }
             if (_x == null)
             {
                 var x = typeof(TwoAxisInputControl).GetMethod("get_X");
                 _x = new Hook(x, MyX);
+                this.LogModTEMP("Hooked _x");
             }
             if (_inputHandler == null)
             {
@@ -125,6 +130,7 @@ namespace BossAttacks
 
         private Vector2 MyVector(Func<TwoAxisInputControl, Vector2> orig, TwoAxisInputControl self)
         {
+            this.LogModTEMP("MyVector()");
             if (self == _inputHandler?.inputActions?.moveVector)
             {
                 var vec = _leftDown ? Vector2.left : Vector2.zero;
@@ -136,6 +142,7 @@ namespace BossAttacks
 
         private Vector2 MyValue(Func<TwoAxisInputControl, Vector2> orig, TwoAxisInputControl self)
         {
+            this.LogModTEMP("MyValue()");
             if (self == _inputHandler?.inputActions?.moveVector)
             {
                 var vec = _leftDown ? Vector2.left : Vector2.zero;
@@ -147,6 +154,7 @@ namespace BossAttacks
 
         private float MyX(Func<TwoAxisInputControl, float> orig, TwoAxisInputControl self)
         {
+            this.LogModTEMP("MyX()");
             if (self == _inputHandler?.inputActions?.moveVector)
             {
                 var vec = _leftDown ? Vector2.left : Vector2.zero;
