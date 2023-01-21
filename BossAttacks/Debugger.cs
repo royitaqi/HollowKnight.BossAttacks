@@ -71,42 +71,49 @@ namespace BossAttacks
             if (_isPressed == null)
             {
                 var isPressed = typeof(OneAxisInputControl).GetMethod("get_IsPressed");
+                ModAssert.AllBuilds(isPressed != null, "isPressed != null");
                 _isPressed = new Hook(isPressed, MyIsPressed);
                 this.LogModTEMP("Hooked _isPressed");
             }
             if (_wasPressed == null)
             {
                 var wasPressed = typeof(OneAxisInputControl).GetMethod("get_WasPressed");
+                ModAssert.AllBuilds(wasPressed != null, "wasPressed != null");
                 _wasPressed = new Hook(wasPressed, MyWasPressed);
                 this.LogModTEMP("Hooked _wasPressed");
             }
             if (_vector == null)
             {
                 var vector = typeof(TwoAxisInputControl).GetMethod("get_Vector");
+                ModAssert.AllBuilds(vector != null, "vector != null");
                 _vector = new Hook(vector, MyVector);
                 this.LogModTEMP("Hooked _vector");
             }
             if (_value == null)
             {
                 var value = typeof(TwoAxisInputControl).GetMethod("get_Value");
+                ModAssert.AllBuilds(value != null, "value != null");
                 _value = new Hook(value, MyValue);
                 this.LogModTEMP("Hooked _value");
             }
             if (_x == null)
             {
                 var x = typeof(TwoAxisInputControl).GetMethod("get_X");
+                ModAssert.AllBuilds(x != null, "x != null");
                 _x = new Hook(x, MyX);
                 this.LogModTEMP("Hooked _x");
             }
             if (_2HasChanged == null)
             {
                 var method = typeof(TwoAxisInputControl).GetMethod("get_HasChanged");
+                ModAssert.AllBuilds(method != null, "2HasChanged != null");
                 _2HasChanged = new Hook(method, My2HasChanged);
                 this.LogModTEMP("Hooked _2HasChanged");
             }
             if (_2IsPressed == null)
             {
                 var method = typeof(TwoAxisInputControl).GetMethod("get_IsPressed");
+                ModAssert.AllBuilds(method != null, "2IsPressed != null");
                 _2IsPressed = new Hook(method, My2IsPressed);
                 this.LogModTEMP("Hooked _2IsPressed");
             }
