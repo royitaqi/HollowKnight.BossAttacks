@@ -43,6 +43,8 @@ namespace BossAttacks
 
             Instance = this;
             LoggingUtils.LoggingFunction = this.Log;
+            LoggingUtils.LogLevel = LogLevel.Fine;
+            //LoggingUtils.FilterFunction = LoggingUtils.DontRepeatWithin1s;
 
             ModDisplay.Instance = new ModDisplay();
 
