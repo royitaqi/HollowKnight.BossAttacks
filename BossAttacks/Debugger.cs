@@ -86,7 +86,7 @@ namespace BossAttacks
             return fieldNames;
         }
 
-        private void HookPropertyGeneric<AxisInputControl, T>(Dictionary<object, string> fieldNames, Func<AxisInputControl, string, T, T> overrideFunc) where AxisInputControl : class
+        private void HookPropertyGeneric<AxisInputControl, T>(Dictionary<object, string> fieldNames, Func<string, T, T> overrideFunc) where AxisInputControl : class
         {
             foreach (var prop in typeof(AxisInputControl).GetProperties())
             {
@@ -96,16 +96,19 @@ namespace BossAttacks
                     ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
                     var genericHook = (Func<AxisInputControl, T> orig, AxisInputControl self) =>
                     {
-                        // original
+                        // original value
                         var ret = orig(self);
 
-                        // override
-                        ret = overrideFunc.Invoke(self, prop.Name, ret);
-
-                        if (fieldNames.ContainsKey(self))
+                        // if not one of the interesting actions, return original value
+                        if (!fieldNames.ContainsKey(self))
                         {
-                            this.LogModTEMP($"~ {typeof(AxisInputControl).Name.Substring(0, 7)} ~ {fieldNames[self]}.{prop.Name}: {ret}");
+                            return ret;
                         }
+
+                        // override value
+                        var key = $"{fieldNames[self]}.{prop.Name}";
+                        ret = overrideFunc(key, ret);
+                        this.LogModTEMP($"~ {typeof(AxisInputControl).Name.Substring(0, 7)} ~ {key}: {ret}");
                         return ret;
                     };
                     _hooks.Add(new Hook(getter, genericHook));
@@ -114,45 +117,41 @@ namespace BossAttacks
             }
         }
 
-        private bool OneAxisBoolOverrides(OneAxisInputControl self, string propName, bool dft)
+        private bool OneAxisBoolOverrides(string key, bool dft)
         {
-            if (self == _inputHandler?.inputActions?.attack && propName == "WasPressed")
+            if (key == "attack.WasPressed")
             {
-                this.LogModTEMP("Overriding attack.WasPressed");
-                return _attackDown;
+                bool v = _attackDown | dft;
+                this.LogModTEMP($"Overriding attack.WasPressed to {v}");
+                return v;
             }
             return dft;
         }
 
-        private int OneAxisIntOverrides(OneAxisInputControl self, string propName, int dft)
+        private int OneAxisIntOverrides(string key, int dft)
         {
             return dft;
         }
 
-        private float OneAxisFloatOverrides(OneAxisInputControl self, string propName, float dft)
+        private float OneAxisFloatOverrides(string key, float dft)
         {
-            if (self == _inputHandler?.inputActions?.left && propName == "Value")
+            if (key == "left.Value")
             {
-                float v = _leftDown ? 1 : 0;
+                float v = _leftDown ? 1 : dft;
                 this.LogModTEMP($"Overriding left.Value to {v}");
                 return v;
             }
-            if (self == _inputHandler?.inputActions?.right && propName == "Value")
+            if (key == "right.Value")
             {
-                float v = _rightDown ? 1 : 0;
+                float v = _rightDown ? 1 : dft;
                 this.LogModTEMP($"Overriding right.Value to {v}");
                 return v;
             }
             return dft;
         }
 
-        private bool TwoAxisBoolOverrides(TwoAxisInputControl self, string propName, bool dft)
+        private bool TwoAxisBoolOverrides(string key, bool dft)
         {
-            //if (self == _inputHandler?.inputActions?.moveVector && propName == "WasPressed")
-            //{
-            //    this.LogModTEMP($"Overriding moveVector.WasPressed to {_leftDown}");
-            //    return _leftDown;
-            //}
             return dft;
         }
 
@@ -176,9 +175,9 @@ namespace BossAttacks
                 HookPropertyGeneric<OneAxisInputControl, int>(oneAxisFieldNames, OneAxisIntOverrides);
                 HookPropertyGeneric<OneAxisInputControl, float>(oneAxisFieldNames, OneAxisFloatOverrides);
                 HookPropertyGeneric<TwoAxisInputControl, bool>(twoAxisFieldNames, TwoAxisBoolOverrides);
-                HookPropertyGeneric<TwoAxisInputControl, int>(twoAxisFieldNames, (_, _, ret) => ret);
-                HookPropertyGeneric<TwoAxisInputControl, float>(twoAxisFieldNames, (_, _, ret) => ret);
-                HookPropertyGeneric<TwoAxisInputControl, Vector2>(twoAxisFieldNames, (_, _, ret) => ret);
+                HookPropertyGeneric<TwoAxisInputControl, int>(twoAxisFieldNames, (_, ret) => ret);
+                HookPropertyGeneric<TwoAxisInputControl, float>(twoAxisFieldNames, (_, ret) => ret);
+                HookPropertyGeneric<TwoAxisInputControl, Vector2>(twoAxisFieldNames, (_, ret) => ret);
             }
         }
 
