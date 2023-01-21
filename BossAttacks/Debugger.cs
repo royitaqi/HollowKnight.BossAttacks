@@ -27,6 +27,10 @@ namespace BossAttacks
             _value = null;
             _x?.Dispose();
             _x = null;
+            _2HasChanged?.Dispose();
+            _2HasChanged = null;
+            _2IsPressed?.Dispose();
+            _2IsPressed = null;
         }
 
         private void OnHeroUpdate()
@@ -91,6 +95,18 @@ namespace BossAttacks
                 var x = typeof(TwoAxisInputControl).GetMethod("get_X");
                 _x = new Hook(x, MyX);
                 this.LogModTEMP("Hooked _x");
+            }
+            if (_2HasChanged == null)
+            {
+                var method = typeof(TwoAxisInputControl).GetMethod("get_HasChanged");
+                _2HasChanged = new Hook(method, My2HasChanged);
+                this.LogModTEMP("Hooked _2HasChanged");
+            }
+            if (_2IsPressed == null)
+            {
+                var method = typeof(TwoAxisInputControl).GetMethod("get_IsPressed");
+                _2IsPressed = new Hook(method, My2IsPressed);
+                this.LogModTEMP("Hooked _2IsPressed");
             }
             if (_inputHandler == null)
             {
@@ -164,12 +180,39 @@ namespace BossAttacks
             return orig(self);
         }
 
+        private bool My2HasChanged(Func<TwoAxisInputControl, bool> orig, TwoAxisInputControl self)
+        {
+            this.LogModTEMP("My2HasChanged()");
+            if (self == _inputHandler?.inputActions?.moveVector)
+            {
+                this.LogModTEMP($"2 has changed: true");
+                return true;
+            }
+            return orig(self);
+        }
+
+        private bool My2IsPressed(Func<TwoAxisInputControl, bool> orig, TwoAxisInputControl self)
+        {
+            this.LogModTEMP("My2IsPressed()");
+            if (self == _inputHandler?.inputActions?.moveVector)
+            {
+                this.LogModTEMP($"2 is pressed: true");
+                return true;
+            }
+            return orig(self);
+        }
+
         private InputHandler _inputHandler;
+        // one axis
         private Hook _isPressed;
         private Hook _wasPressed;
+        // two axis
         private Hook _vector;
         private Hook _value;
         private Hook _x;
+        private Hook _2HasChanged;
+        private Hook _2IsPressed;
+        // fake input
         private bool _leftDown;
         private bool _attackDown;
     }
