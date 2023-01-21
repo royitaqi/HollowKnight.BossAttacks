@@ -8,13 +8,12 @@ namespace BossAttacks.Utils
 {
     internal static class LoggingUtils
     {
-        //public static Modding.LogLevel LogLevel = Modding.LogLevel.Info;
-        public static Modding.LogLevel LogLevel = Modding.LogLevel.Fine;
+        public static Modding.LogLevel LogLevel = Modding.LogLevel.Info;
 
         public static void LogModTEMP<T>(this T self, string message)
         {
 #if DEBUG
-            DoLog(self, "TEMP", message);
+            LogModImpl(self, "TEMP", message);
 #endif
         }
 
@@ -24,7 +23,7 @@ namespace BossAttacks.Utils
         {
             if (LogLevel <= Modding.LogLevel.Error)
             {
-                DoLog(self, "E", message);
+                LogModImpl(self, "E", message);
                 throw new ModException(message);
             }
         }
@@ -35,7 +34,7 @@ namespace BossAttacks.Utils
         {
             if (LogLevel <= Modding.LogLevel.Warn)
             {
-                DoLog(self, "W", message);
+                LogModImpl(self, "W", message);
             }
         }
 
@@ -46,7 +45,7 @@ namespace BossAttacks.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Info)
             {
-                DoLog(self, "I", message);
+                LogModImpl(self, "I", message);
             }
 #endif
         }
@@ -59,7 +58,7 @@ namespace BossAttacks.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Debug)
             {
-                DoLog(self, "D", message);
+                LogModImpl(self, "D", message);
             }
 #endif
         }
@@ -72,14 +71,14 @@ namespace BossAttacks.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Fine)
             {
-                DoLog(self, "F", message);
+                LogModImpl(self, "F", message);
             }
 #endif
         }
 
-        internal static void DoLog<T>(T self, string flag, string message)
+        internal static void LogModImpl<T>(T self, string flag, string message)
         {
-            var time = TimeFunction();
+            var time = TimeStringFunction(TimeFunction());
             string id;
 
             if (self == null)
@@ -96,10 +95,55 @@ namespace BossAttacks.Utils
                 id = type.GetProperty("ID")?.GetValue(self) as string ?? type.Name;
             }
 
-            LoggingFunction($"{time} [{flag}] [{id}] {message}");
-        }
+            var content = $"[{flag}] [{id}] {message}";
 
+            if (FilterFunction(content))
+            {
+                LoggingFunction($"{time} {content}");
+                lastIsLogged = true;
+            }
+            else if (lastIsLogged) // avoids repeated "hidden logs" log
+            {
+                LoggingFunction($"{time} (hidden logs)");
+                lastIsLogged = false;
+            }
+        }
+        private static bool lastIsLogged = true;
+
+        internal static bool DontRepeatLast(string content)
+        {
+            var ret = content != lastContent;
+            lastContent = content;
+            return ret;
+        }
+        private static string lastContent;
+
+        internal static bool DontRepeatWithin1s(string content)
+        {
+            var now = TimeFunction();
+            var updateTime = () =>
+            {
+                cannotLogBefore[content] = now + TimeSpan.FromSeconds(1);
+            };
+
+            if (!cannotLogBefore.ContainsKey(content))
+            {
+                updateTime();
+                return true;
+            }
+            if (now < cannotLogBefore[content])
+            {
+                updateTime();
+                return false;
+            }
+            updateTime();
+            return true;
+        }
+        private static Dictionary<string, DateTime> cannotLogBefore = new();
+
+        internal static Func<DateTime> TimeFunction = () => DateTime.Now;
+        internal static Func<DateTime, string> TimeStringFunction = datetime => datetime.ToString("HH':'mm':'ss'.'fff");
+        internal static Func<string, bool> FilterFunction = (_) => true;
         internal static Action<string> LoggingFunction;
-        internal static Func<string> TimeFunction = () => DateTime.Now.ToString("HH':'mm':'ss'.'fff");
     }
 }
