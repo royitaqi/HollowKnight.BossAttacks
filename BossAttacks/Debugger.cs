@@ -9,6 +9,8 @@ namespace BossAttacks
 {
     internal class Debugger
     {
+        public static Debugger Instance;
+
         public void Load()
         {
             ModHooks.HeroUpdateHook += OnHeroUpdate;
