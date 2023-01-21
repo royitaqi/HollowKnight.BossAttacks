@@ -55,7 +55,8 @@ namespace BossAttacks
             USceneManager.activeSceneChanged += SceneManager_OnActiveSceneChanged;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
 
-            new Debugger().Load();
+            Debugger.Instance = new Debugger();
+            Debugger.Instance.Load();
 
             Log("Initialized mod");
         }
@@ -166,6 +167,12 @@ namespace BossAttacks
             {
                 ModDisplay.Instance.Destroy();
                 ModDisplay.Instance = null;
+            }
+
+            if (Debugger.Instance != null)
+            {
+                Debugger.Instance.Unload();
+                Debugger.Instance = null;
             }
         }
 
