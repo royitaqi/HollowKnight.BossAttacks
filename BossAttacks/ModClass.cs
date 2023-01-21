@@ -45,7 +45,7 @@ namespace BossAttacks
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
-            Log("Initializing mod");
+            Log($"Initializing mod {GetVersion()}");
 
             Instance = this;
             LoggingUtils.LoggingFunction = this.Log;
