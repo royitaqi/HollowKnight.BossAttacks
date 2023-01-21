@@ -20,20 +20,6 @@ namespace BossAttacks
         public void Unload()
         {
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
-            _isPressed?.Dispose();
-            _isPressed = null;
-            _wasPressed?.Dispose();
-            _wasPressed = null;
-            _vector?.Dispose();
-            _vector = null;
-            _value?.Dispose();
-            _value = null;
-            _x?.Dispose();
-            _x = null;
-            _2HasChanged?.Dispose();
-            _2HasChanged = null;
-            _2IsPressed?.Dispose();
-            _2IsPressed = null;
 
             foreach (var hook in _hooks)
             {
@@ -87,7 +73,7 @@ namespace BossAttacks
             return fieldNames;
         }
 
-        private void HookPropertyGeneric<AxisInputControl, T>(Dictionary<object, string> fieldNames)
+        private void HookPropertyGeneric<AxisInputControl, T>(Dictionary<object, string> fieldNames, Func<AxisInputControl, string, T, T> overrideFunc) where AxisInputControl : class
         {
             foreach (var prop in typeof(AxisInputControl).GetProperties())
             {
@@ -95,19 +81,65 @@ namespace BossAttacks
                 {
                     var getter = typeof(AxisInputControl).GetMethod($"get_{prop.Name}");
                     ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
-                    var hook = new Hook(getter, (Func<AxisInputControl, T> orig, AxisInputControl self) =>
+                    var genericHook = (Func<AxisInputControl, T> orig, AxisInputControl self) =>
                     {
+                        // original
                         var ret = orig(self);
+
+                        // override
+                        ret = overrideFunc.Invoke(self, prop.Name, ret);
+
                         if (fieldNames.ContainsKey(self))
                         {
                             this.LogModTEMP($"~ {typeof(AxisInputControl).Name.Substring(0, 7)} ~ {fieldNames[self]}.{prop.Name}: {ret}");
                         }
                         return ret;
-                    });
-                    _hooks.Add(hook);
+                    };
+                    _hooks.Add(new Hook(getter, genericHook));
                     this.LogModTEMP($"Hooked {typeof(AxisInputControl).Name.Substring(0, 7)} ~ {prop.Name}");
                 }
             }
+        }
+
+        private bool OneAxisBoolOverrides(OneAxisInputControl self, string propName, bool dft)
+        {
+            //if (self == _inputHandler?.inputActions?.left && propName == "WasPressed")
+            //{
+            //    this.LogModTEMP("Overriding left.WasPressed");
+            //    return _leftDown;
+            //}
+            //if (self == _inputHandler?.inputActions?.left && propName == "IsPressed")
+            //{
+            //    this.LogModTEMP("Overriding left.IsPressed");
+            //    return _leftDown;
+            //}
+            return dft;
+        }
+
+        private int OneAxisIntOverrides(OneAxisInputControl self, string propName, int dft)
+        {
+            return dft;
+        }
+
+        private float OneAxisFloatOverrides(OneAxisInputControl self, string propName, float dft)
+        {
+            if (self == _inputHandler?.inputActions?.left && propName == "Value")
+            {
+                float v = _leftDown ? 1 : 0;
+                this.LogModTEMP($"Overriding left.Value to {v}");
+                return v;
+            }
+            return dft;
+        }
+
+        private bool TwoAxisBoolOverrides(TwoAxisInputControl self, string propName, bool dft)
+        {
+            if (self == _inputHandler?.inputActions?.moveVector && propName == "WasPressed")
+            {
+                this.LogModTEMP($"Overriding moveVector.WasPressed to {_leftDown}");
+                return _leftDown;
+            }
+            return dft;
         }
 
         private void Initialize()
@@ -115,213 +147,31 @@ namespace BossAttacks
             if (_inputHandler == null)
             {
                 _inputHandler = typeof(HeroController).GetField("inputHandler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(HeroController.instance) as InputHandler;
-            }
-            if (_inputHandler == null)
-            {
-                return;
+                if (_inputHandler == null)
+                {
+                    return;
+                }
             }
 
             // Get all the input actions in HeroActions. Create a map from action instance to string name. The hook will print the name of the actions being queried.
-            var oneAxisFieldNames = GetFieldNamesGeneric<OneAxisInputControl>();
-            var twoAxisFieldNames = GetFieldNamesGeneric<TwoAxisInputControl>();
-            HookPropertyGeneric<OneAxisInputControl, bool>(oneAxisFieldNames);
-            HookPropertyGeneric<OneAxisInputControl, int>(oneAxisFieldNames);
-            HookPropertyGeneric<OneAxisInputControl, float>(oneAxisFieldNames);
-            HookPropertyGeneric<TwoAxisInputControl, bool>(twoAxisFieldNames);
-            HookPropertyGeneric<TwoAxisInputControl, int>(twoAxisFieldNames);
-            HookPropertyGeneric<TwoAxisInputControl, float>(twoAxisFieldNames);
-            HookPropertyGeneric<TwoAxisInputControl, Vector2>(twoAxisFieldNames);
-
-            //foreach (var prop in typeof(OneAxisInputControl).GetProperties())
-            //{
-            //    if (prop.PropertyType == typeof(bool))
-            //    {
-            //        var getter = typeof(OneAxisInputControl).GetMethod($"get_{prop.Name}");
-            //        ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
-            //        var hook = new Hook(getter, (Func<OneAxisInputControl, bool> orig, OneAxisInputControl self) =>
-            //        {
-            //            var ret = orig(self);
-            //            if (fieldNames.ContainsKey(self))
-            //            {
-            //                this.LogModTEMP($"~ {fieldNames[self]}.{prop.Name}: {ret}");
-            //            }
-            //            return ret;
-            //        });
-            //        _hooks.Add(hook);
-            //        this.LogModTEMP($"Hooked {prop.Name}");
-            //    }
-            //    if (prop.PropertyType == typeof(float))
-            //    {
-            //        var getter = typeof(OneAxisInputControl).GetMethod($"get_{prop.Name}");
-            //        ModAssert.AllBuilds(getter != null, $"getter for {prop.Name} should be nonnull");
-            //        var hook = new Hook(getter, (Func<OneAxisInputControl, float> orig, OneAxisInputControl self) =>
-            //        {
-            //            var ret = orig(self);
-            //            if (fieldNames.ContainsKey(self))
-            //            {
-            //                this.LogModTEMP($"~ {fieldNames[self]}.{prop.Name}: {ret}");
-            //            }
-            //            return ret;
-            //        });
-            //        _hooks.Add(hook);
-            //        this.LogModTEMP($"Hooked {prop.Name}");
-            //    }
-            //}
-
-            if (_isPressed == null)
+            if (_hooks.Count == 0)
             {
-                var isPressed = typeof(OneAxisInputControl).GetMethod("get_IsPressed");
-                ModAssert.AllBuilds(isPressed != null, "isPressed != null");
-                _isPressed = new Hook(isPressed, MyIsPressed);
-                this.LogModTEMP("Hooked _isPressed");
+                var oneAxisFieldNames = GetFieldNamesGeneric<OneAxisInputControl>();
+                var twoAxisFieldNames = GetFieldNamesGeneric<TwoAxisInputControl>();
+                HookPropertyGeneric<OneAxisInputControl, bool>(oneAxisFieldNames, OneAxisBoolOverrides);
+                HookPropertyGeneric<OneAxisInputControl, int>(oneAxisFieldNames, OneAxisIntOverrides);
+                HookPropertyGeneric<OneAxisInputControl, float>(oneAxisFieldNames, OneAxisFloatOverrides);
+                HookPropertyGeneric<TwoAxisInputControl, bool>(twoAxisFieldNames, TwoAxisBoolOverrides);
+                HookPropertyGeneric<TwoAxisInputControl, int>(twoAxisFieldNames, (_, _, ret) => ret);
+                HookPropertyGeneric<TwoAxisInputControl, float>(twoAxisFieldNames, (_, _, ret) => ret);
+                HookPropertyGeneric<TwoAxisInputControl, Vector2>(twoAxisFieldNames, (_, _, ret) => ret);
             }
-            if (_wasPressed == null)
-            {
-                var wasPressed = typeof(OneAxisInputControl).GetMethod("get_WasPressed");
-                ModAssert.AllBuilds(wasPressed != null, "wasPressed != null");
-                _wasPressed = new Hook(wasPressed, MyWasPressed);
-                this.LogModTEMP("Hooked _wasPressed");
-            }
-            if (_vector == null)
-            {
-                var vector = typeof(TwoAxisInputControl).GetMethod("get_Vector");
-                ModAssert.AllBuilds(vector != null, "vector != null");
-                _vector = new Hook(vector, MyVector);
-                this.LogModTEMP("Hooked _vector");
-            }
-            if (_value == null)
-            {
-                var value = typeof(TwoAxisInputControl).GetMethod("get_Value");
-                ModAssert.AllBuilds(value != null, "value != null");
-                _value = new Hook(value, MyValue);
-                this.LogModTEMP("Hooked _value");
-            }
-            if (_x == null)
-            {
-                var x = typeof(TwoAxisInputControl).GetMethod("get_X");
-                ModAssert.AllBuilds(x != null, "x != null");
-                _x = new Hook(x, MyX);
-                this.LogModTEMP("Hooked _x");
-            }
-            if (_2HasChanged == null)
-            {
-                var method = typeof(TwoAxisInputControl).GetMethod("get_HasChanged");
-                ModAssert.AllBuilds(method != null, "2HasChanged != null");
-                _2HasChanged = new Hook(method, My2HasChanged);
-                this.LogModTEMP("Hooked _2HasChanged");
-            }
-            if (_2IsPressed == null)
-            {
-                var method = typeof(TwoAxisInputControl).GetMethod("get_IsPressed");
-                ModAssert.AllBuilds(method != null, "2IsPressed != null");
-                _2IsPressed = new Hook(method, My2IsPressed);
-                this.LogModTEMP("Hooked _2IsPressed");
-            }
-        }
-
-        private bool MyIsPressed(Func<OneAxisInputControl, bool> orig, OneAxisInputControl self)
-        {
-
-
-            if (self == _inputHandler?.inputActions?.left)
-            {
-                this.LogModTEMP($"left (is): {_leftDown}");
-                return _leftDown;
-            }
-            if (self == _inputHandler?.inputActions?.attack)
-            {
-                this.LogModTEMP($"attack (is): {_attackDown}");
-                return _attackDown;
-            }
-            return orig(self);
-        }
-
-        private bool MyWasPressed(Func<OneAxisInputControl, bool> orig, OneAxisInputControl self)
-        {
-            if (self == _inputHandler?.inputActions?.left)
-            {
-                this.LogModTEMP($"left (was): {_leftDown}");
-                return _leftDown;
-            }
-            if (self == _inputHandler?.inputActions?.attack)
-            {
-                this.LogModTEMP($"attack (was): {_attackDown}");
-                return _attackDown;
-            }
-            return orig(self);
-        }
-
-        private Vector2 MyVector(Func<TwoAxisInputControl, Vector2> orig, TwoAxisInputControl self)
-        {
-            this.LogModTEMP("MyVector()");
-            if (self == _inputHandler?.inputActions?.moveVector)
-            {
-                var vec = _leftDown ? Vector2.left : Vector2.zero;
-                this.LogModTEMP($"vector: {vec}");
-                return vec;
-            }
-            return orig(self);
-        }
-
-        private Vector2 MyValue(Func<TwoAxisInputControl, Vector2> orig, TwoAxisInputControl self)
-        {
-            this.LogModTEMP("MyValue()");
-            if (self == _inputHandler?.inputActions?.moveVector)
-            {
-                var vec = _leftDown ? Vector2.left : Vector2.zero;
-                this.LogModTEMP($"value: {vec}");
-                return vec;
-            }
-            return orig(self);
-        }
-
-        private float MyX(Func<TwoAxisInputControl, float> orig, TwoAxisInputControl self)
-        {
-            this.LogModTEMP("MyX()");
-            if (self == _inputHandler?.inputActions?.moveVector)
-            {
-                var vec = _leftDown ? Vector2.left : Vector2.zero;
-                this.LogModTEMP($"x: {vec.x}");
-                return vec.x;
-            }
-            return orig(self);
-        }
-
-        private bool My2HasChanged(Func<TwoAxisInputControl, bool> orig, TwoAxisInputControl self)
-        {
-            this.LogModTEMP("My2HasChanged()");
-            if (self == _inputHandler?.inputActions?.moveVector)
-            {
-                this.LogModTEMP($"2 has changed: true");
-                return true;
-            }
-            return orig(self);
-        }
-
-        private bool My2IsPressed(Func<TwoAxisInputControl, bool> orig, TwoAxisInputControl self)
-        {
-            this.LogModTEMP("My2IsPressed()");
-            if (self == _inputHandler?.inputActions?.moveVector)
-            {
-                this.LogModTEMP($"2 is pressed: true");
-                return true;
-            }
-            return orig(self);
         }
 
         private InputHandler _inputHandler;
-        // one axis
-        private Hook _isPressed;
-        private Hook _wasPressed;
-        // two axis
-        private Hook _vector;
-        private Hook _value;
-        private Hook _x;
-        private Hook _2HasChanged;
-        private Hook _2IsPressed;
+        private List<Hook> _hooks = new();
         // fake input
         private bool _leftDown;
         private bool _attackDown;
-        private List<Hook> _hooks = new();
     }
 }
