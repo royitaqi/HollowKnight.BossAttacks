@@ -72,4 +72,6 @@ Join discord server: https://discord.gg/vqKTF26VGX
 
 ## Credits
 
-Thanks to @Exempt-Medic and @Flibber for answering A LOT of my questions in Hollow Knight Modding discord server.
+Thanks to [@SFGrenade](https://github.com/SFGrenade) for creating for me [an early example](https://github.com/SFGrenade/RoyDefender) of how to modify a boss AI.
+
+Thanks to [@Exempt-Medic](https://github.com/Exempt-Medic) and [@Flibber](https://github.com/flibber-hk) for answering A LOT of my questions in Hollow Knight Modding discord server.
