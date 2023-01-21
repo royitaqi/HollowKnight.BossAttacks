@@ -23,14 +23,15 @@
   </PropertyGroup>
 
   <Target Name="ClearModAndExportDir" AfterTargets="PostBuildEvent">
-    <RemoveDir Condition="Exists('$(HollowKnightRefs)/Mods/$(TargetName)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)/" />
+    <RemoveDir Condition="Exists('$(HollowKnightRefs)/Mods/$(TargetName)_Debug/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)_Debug/" />
+    <RemoveDir Condition="Exists('$(HollowKnightRefs)/Mods/$(TargetName)_Release/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)_Release/" />
     <RemoveDir Condition="Exists('$(ExportDir)/')" Directories="$(ExportDir)/" />
   </Target>
 
   <Target Name="CopyModToGame" AfterTargets="ClearModAndExportDir">
-    <MakeDir Condition="!Exists('$(HollowKnightRefs)/Mods/$(TargetName)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-    <Copy Condition="'$(DocumentationFile)' != ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-    <Copy Condition="'$(DocumentationFile)' == ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
+    <MakeDir Condition="!Exists('$(HollowKnightRefs)/Mods/$(TargetName)_$(Configuration)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)_$(Configuration)/" />
+    <Copy Condition="'$(DocumentationFile)' != ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)_$(Configuration)/" />
+    <Copy Condition="'$(DocumentationFile)' == ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)_$(Configuration)/" />
   </Target>
 
   <Target Name="ExportMod" AfterTargets="ClearModAndExportDir" Condition="'$(Configuration)' == 'Release'">
