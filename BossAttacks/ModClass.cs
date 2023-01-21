@@ -30,18 +30,12 @@ namespace BossAttacks
         {
             Assembly asm = typeof(BossAttacks).Assembly;
             string ver = asm.GetName().Version.ToString();
-
-            using var sha1 = SHA256.Create();
+            using var sha = SHA256.Create();
             using FileStream stream = File.OpenRead(asm.Location);
-
-            byte[] hashBytes = sha1.ComputeHash(stream);
-
+            byte[] hashBytes = sha.ComputeHash(stream);
             string hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-
             return $"{ver}-{hash.Substring(0, 6)}";
         });
-
-
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
