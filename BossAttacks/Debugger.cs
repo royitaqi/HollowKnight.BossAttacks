@@ -31,7 +31,8 @@ namespace BossAttacks
         private void OnHeroUpdate()
         {
             var leftKey = KeyCode.Alpha1;
-            var attackKey = KeyCode.Alpha2;
+            var rightKey = KeyCode.Alpha2;
+            var attackKey = KeyCode.Alpha3;
 
             if (Input.GetKeyDown(leftKey))
             {
@@ -44,6 +45,18 @@ namespace BossAttacks
                 Initialize();
                 _leftDown = false;
                 this.LogModTEMP($"fake left: {_leftDown}");
+            }
+            if (Input.GetKeyDown(rightKey))
+            {
+                Initialize();
+                _rightDown = true;
+                this.LogModTEMP($"fake right: {_rightDown}");
+            }
+            if (Input.GetKeyUp(rightKey))
+            {
+                Initialize();
+                _rightDown = false;
+                this.LogModTEMP($"fake right: {_rightDown}");
             }
             if (Input.GetKeyDown(attackKey))
             {
@@ -103,16 +116,11 @@ namespace BossAttacks
 
         private bool OneAxisBoolOverrides(OneAxisInputControl self, string propName, bool dft)
         {
-            //if (self == _inputHandler?.inputActions?.left && propName == "WasPressed")
-            //{
-            //    this.LogModTEMP("Overriding left.WasPressed");
-            //    return _leftDown;
-            //}
-            //if (self == _inputHandler?.inputActions?.left && propName == "IsPressed")
-            //{
-            //    this.LogModTEMP("Overriding left.IsPressed");
-            //    return _leftDown;
-            //}
+            if (self == _inputHandler?.inputActions?.attack && propName == "WasPressed")
+            {
+                this.LogModTEMP("Overriding attack.WasPressed");
+                return _attackDown;
+            }
             return dft;
         }
 
@@ -129,16 +137,22 @@ namespace BossAttacks
                 this.LogModTEMP($"Overriding left.Value to {v}");
                 return v;
             }
+            if (self == _inputHandler?.inputActions?.right && propName == "Value")
+            {
+                float v = _rightDown ? 1 : 0;
+                this.LogModTEMP($"Overriding right.Value to {v}");
+                return v;
+            }
             return dft;
         }
 
         private bool TwoAxisBoolOverrides(TwoAxisInputControl self, string propName, bool dft)
         {
-            if (self == _inputHandler?.inputActions?.moveVector && propName == "WasPressed")
-            {
-                this.LogModTEMP($"Overriding moveVector.WasPressed to {_leftDown}");
-                return _leftDown;
-            }
+            //if (self == _inputHandler?.inputActions?.moveVector && propName == "WasPressed")
+            //{
+            //    this.LogModTEMP($"Overriding moveVector.WasPressed to {_leftDown}");
+            //    return _leftDown;
+            //}
             return dft;
         }
 
@@ -172,6 +186,7 @@ namespace BossAttacks
         private List<Hook> _hooks = new();
         // fake input
         private bool _leftDown;
+        private bool _rightDown;
         private bool _attackDown;
     }
 }
