@@ -21,6 +21,10 @@ namespace BossAttacks
             _isPressed = null;
             _wasPressed?.Dispose();
             _wasPressed = null;
+            _vector?.Dispose();
+            _vector = null;
+            _value?.Dispose();
+            _value = null;
         }
 
         private void OnHeroUpdate()
@@ -66,6 +70,16 @@ namespace BossAttacks
                 var wasPressed = typeof(OneAxisInputControl).GetMethod("get_WasPressed");
                 _wasPressed = new Hook(wasPressed, MyWasPressed);
             }
+            if (_vector == null)
+            {
+                var vector = typeof(TwoAxisInputControl).GetMethod("get_Vector");
+                _vector = new Hook(vector, MyVector);
+            }
+            if (_value == null)
+            {
+                var value = typeof(TwoAxisInputControl).GetMethod("get_Value");
+                _value = new Hook(value, MyValue);
+            }
             if (_inputHandler == null)
             {
                 _inputHandler = typeof(HeroController).GetField("inputHandler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(HeroController.instance) as InputHandler;
@@ -76,7 +90,7 @@ namespace BossAttacks
         {
             if (self == _inputHandler?.inputActions?.left)
             {
-                this.LogModTEMP($"attack (is): {_leftDown}");
+                this.LogModTEMP($"left (is): {_leftDown}");
                 return _leftDown;
             }
             if (self == _inputHandler?.inputActions?.attack)
@@ -91,7 +105,7 @@ namespace BossAttacks
         {
             if (self == _inputHandler?.inputActions?.left)
             {
-                this.LogModTEMP($"attack (is): {_leftDown}");
+                this.LogModTEMP($"left (was): {_leftDown}");
                 return _leftDown;
             }
             if (self == _inputHandler?.inputActions?.attack)
@@ -102,9 +116,33 @@ namespace BossAttacks
             return orig(self);
         }
 
+        private Vector2 MyVector(Func<TwoAxisInputControl, Vector2> orig, TwoAxisInputControl self)
+        {
+            if (self == _inputHandler?.inputActions?.moveVector)
+            {
+                var vec = _leftDown ? Vector2.left : Vector2.zero;
+                this.LogModTEMP($"vector: {vec}");
+                return vec;
+            }
+            return orig(self);
+        }
+
+        private Vector2 MyValue(Func<TwoAxisInputControl, Vector2> orig, TwoAxisInputControl self)
+        {
+            if (self == _inputHandler?.inputActions?.moveVector)
+            {
+                var vec = _leftDown ? Vector2.left : Vector2.zero;
+                this.LogModTEMP($"value: {vec}");
+                return vec;
+            }
+            return orig(self);
+        }
+
         private InputHandler _inputHandler;
         private Hook _isPressed;
         private Hook _wasPressed;
+        private Hook _vector;
+        private Hook _value;
         private bool _leftDown;
         private bool _attackDown;
     }
