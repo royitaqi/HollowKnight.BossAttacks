@@ -25,6 +25,8 @@ namespace BossAttacks
             _vector = null;
             _value?.Dispose();
             _value = null;
+            _x?.Dispose();
+            _x = null;
         }
 
         private void OnHeroUpdate()
@@ -79,6 +81,11 @@ namespace BossAttacks
             {
                 var value = typeof(TwoAxisInputControl).GetMethod("get_Value");
                 _value = new Hook(value, MyValue);
+            }
+            if (_x == null)
+            {
+                var x = typeof(TwoAxisInputControl).GetMethod("get_X");
+                _x = new Hook(x, MyX);
             }
             if (_inputHandler == null)
             {
@@ -138,11 +145,23 @@ namespace BossAttacks
             return orig(self);
         }
 
+        private float MyX(Func<TwoAxisInputControl, float> orig, TwoAxisInputControl self)
+        {
+            if (self == _inputHandler?.inputActions?.moveVector)
+            {
+                var vec = _leftDown ? Vector2.left : Vector2.zero;
+                this.LogModTEMP($"x: {vec.x}");
+                return vec.x;
+            }
+            return orig(self);
+        }
+
         private InputHandler _inputHandler;
         private Hook _isPressed;
         private Hook _wasPressed;
         private Hook _vector;
         private Hook _value;
+        private Hook _x;
         private bool _leftDown;
         private bool _attackDown;
     }
