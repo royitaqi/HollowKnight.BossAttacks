@@ -1,4 +1,5 @@
-﻿using Modding;
+﻿using BossAttacks.Utils;
+using Modding;
 using Satchel.BetterMenus;
 using MenuButton = Satchel.BetterMenus.MenuButton;
 
@@ -31,6 +32,11 @@ namespace BossAttacks
                     "DEBUG: Move & Resize Display",
                     "",
                     _ => ModDisplay.Instance?.EnableDebugger()
+                ),
+                new MenuButton(
+                    "DEBUG: Change Logger Settings",
+                    "",
+                    _ => LoggingUtils.EnableDebugger()
                 ),
 #endif
             });

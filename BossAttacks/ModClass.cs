@@ -53,6 +53,8 @@ namespace BossAttacks
 
             Debugger.Instance = new Debugger();
             Debugger.Instance.Load();
+            Debugger2.Instance = new Debugger2();
+            Debugger2.Instance.Load();
 
             Log("Initialized mod");
         }

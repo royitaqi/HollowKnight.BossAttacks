@@ -97,27 +97,35 @@ namespace BossAttacks.Utils
             }
         }
 
-        internal static void PressControllerDirection(string key)
+        internal static void PressDirection(string key)
         {
+            Load();
+            typeof(InputUtils).LogMod($"Pressing {key}");
             ControllerFloatOverrides.Add(key + ".Value", 1f);
         }
-        internal static void ReleaseControllerDirection(string key)
+        internal static void ReleaseDirection(string key)
         {
+            Load();
+            typeof(InputUtils).LogMod($"Releasing {key}");
             ControllerFloatOverrides.Remove(key + ".Value");
         }
-        internal static void PressControllerButton(string key)
+        internal static void PressButton(string key)
         {
+            Load();
+            typeof(InputUtils).LogMod($"Pressing {key}");
             ControllerBoolOverrides.Add(key + ".WasPressed", true);
         }
-        internal static void ReleaseControllerButton(string key)
+        internal static void ReleaseButton(string key)
         {
+            Load();
+            typeof(InputUtils).LogMod($"Releasing {key}");
             ControllerBoolOverrides.Remove(key + ".WasPressed");
         }
         private static bool ApplyControllerOverride(string key, bool dft)
         {
             if (ControllerBoolOverrides.ContainsKey(key))
             {
-                return ControllerBoolOverrides[key] | dft;
+                return ControllerBoolOverrides[key];
             }
             return dft;
         }
@@ -133,6 +141,7 @@ namespace BossAttacks.Utils
         {
             if (ControllerFloatOverrides.ContainsKey(key))
             {
+                typeof(InputUtils).LogModTEMP($"Overriding {key}: {ControllerFloatOverrides[key]}");
                 return ControllerFloatOverrides[key];
             }
             return dft;
@@ -147,11 +156,15 @@ namespace BossAttacks.Utils
         #region Keyboard Overrides
         internal static void PressKey(KeyCode key)
         {
+            Load();
+            typeof(InputUtils).LogMod($"Pressing {key}");
             KeyboardOverrides.Add(key, true);
         }
 
-        internal static void Release(KeyCode key)
+        internal static void ReleaseKey(KeyCode key)
         {
+            Load();
+            typeof(InputUtils).LogMod($"Releasing {key}");
             KeyboardOverrides.Remove(key);
         }
 
@@ -159,7 +172,6 @@ namespace BossAttacks.Utils
         {
             if (KeyboardOverrides.ContainsKey(key))
             {
-                KeyboardOverrides.Remove(key);
                 return KeyboardOverrides[key];
             }
             return Input.GetKeyDown(key);

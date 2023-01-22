@@ -28,40 +28,47 @@ namespace BossAttacks
             var rightKey = KeyCode.Alpha2;
             var attackKey = KeyCode.Alpha3;
 
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                new E2eTestSoulTyrant().RunScript();
+            }
+
             if (Input.GetKeyDown(leftKey))
             {
                 InputUtils.Load();
-                InputUtils.PressControllerDirection("left");
+                InputUtils.PressDirection("left");
                 this.LogModTEMP($"fake left: down");
             }
             if (Input.GetKeyUp(leftKey))
             {
                 InputUtils.Load();
-                InputUtils.ReleaseControllerDirection("left");
+                InputUtils.ReleaseDirection("left");
                 this.LogModTEMP($"fake left: up");
             }
             if (Input.GetKeyDown(rightKey))
             {
                 InputUtils.Load();
-                InputUtils.PressControllerDirection("right");
+                InputUtils.PressDirection("right");
                 this.LogModTEMP($"fake right: down");
             }
             if (Input.GetKeyUp(rightKey))
             {
                 InputUtils.Load();
-                InputUtils.ReleaseControllerDirection("right");
+                InputUtils.ReleaseDirection("right");
                 this.LogModTEMP($"fake right: up");
             }
             if (Input.GetKeyDown(attackKey))
             {
                 InputUtils.Load();
-                InputUtils.PressControllerButton("attack");
+                InputUtils.PressButton("attack");
                 this.LogModTEMP($"fake attack: down");
+
+                InputUtils.PressKey(KeyCode.J);
             }
             if (Input.GetKeyUp(attackKey))
             {
                 InputUtils.Load();
-                InputUtils.ReleaseControllerButton("attack");
+                InputUtils.ReleaseButton("attack");
                 this.LogModTEMP($"fake attack: up");
             }
         }
