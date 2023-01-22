@@ -31,7 +31,7 @@ namespace BossAttacks
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                new TestSoulTyrant().RunFullTest();
+                new TestSoulTyrant().RunLeanTest();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha9))

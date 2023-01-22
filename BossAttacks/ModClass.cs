@@ -50,6 +50,7 @@ namespace BossAttacks
 
             USceneManager.activeSceneChanged += SceneManager_OnActiveSceneChanged;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
+            ModHooks.SceneChanged += ModHooks_SceneChanged;
 
             Debugger.Instance = new Debugger();
             Debugger.Instance.Load();
@@ -86,6 +87,13 @@ namespace BossAttacks
                     break;
                 }
             }
+        }
+
+        private void ModHooks_SceneChanged(string someScene)
+        {
+            string from = GameManager.instance.sceneName;
+            var to = USceneManager.GetActiveScene();
+            this.LogModTEMP($"ModHooks_SceneChanged: {from} -> {to.name} (??{someScene})");
         }
 
         private void SceneManager_OnActiveSceneChanged(Scene from, Scene to)

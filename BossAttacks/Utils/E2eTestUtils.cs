@@ -55,6 +55,7 @@ namespace BossAttacks.Utils
         }
 
         internal void RunFullTest() => InParallel(FullTest());
+        internal void RunLeanTest() => InParallel(LeanTest());
 
         internal IEnumerator Left(float seconds)
         {
@@ -140,8 +141,18 @@ namespace BossAttacks.Utils
 
         internal virtual IEnumerator EnterFight()
         {
-            GameManager.instance.ChangeToScene(BossScene, "", 1f);
-            GameManager.instance.LoadScene
+            //GameManager.instance.ChangeToScene(BossScene, "", 0);
+
+            GameManager.instance.BeginSceneTransition(new GameManager.SceneLoadInfo
+            {
+                SceneName = BossScene,
+                EntryGateName = "",
+                EntryDelay = 0,
+                PreventCameraFadeOut = true,
+                Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory,
+            });
+            GameManager.instance.BeginScene();
+
             //HeroController.instance.gameObject.transform.position = BossDoorPos;
             //yield return new WaitForSeconds(0.1f);
             //yield return Up(0.1f);
