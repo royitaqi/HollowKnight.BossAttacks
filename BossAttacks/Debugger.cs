@@ -37,37 +37,37 @@ namespace BossAttacks
             if (Input.GetKeyDown(leftKey))
             {
                 InputUtils.Load();
-                InputUtils.ControllerFloatOverrides.Add("left.Value", 1f);
+                InputUtils.PressControllerDirection("left");
                 this.LogModTEMP($"fake left: {_leftDown}");
             }
             if (Input.GetKeyUp(leftKey))
             {
                 InputUtils.Load();
-                InputUtils.ControllerFloatOverrides.Remove("left.Value");
+                InputUtils.ReleaseControllerDirection("left");
                 this.LogModTEMP($"fake left: {_leftDown}");
             }
             if (Input.GetKeyDown(rightKey))
             {
                 InputUtils.Load();
-                InputUtils.ControllerFloatOverrides.Add("right.Value", 1f);
+                InputUtils.PressControllerDirection("right");
                 this.LogModTEMP($"fake right: {_rightDown}");
             }
             if (Input.GetKeyUp(rightKey))
             {
                 InputUtils.Load();
-                InputUtils.ControllerFloatOverrides.Remove("right.Value");
+                InputUtils.ReleaseControllerDirection("right");
                 this.LogModTEMP($"fake right: {_rightDown}");
             }
             if (Input.GetKeyDown(attackKey))
             {
                 InputUtils.Load();
-                InputUtils.ControllerBoolOverrides.Add("attack.WasPressed", true);
+                InputUtils.PressControllerButton("attack");
                 this.LogModTEMP($"fake attack: {_attackDown}");
             }
             if (Input.GetKeyUp(attackKey))
             {
                 InputUtils.Load();
-                InputUtils.ControllerBoolOverrides.Remove("attack.WasPressed");
+                InputUtils.ReleaseControllerButton("attack");
                 this.LogModTEMP($"fake attack: {_attackDown}");
             }
 

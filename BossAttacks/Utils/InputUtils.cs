@@ -8,7 +8,6 @@ namespace BossAttacks.Utils
 {
     internal static class InputUtils
     {
-        #region Controller Overrides
         internal static void Load()
         {
             if (InputHandler == null)
@@ -48,9 +47,11 @@ namespace BossAttacks.Utils
             ControllerBoolOverrides.Clear();
             ControllerIntOverrides.Clear();
             ControllerFloatOverrides.Clear();
+
             KeyboardOverrides.Clear();
         }
 
+        #region Controller Overrides
         private static Dictionary<object, string> GetFieldNamesGeneric<AxisInputControl>()
         {
             var fieldNames = new Dictionary<object, string>();
@@ -96,19 +97,23 @@ namespace BossAttacks.Utils
             }
         }
 
-        private static InputHandler InputHandler;
-        private static readonly List<Hook> Hooks = new();
-
-        //internal static void OverrideControllerInput(string key, bool value)
-        //{
-        //}
-        //internal static void OverrideControllerInput(string key, int value)
-        //{
-        //}
-        //internal static void OverrideControllerInput(string key, float value)
-        //{
-        //}
-        internal static bool ApplyControllerOverride(string key, bool dft)
+        internal static void PressControllerDirection(string key)
+        {
+            ControllerFloatOverrides.Add(key + ".Value", 1f);
+        }
+        internal static void ReleaseControllerDirection(string key)
+        {
+            ControllerFloatOverrides.Remove(key + ".Value");
+        }
+        internal static void PressControllerButton(string key)
+        {
+            ControllerBoolOverrides.Add(key + ".WasPressed", true);
+        }
+        internal static void ReleaseControllerButton(string key)
+        {
+            ControllerBoolOverrides.Remove(key + ".WasPressed");
+        }
+        private static bool ApplyControllerOverride(string key, bool dft)
         {
             if (ControllerBoolOverrides.ContainsKey(key))
             {
@@ -116,7 +121,7 @@ namespace BossAttacks.Utils
             }
             return dft;
         }
-        internal static int ApplyControllerOverride(string key, int dft)
+        private static int ApplyControllerOverride(string key, int dft)
         {
             if (ControllerIntOverrides.ContainsKey(key))
             {
@@ -124,7 +129,7 @@ namespace BossAttacks.Utils
             }
             return dft;
         }
-        internal static float ApplyControllerOverride(string key, float dft)
+        private static float ApplyControllerOverride(string key, float dft)
         {
             if (ControllerFloatOverrides.ContainsKey(key))
             {
@@ -132,16 +137,23 @@ namespace BossAttacks.Utils
             }
             return dft;
         }
-        internal static readonly Dictionary<string, bool> ControllerBoolOverrides = new();
-        internal static readonly Dictionary<string, int> ControllerIntOverrides = new();
-        internal static readonly Dictionary<string, float> ControllerFloatOverrides = new();
+        private static InputHandler InputHandler;
+        private static readonly List<Hook> Hooks = new();
+        private static readonly Dictionary<string, bool> ControllerBoolOverrides = new();
+        private static readonly Dictionary<string, int> ControllerIntOverrides = new();
+        private static readonly Dictionary<string, float> ControllerFloatOverrides = new();
         #endregion
 
         #region Keyboard Overrides
-        //internal static void OverrideKeyboardInput(KeyCode key, bool value)
-        //{
-        //    KeyboardOverrides[key] = value;
-        //}
+        internal static void PressKey(KeyCode key)
+        {
+            KeyboardOverrides.Add(key, true);
+        }
+
+        internal static void Release(KeyCode key)
+        {
+            KeyboardOverrides.Remove(key);
+        }
 
         internal static bool GetKeyDown(KeyCode key)
         {
@@ -152,7 +164,7 @@ namespace BossAttacks.Utils
             }
             return Input.GetKeyDown(key);
         }
-        internal static readonly Dictionary<KeyCode, bool> KeyboardOverrides = new();
+        private static readonly Dictionary<KeyCode, bool> KeyboardOverrides = new();
         #endregion
     }
 }
