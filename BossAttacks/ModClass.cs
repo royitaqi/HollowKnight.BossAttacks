@@ -98,6 +98,8 @@ namespace BossAttacks
 
         private void SceneManager_OnActiveSceneChanged(Scene from, Scene to)
         {
+            this.LogMod($"SceneManager_OnActiveSceneChanged: {from.name} -> {to.name}");
+
             if (ModuleManager.Instance != null)
             {
                 ModuleManager.Instance.Unload();

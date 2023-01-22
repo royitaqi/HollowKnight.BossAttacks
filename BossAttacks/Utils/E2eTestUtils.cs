@@ -151,7 +151,6 @@ namespace BossAttacks.Utils
                 PreventCameraFadeOut = true,
                 Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory,
             });
-            GameManager.instance.BeginScene();
 
             //HeroController.instance.gameObject.transform.position = BossDoorPos;
             //yield return new WaitForSeconds(0.1f);
