@@ -160,10 +160,11 @@ namespace BossAttacks.Utils
         protected abstract string ReturnDoor { get; }
 
         /**
-         * Caveat:
-         *   - Flash of black screen during win return's white screen.
-         *   - (No save on win, which is good.)
-         *   - Save on death.
+         * Notes:
+         *   - (good or bad) Hero stuck for a few seconds, then scene suddonly jump into fights. Fast, but abrupt.
+         *   - (bad) Flash of black screen during win return's white screen.
+         *   - (good) No save on win.
+         *   - (bad) Save on death.
          */
         internal virtual IEnumerator EnterFightViaSceneChange()
         {
@@ -173,7 +174,7 @@ namespace BossAttacks.Utils
 
             // Win return
             BossSceneController.SetupEvent = (self) => {
-                self.BossLevel = 0;
+                self.BossLevel = ChallengeLevel;
                 self.DreamReturnEvent = "DREAM RETURN";
                 self.OnBossSceneComplete += () =>
                 {
@@ -185,7 +186,7 @@ namespace BossAttacks.Utils
             GameManager.instance.BeginSceneTransition(new GameManager.SceneLoadInfo
             {
                 SceneName = BossScene,
-                EntryGateName = "door_dreamEnter",
+                EntryGateName = "door_dreamEnter", // Don't miss this. Will cause fight to not start (boss and hero stuck).
                 PreventCameraFadeOut = true,
                 Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory,
             });
@@ -194,10 +195,11 @@ namespace BossAttacks.Utils
         }
 
         /**
-         * Caveat:
-         *   - Flash of black screen during win return's white screen.
-         *   - (No save on win, which is good.)
-         *   - Save on death.
+         * Notes:
+         *   - (good) Smooth transition into fight. Not too slow.
+         *   - (bad) Flash of black screen during win return's white screen.
+         *   - (good) No save on win.
+         *   - (bad) Save on death.
          * 
          * Assumptions:
          *   - Active scene is GG_Workshop (in order to get a statue GO).
@@ -232,10 +234,11 @@ namespace BossAttacks.Utils
         }
 
         /**
-         * Caveat:
-         *   - (No flash of black, which is good.)
-         *   - Save on win.
-         *   - Save on death.
+         * Notes:
+         *   - (good) The most normal way to enter GG fights.
+         *   - (good) No flash of black.
+         *   - (bad) Save on win.
+         *   - (bad) Save on death.
          *   
          * Assumptions:
          *   - The code which selects challenge level in the menu assumes that the menu started at challenge 0.
