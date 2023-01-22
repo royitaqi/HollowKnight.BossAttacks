@@ -13,7 +13,6 @@ namespace BossAttacks.Utils
         {
             this.LogMod("Setting up test");
             InputUtils.Load();
-            this.LogMod("Starting script");
             yield return 0;
         }
 
@@ -21,21 +20,41 @@ namespace BossAttacks.Utils
         {
             this.LogMod("Tearing down test");
             InputUtils.Unload();
-            this.LogMod("TEST SUCCEEDED");
             yield return 0;
         }
 
+        /**
+         * Test WITH setup and tear down.
+         */
         private IEnumerator FullTest()
         {
             yield return Setup();
+
+            this.LogMod("Starting script");
             yield return Script();
+
             yield return TearDown();
+
+            this.LogMod("TEST SUCCEEDED");
         }
 
-        internal void RunScript()
+        /**
+         * Test WITHOUT setup and tear down.
+         */
+        public IEnumerator LeanTest()
         {
-            HeroController.instance.StartCoroutine(FullTest());
+            this.LogMod("Starting script");
+            yield return Script();
+
+            this.LogMod("TEST SUCCEEDED");
         }
+
+        internal void InParallel(IEnumerator coroutine)
+        {
+            HeroController.instance.StartCoroutine(coroutine);
+        }
+
+        internal void RunFullTest() => InParallel(FullTest());
 
         internal IEnumerator Left(float seconds)
         {
@@ -43,6 +62,30 @@ namespace BossAttacks.Utils
             InputUtils.PressDirection("left");
             yield return new WaitForSeconds(seconds);
             InputUtils.ReleaseDirection("left");
+        }
+
+        internal IEnumerator Up(float seconds)
+        {
+            this.LogMod($"Up(seconds = {seconds})");
+            InputUtils.PressDirection("up");
+            yield return new WaitForSeconds(seconds);
+            InputUtils.ReleaseDirection("up");
+        }
+
+        internal IEnumerator Jump(float seconds)
+        {
+            this.LogMod($"Jump(seconds = {seconds})");
+            InputUtils.PressButton("jump");
+            yield return new WaitForSeconds(seconds);
+            InputUtils.ReleaseButton("jump");
+        }
+
+        internal IEnumerator Teleport(float x, float y)
+        {
+            this.LogMod($"Teleport(x = {x}, y = {y})");
+            //var cp = HeroController.instance.gameObject.transform.position;
+            HeroController.instance.gameObject.transform.position = new Vector3(x, y, 0);
+            yield return 0;
         }
 
         internal IEnumerator InterceptLog()
@@ -90,13 +133,27 @@ namespace BossAttacks.Utils
         private Action<string> _origLoggingFunction;
     }
 
-    internal class E2eTestSoulTyrant : E2eTest
+    internal abstract class E2eBossFightTest : E2eTest
     {
-        internal override IEnumerator Script()
+        protected abstract string BossScene { get; }
+        protected abstract Vector3 BossDoorPos { get; }
+
+        internal virtual IEnumerator EnterFight()
         {
-            yield return InterceptLog();
-            yield return Left(3);
-            yield return ExpectLog("Overriding left", 5);
+            GameManager.instance.ChangeToScene(BossScene, "", 1f);
+            GameManager.instance.LoadScene
+            //HeroController.instance.gameObject.transform.position = BossDoorPos;
+            //yield return new WaitForSeconds(0.1f);
+            //yield return Up(0.1f);
+            //yield return new WaitForSeconds(2);
+            //yield return Jump(0.1f);
+
+            yield return 0;
+        }
+
+        internal virtual IEnumerator LeaveFight()
+        {
+            yield return 0;
         }
     }
 }

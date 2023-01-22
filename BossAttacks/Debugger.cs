@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BossAttacks.E2eTests;
 using BossAttacks.Utils;
 using InControl;
 using Modding;
@@ -30,7 +31,12 @@ namespace BossAttacks
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                new E2eTestSoulTyrant().RunScript();
+                new TestSoulTyrant().RunFullTest();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                HeroController.instance.gameObject.transform.position += new Vector3(3, 3);
             }
 
             if (Input.GetKeyDown(leftKey))
