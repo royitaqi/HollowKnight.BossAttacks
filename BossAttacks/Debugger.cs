@@ -31,20 +31,20 @@ namespace BossAttacks
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                var t = new TestSoulTyrant();
-                t.InParallel(t.EnterFight());
+                var t = new TestGruzMother();
+                t.InParallel(t.EnterFightViaSceneChange());
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha9))
             {
-                var t = new TestSoulTyrant();
-                t.InParallel(t.EnterFight2());
+                var t = new TestGruzMother();
+                t.InParallel(t.EnterFightViaStatueGo());
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha8))
             {
-                var t = new TestSoulTyrant();
-                t.InParallel(t.EnterFight3());
+                var t = new TestGruzMother();
+                t.InParallel(t.EnterFightViaChallengeMenu());
             }
 
             if (Input.GetKeyDown(leftKey))

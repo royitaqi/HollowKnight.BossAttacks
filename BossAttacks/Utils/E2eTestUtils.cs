@@ -59,12 +59,20 @@ namespace BossAttacks.Utils
         internal void RunFullTest() => InParallel(FullTest());
         internal void RunLeanTest() => InParallel(LeanTest());
 
-        internal IEnumerator Left(float seconds)
+        internal IEnumerator DLeft(float seconds)
         {
-            this.LogMod($"Left(seconds = {seconds})");
+            this.LogMod($"DLeft(seconds = {seconds})");
             InputUtils.PressDirection("left");
             yield return new WaitForSeconds(seconds);
             InputUtils.ReleaseDirection("left");
+        }
+
+        internal IEnumerator DUp(float seconds)
+        {
+            this.LogMod($"DUp(seconds = {seconds})");
+            InputUtils.PressDirection("up");
+            yield return new WaitForSeconds(seconds);
+            InputUtils.ReleaseDirection("up");
         }
 
         internal IEnumerator Up(float seconds)
@@ -73,6 +81,14 @@ namespace BossAttacks.Utils
             InputUtils.PressButton("up");
             yield return new WaitForSeconds(seconds);
             InputUtils.ReleaseButton("up");
+        }
+
+        internal IEnumerator Down(float seconds)
+        {
+            this.LogMod($"Down(seconds = {seconds})");
+            InputUtils.PressButton("down");
+            yield return new WaitForSeconds(seconds);
+            InputUtils.ReleaseButton("down");
         }
 
         internal IEnumerator Jump(float seconds)
@@ -139,80 +155,105 @@ namespace BossAttacks.Utils
     internal abstract class E2eBossFightTest : E2eTest
     {
         protected abstract string BossScene { get; }
-        protected abstract Vector3 BossDoorPos { get; }
+        protected abstract Vector3 StatuePos { get; }
+        protected abstract int ChallengeLevel { get; }
+        protected abstract string ReturnDoor { get; }
 
-        internal virtual IEnumerator EnterFight()
+        /**
+         * Caveat:
+         *   - Flash of black screen during win return's white screen.
+         *   - (No save on win, which is good.)
+         *   - Save on death.
+         */
+        internal virtual IEnumerator EnterFightViaSceneChange()
         {
-            //GameManager.instance.ChangeToScene(BossScene, "", 0);
-
+            // Death return
             PlayerData.instance.dreamReturnScene = "GG_Workshop";
-            PlayerData.instance.bossReturnEntryGate = "door_dreamReturnGG_GG_Statue_Gruz"; // "door_dreamReturnGG_GG_Statue_HollowKnight";
+            PlayerData.instance.bossReturnEntryGate = ReturnDoor;
 
+            // Win return
             BossSceneController.SetupEvent = (self) => {
                 self.BossLevel = 0;
                 self.DreamReturnEvent = "DREAM RETURN";
                 self.OnBossSceneComplete += () =>
                 {
-                    GameManager.instance.ChangeToScene("GG_Workshop", "door_dreamReturnGG_GG_Statue_Gruz", 0);
+                    GameManager.instance.ChangeToScene("GG_Workshop", ReturnDoor, 0);
                 };
             };
 
+            // Start fight
             GameManager.instance.BeginSceneTransition(new GameManager.SceneLoadInfo
             {
-                //SceneName = "GG_Radiance",
-                //EntryGateName = "door_dreamEnter",
-                //PreventCameraFadeOut = true,
-                //Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory,
-                SceneName = "GG_Gruz_Mother",
+                SceneName = BossScene,
                 EntryGateName = "door_dreamEnter",
                 PreventCameraFadeOut = true,
                 Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory,
             });
 
-
-            //HeroController.instance.gameObject.transform.position = BossDoorPos;
-            //yield return new WaitForSeconds(0.1f);
-            //yield return Up(0.1f);
-            //yield return new WaitForSeconds(2);
-            //yield return Jump(0.1f);
-
             yield return 0;
         }
 
-        internal virtual IEnumerator EnterFight2()
+        /**
+         * Caveat:
+         *   - Flash of black screen during win return's white screen.
+         *   - (No save on win, which is good.)
+         *   - Save on death.
+         * 
+         * Assumptions:
+         *   - Active scene is GG_Workshop (in order to get a statue GO).
+         */
+        internal virtual IEnumerator EnterFightViaStatueGo()
         {
+            // Death return
             PlayerData.instance.dreamReturnScene = "GG_Workshop";
-            PlayerData.instance.bossReturnEntryGate = "door_dreamReturnGG_GG_Statue_Gruz"; // "door_dreamReturnGG_GG_Statue_HollowKnight";
+            PlayerData.instance.bossReturnEntryGate = ReturnDoor;
 
+            // Win return
             BossSceneController.SetupEvent = (self) => {
-                self.BossLevel = 0; // Set to your value: 0 - Attuned, 1 - Ascended, 2 - Radiant
+                self.BossLevel = ChallengeLevel;
                 self.DreamReturnEvent = "DREAM RETURN";
                 self.OnBossSceneComplete += () =>
                 {
-                    GameManager.instance.ChangeToScene("GG_Workshop", "door_dreamReturnGG_GG_Statue_Gruz", 0);
+                    GameManager.instance.ChangeToScene("GG_Workshop", ReturnDoor, 0);
                 };
             };
 
+            // Start fight
             GameObject statue = USceneManager.GetActiveScene()
                 .GetRootGameObjects()
-                .First(go => go.name == "GG_Statue_GreyPrince");
-
+                .First(go => go.name == "GG_Statue_GreyPrince"); // statue name doesn't matter
             var statueControl = statue.transform.GetChild(0).gameObject.LocateMyFSM("GG Boss UI").Fsm;
             statueControl.GetState("Take Control").Transitions[0].ToFsmState = statueControl.GetState("Impact");
             statueControl.Variables.FindFsmString("Return Scene").Value = "GG_Workshop";
-            statueControl.Variables.FindFsmString("To Scene").Value = "GG_Gruz_Mother";
+            statueControl.Variables.FindFsmString("To Scene").Value = BossScene;
             statueControl.SetState("Take Control");
 
             yield return 0;
         }
 
-
-        internal virtual IEnumerator EnterFight3()
+        /**
+         * Caveat:
+         *   - (No flash of black, which is good.)
+         *   - Save on win.
+         *   - Save on death.
+         *   
+         * Assumptions:
+         *   - The code which selects challenge level in the menu assumes that the menu started at challenge 0.
+         *     This can be wrong assumption because menu can remember last challenge position.
+         */
+        internal virtual IEnumerator EnterFightViaChallengeMenu()
         {
-            HeroController.instance.gameObject.transform.position = new Vector3(28, 6.4f, 0);
+            // warp
+            HeroController.instance.gameObject.transform.position = StatuePos;
+
+            // interact with menu
             yield return new WaitForSeconds(0.1f);
-            yield return Up(5f);
-            yield return new WaitForSeconds(2);
+            yield return Up(0.1f);
+            yield return new WaitForSeconds(1);
+            for (int i =  0; i < ChallengeLevel; i++)
+            {
+                yield return Down(0.1f);
+            }
             yield return Jump(0.1f);
 
             yield return 0;
