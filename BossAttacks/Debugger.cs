@@ -31,12 +31,20 @@ namespace BossAttacks
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                new TestSoulTyrant().RunLeanTest();
+                var t = new TestSoulTyrant();
+                t.InParallel(t.EnterFight());
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha9))
             {
-                HeroController.instance.gameObject.transform.position += new Vector3(3, 3);
+                var t = new TestSoulTyrant();
+                t.InParallel(t.EnterFight2());
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                var t = new TestSoulTyrant();
+                t.InParallel(t.EnterFight3());
             }
 
             if (Input.GetKeyDown(leftKey))

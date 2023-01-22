@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace BossAttacks.Utils
 {
@@ -68,9 +70,9 @@ namespace BossAttacks.Utils
         internal IEnumerator Up(float seconds)
         {
             this.LogMod($"Up(seconds = {seconds})");
-            InputUtils.PressDirection("up");
+            InputUtils.PressButton("up");
             yield return new WaitForSeconds(seconds);
-            InputUtils.ReleaseDirection("up");
+            InputUtils.ReleaseButton("up");
         }
 
         internal IEnumerator Jump(float seconds)
@@ -143,20 +145,75 @@ namespace BossAttacks.Utils
         {
             //GameManager.instance.ChangeToScene(BossScene, "", 0);
 
+            PlayerData.instance.dreamReturnScene = "GG_Workshop";
+            PlayerData.instance.bossReturnEntryGate = "door_dreamReturnGG_GG_Statue_Gruz"; // "door_dreamReturnGG_GG_Statue_HollowKnight";
+
+            BossSceneController.SetupEvent = (self) => {
+                self.BossLevel = 0;
+                self.DreamReturnEvent = "DREAM RETURN";
+                self.OnBossSceneComplete += () =>
+                {
+                    GameManager.instance.ChangeToScene("GG_Workshop", "door_dreamReturnGG_GG_Statue_Gruz", 0);
+                };
+            };
+
             GameManager.instance.BeginSceneTransition(new GameManager.SceneLoadInfo
             {
-                SceneName = BossScene,
-                EntryGateName = "",
-                EntryDelay = 0,
+                //SceneName = "GG_Radiance",
+                //EntryGateName = "door_dreamEnter",
+                //PreventCameraFadeOut = true,
+                //Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory,
+                SceneName = "GG_Gruz_Mother",
+                EntryGateName = "door_dreamEnter",
                 PreventCameraFadeOut = true,
                 Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory,
             });
+
 
             //HeroController.instance.gameObject.transform.position = BossDoorPos;
             //yield return new WaitForSeconds(0.1f);
             //yield return Up(0.1f);
             //yield return new WaitForSeconds(2);
             //yield return Jump(0.1f);
+
+            yield return 0;
+        }
+
+        internal virtual IEnumerator EnterFight2()
+        {
+            PlayerData.instance.dreamReturnScene = "GG_Workshop";
+            PlayerData.instance.bossReturnEntryGate = "door_dreamReturnGG_GG_Statue_Gruz"; // "door_dreamReturnGG_GG_Statue_HollowKnight";
+
+            BossSceneController.SetupEvent = (self) => {
+                self.BossLevel = 0; // Set to your value: 0 - Attuned, 1 - Ascended, 2 - Radiant
+                self.DreamReturnEvent = "DREAM RETURN";
+                self.OnBossSceneComplete += () =>
+                {
+                    GameManager.instance.ChangeToScene("GG_Workshop", "door_dreamReturnGG_GG_Statue_Gruz", 0);
+                };
+            };
+
+            GameObject statue = USceneManager.GetActiveScene()
+                .GetRootGameObjects()
+                .First(go => go.name == "GG_Statue_GreyPrince");
+
+            var statueControl = statue.transform.GetChild(0).gameObject.LocateMyFSM("GG Boss UI").Fsm;
+            statueControl.GetState("Take Control").Transitions[0].ToFsmState = statueControl.GetState("Impact");
+            statueControl.Variables.FindFsmString("Return Scene").Value = "GG_Workshop";
+            statueControl.Variables.FindFsmString("To Scene").Value = "GG_Gruz_Mother";
+            statueControl.SetState("Take Control");
+
+            yield return 0;
+        }
+
+
+        internal virtual IEnumerator EnterFight3()
+        {
+            HeroController.instance.gameObject.transform.position = new Vector3(28, 6.4f, 0);
+            yield return new WaitForSeconds(0.1f);
+            yield return Up(5f);
+            yield return new WaitForSeconds(2);
+            yield return Jump(0.1f);
 
             yield return 0;
         }
