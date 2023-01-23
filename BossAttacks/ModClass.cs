@@ -159,20 +159,6 @@ namespace BossAttacks
         ///
         public void Unload()
         {
-            // display
-            if (ModDisplay.Instance != null)
-            {
-                ModDisplay.Instance.Destroy();
-                ModDisplay.Instance = null;
-            }
-
-            // hooks
-            USceneManager.activeSceneChanged -= SceneManager_OnActiveSceneChanged;
-            ModHooks.HeroUpdateHook -= ModHooks_HeroUpdateHook;
-
-            // input overrides
-            KeyboardOverride.Unload();
-
             // debugger
             if (Debugger.Instance != null)
             {
@@ -180,17 +166,25 @@ namespace BossAttacks
                 Debugger.Instance = null;
             }
 
-            // objeects
+            // input overrides
+            KeyboardOverride.Unload();
+
+            // hooks
+            USceneManager.activeSceneChanged -= SceneManager_OnActiveSceneChanged;
+            ModHooks.HeroUpdateHook -= ModHooks_HeroUpdateHook;
+
+            // display
+            if (ModDisplay.Instance != null)
+            {
+                ModDisplay.Instance.Destroy();
+                ModDisplay.Instance = null;
+            }
+
+            // objects
             if (ModuleManager.Instance != null)
             {
                 ModuleManager.Instance.Unload();
                 ModuleManager.Instance = null;
-            }
-
-            if (Debugger.Instance != null)
-            {
-                Debugger.Instance.Unload();
-                Debugger.Instance = null;
             }
         }
 
