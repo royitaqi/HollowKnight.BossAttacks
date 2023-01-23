@@ -186,6 +186,12 @@ namespace BossAttacks
                 ModuleManager.Instance.Unload();
                 ModuleManager.Instance = null;
             }
+
+            if (Debugger.Instance != null)
+            {
+                Debugger.Instance.Unload();
+                Debugger.Instance = null;
+            }
         }
 
         ///
