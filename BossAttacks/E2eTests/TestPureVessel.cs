@@ -7,9 +7,6 @@ namespace BossAttacks.E2eTests
     internal class TestPureVessel : E2eBossFightTest
     {
         protected override string BossScene => "GG_Hollow_Knight";
-        protected override Vector3 StatuePos => new Vector3(0, 0, 0);
-        protected override int ChallengeLevel => 0;
-        protected override string ReturnDoor => "door_dreamReturnGG_GG_Statue_HollowKnight";
 
         internal override IEnumerator Script()
         {

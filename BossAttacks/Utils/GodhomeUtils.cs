@@ -3,11 +3,13 @@ using System.Linq;
 using BossAttacks.Modules;
 using BossAttacks.Modules.Generic;
 using HutongGames.PlayMaker.Actions;
+using UnityEngine;
 
 namespace BossAttacks.Utils
 {
     static class GodhomeUtils
     {
+        #region SceneToModuleConfigs
         public static readonly Dictionary<string, ModuleConfig[]> SceneToModuleConfigs = new()
         {
             { "GG_Broken_Vessel"     , new ModuleConfig[] {
@@ -590,5 +592,239 @@ namespace BossAttacks.Utils
 
             return configs.ToArray();
         }
+        #endregion SceneToModuleConfigs
+
+        #region SceneToStatue
+        internal class StatueInfo
+        {
+            internal Vector3 StatuePos { get; set; }
+            internal string ReturnDoor { get; set; }
+        }
+        private const float Y1 = 6.4f;
+        private const float Y2 = 36.49f;
+        internal static readonly Dictionary<string, StatueInfo> SceneToStatue = new()
+        {
+            { "GG_Broken_Vessel"     , new StatueInfo {
+                StatuePos = new Vector3(121.2f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Vessel",
+            } },
+            { "GG_Brooding_Mawlek"   , new StatueInfo {
+                StatuePos = new Vector3(45.43f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Mawlek",
+            } },
+            { "GG_Brooding_Mawlek_V" , new StatueInfo {
+                StatuePos = new Vector3(45.43f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Mawlek",
+            } },
+            { "GG_Collector"         , new StatueInfo {
+                StatuePos = new Vector3(141.47f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Collector",
+            } },
+            { "GG_Collector_V"       , new StatueInfo {
+                StatuePos = new Vector3(141.47f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Collector",
+            } },
+            { "GG_Crystal_Guardian"  , new StatueInfo {
+                StatuePos = new Vector3(164.6f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_CrystalGuardian",
+            } },
+            { "GG_Crystal_Guardian_2", new StatueInfo {
+                StatuePos = new Vector3(164.6f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_CrystalGuardian",
+            } },
+            { "GG_Dung_Defender"     , new StatueInfo {
+                StatuePos = new Vector3(58.959f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Defender",
+            } },
+            { "GG_Failed_Champion"   , new StatueInfo {
+                StatuePos = new Vector3(53.625f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_FalseKnight",
+            } },
+            { "GG_False_Knight"      , new StatueInfo {
+                StatuePos = new Vector3(53.625f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_FalseKnight",
+            } },
+            { "GG_Flukemarm"         , new StatueInfo {
+                StatuePos = new Vector3(82.81f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Flukemarm",
+            } },
+            { "GG_Ghost_Galien"      , new StatueInfo {
+                StatuePos = new Vector3(119.2f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Galien",
+            } },
+            { "GG_Ghost_Gorb"        , new StatueInfo {
+                StatuePos = new Vector3(127.809f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Gorb",
+            } },
+            { "GG_Ghost_Gorb_V"      , new StatueInfo {
+                StatuePos = new Vector3(127.809f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Gorb",
+            } },
+            { "GG_Ghost_Hu"          , new StatueInfo {
+                StatuePos = new Vector3(136.189f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_ElderHu",
+            } },
+            { "GG_Ghost_Markoth"     , new StatueInfo {
+                StatuePos = new Vector3(110.479f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Markoth",
+            } },
+            { "GG_Ghost_Markoth_V"   , new StatueInfo {
+                StatuePos = new Vector3(110.479f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Markoth",
+            } },
+            { "GG_Ghost_Marmu"       , new StatueInfo {
+                StatuePos = new Vector3(92.899f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Marmu",
+            } },
+            { "GG_Ghost_Marmu_V"     , new StatueInfo {
+                StatuePos = new Vector3(92.899f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Marmu",
+            } },
+            { "GG_Ghost_No_Eyes"     , new StatueInfo {
+                StatuePos = new Vector3(83.859f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_NoEyes",
+            } },
+            { "GG_Ghost_No_Eyes_V"   , new StatueInfo {
+                StatuePos = new Vector3(83.859f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_NoEyes",
+            } },
+            { "GG_Ghost_Xero"        , new StatueInfo {
+                StatuePos = new Vector3(101.849f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Xero",
+            } },
+            { "GG_Ghost_Xero_V"      , new StatueInfo {
+                StatuePos = new Vector3(101.849f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Xero",
+            } },
+            { "GG_God_Tamer"         , new StatueInfo {
+                StatuePos = new Vector3(154.01f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_GodTamer",
+            } },
+            { "GG_Grey_Prince_Zote"  , new StatueInfo {
+                StatuePos = new Vector3(199.6f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_GreyPrince",
+            } },
+            { "GG_Grimm"             , new StatueInfo {
+                StatuePos = new Vector3(193.379f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Grimm",
+            } },
+            { "GG_Grimm_Nightmare"   , new StatueInfo {
+                StatuePos = new Vector3(193.379f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Grimm",
+            } },
+            { "GG_Gruz_Mother"       , new StatueInfo {
+                StatuePos = new Vector3(29.57f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Gruz",
+            } },
+            { "GG_Gruz_Mother_V"     , new StatueInfo {
+                StatuePos = new Vector3(29.57f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Gruz",
+            } },
+            { "GG_Hive_Knight"       , new StatueInfo {
+                StatuePos = new Vector3(112.9f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_HiveKnight",
+            } },
+            { "GG_Hollow_Knight"     , new StatueInfo {
+                StatuePos = new Vector3(183.79f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_HollowKnight",
+            } },
+            { "GG_Hornet_1"          , new StatueInfo {
+                StatuePos = new Vector3(62.21f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Hornet",
+            } },
+            { "GG_Hornet_2"          , new StatueInfo {
+                StatuePos = new Vector3(62.21f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Hornet",
+            } },
+            { "GG_Lost_Kin"          , new StatueInfo {
+                StatuePos = new Vector3(121.2f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Vessel",
+            } },
+            { "GG_Mage_Knight"       , new StatueInfo {
+                StatuePos = new Vector3(35.57f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Mage_Knight",
+            } },
+            { "GG_Mage_Knight_V"     , new StatueInfo {
+                StatuePos = new Vector3(35.57f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Mage_Knight",
+            } },
+            { "GG_Mantis_Lords"      , new StatueInfo {
+                StatuePos = new Vector3(92.49f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_MantisLords",
+            } },
+            { "GG_Mantis_Lords_V"    , new StatueInfo {
+                StatuePos = new Vector3(92.49f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_MantisLords",
+            } },
+            { "GG_Mega_Moss_Charger" , new StatueInfo {
+                StatuePos = new Vector3(72.66f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_MegaMossCharger",
+            } },
+            { "GG_Nailmasters"       , new StatueInfo {
+                StatuePos = new Vector3(147.95f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Nailmasters",
+            } },
+            { "GG_Nosk"              , new StatueInfo {
+                StatuePos = new Vector3(130.54f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Nosk",
+            } },
+            { "GG_Nosk_Hornet"       , new StatueInfo {
+                StatuePos = new Vector3(130.54f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Nosk",
+            } },
+            { "GG_Oblobbles"         , new StatueInfo {
+                StatuePos = new Vector3(102.06f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Oblobbles",
+            } },
+            { "GG_Painter"           , new StatueInfo {
+                StatuePos = new Vector3(163f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Paintmaster",
+            } },
+            { "GG_Radiance"          , new StatueInfo {
+                StatuePos = new Vector3(250.05f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Radiance",
+            } },
+            { "GG_Sly"               , new StatueInfo {
+                StatuePos = new Vector3(173.75f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Sly",
+            } },
+            { "GG_Soul_Master"       , new StatueInfo {
+                StatuePos = new Vector3(46.529f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_SoulMaster",
+            } },
+            { "GG_Soul_Tyrant"       , new StatueInfo {
+                StatuePos = new Vector3(46.529f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_SoulMaster",
+            } },
+            { "GG_Traitor_Lord"      , new StatueInfo {
+                StatuePos = new Vector3(188.19f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_TraitorLord",
+            } },
+            { "GG_Uumuu"             , new StatueInfo {
+                StatuePos = new Vector3(177.04f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Uumuu",
+            } },
+            { "GG_Uumuu_V"           , new StatueInfo {
+                StatuePos = new Vector3(177.04f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Uumuu",
+            } },
+            { "GG_Vengefly"          , new StatueInfo {
+                StatuePos = new Vector3(37.98f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Vengefly",
+            } },
+            { "GG_Vengefly_V"        , new StatueInfo {
+                StatuePos = new Vector3(37.98f, Y1, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Vengefly",
+            } },
+            { "GG_Watcher_Knights"   , new StatueInfo {
+                StatuePos = new Vector3(71.439f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_WatcherKnights",
+            } },
+            { "GG_White_Defender"    , new StatueInfo {
+                StatuePos = new Vector3(58.959f, Y2, 0),
+                ReturnDoor = "door_dreamReturnGG_GG_Statue_Defender",
+            } },
+        };
+        #endregion SceneToStatue
     }
 }

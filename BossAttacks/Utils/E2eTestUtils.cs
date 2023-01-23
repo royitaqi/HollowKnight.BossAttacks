@@ -358,9 +358,9 @@ namespace BossAttacks.Utils
     internal abstract class E2eBossFightTest : E2eTest
     {
         protected abstract string BossScene { get; }
-        protected abstract Vector3 StatuePos { get; }
-        protected abstract int ChallengeLevel { get; }
-        protected abstract string ReturnDoor { get; }
+        protected virtual Vector3 StatuePos => GodhomeUtils.SceneToStatue[BossScene].StatuePos;
+        protected virtual string ReturnDoor => GodhomeUtils.SceneToStatue[BossScene].ReturnDoor;
+        protected virtual int ChallengeLevel => 0;
 
         /**
          * Notes:
