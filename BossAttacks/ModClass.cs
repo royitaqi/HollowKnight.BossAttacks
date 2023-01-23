@@ -41,16 +41,23 @@ namespace BossAttacks
         {
             Log($"Initializing mod {GetVersion()}");
 
+            // logger
             Instance = this;
             LoggingUtils.LoggingFunction = this.Log;
             LoggingUtils.LogLevel = LogLevel.Fine;
-            //LoggingUtils.FilterFunction = LoggingUtils.DontRepeatWithin1s;
+            LoggingUtils.FilterFunction = LoggingUtils.DontRepeatWithin1s;
 
+            // display
             ModDisplay.Instance = new ModDisplay();
 
+            // hooks
             USceneManager.activeSceneChanged += SceneManager_OnActiveSceneChanged;
             ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
 
+            // input overrides
+            KeyboardOverride.Load();
+
+            // debugger
             Debugger.Instance = new Debugger();
             Debugger.Instance.Load();
 
@@ -64,7 +71,7 @@ namespace BossAttacks
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha0))
+            if (KeyboardOverride.GetKeyDown(KeyCode.Alpha0))
             {
                 UpdateOptionDisplay();
             }
@@ -73,7 +80,7 @@ namespace BossAttacks
             // Order MATTERS
             foreach (var opt in ModuleManager.Instance.Options)
             {
-                if (opt.Interactive && Input.GetKeyDown(KeyCode.Alpha0 + ++i))
+                if (opt.Interactive && KeyboardOverride.GetKeyDown(KeyCode.Alpha0 + ++i))
                 {
                     if (ModAssert.DebugBuild(i <= 9, $"Cannot have more than 9 interactive options (got {i}: {opt.Display})"))
                     {
@@ -88,6 +95,8 @@ namespace BossAttacks
 
         private void SceneManager_OnActiveSceneChanged(Scene from, Scene to)
         {
+            this.LogMod($"SceneManager_OnActiveSceneChanged: {from.name} -> {to.name}");
+
             if (ModuleManager.Instance != null)
             {
                 ModuleManager.Instance.Unload();
@@ -150,25 +159,32 @@ namespace BossAttacks
         ///
         public void Unload()
         {
+            // debugger
+            if (Debugger.Instance != null)
+            {
+                Debugger.Instance.Unload();
+                Debugger.Instance = null;
+            }
+
+            // input overrides
+            KeyboardOverride.Unload();
+
+            // hooks
             USceneManager.activeSceneChanged -= SceneManager_OnActiveSceneChanged;
             ModHooks.HeroUpdateHook -= ModHooks_HeroUpdateHook;
 
-            if (ModuleManager.Instance != null)
-            {
-                ModuleManager.Instance.Unload();
-                ModuleManager.Instance = null;
-            }
-
+            // display
             if (ModDisplay.Instance != null)
             {
                 ModDisplay.Instance.Destroy();
                 ModDisplay.Instance = null;
             }
 
-            if (Debugger.Instance != null)
+            // objects
+            if (ModuleManager.Instance != null)
             {
-                Debugger.Instance.Unload();
-                Debugger.Instance = null;
+                ModuleManager.Instance.Unload();
+                ModuleManager.Instance = null;
             }
         }
 

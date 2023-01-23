@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BossAttacks.Modules;
+using Modding;
+using UnityEngine;
 
 namespace BossAttacks.Utils
 {
@@ -35,6 +37,14 @@ namespace BossAttacks.Utils
             if (LogLevel <= Modding.LogLevel.Warn)
             {
                 LogModImpl(self, "W", message);
+            }
+        }
+
+        public static void LogModTest<T>(this T self, string message)
+        {
+            if (LogLevel <= Modding.LogLevel.Warn)
+            {
+                LogModImpl(self, "T", message);
             }
         }
 
@@ -110,6 +120,11 @@ namespace BossAttacks.Utils
         }
         private static bool lastIsLogged = true;
 
+        internal static bool NoFilters(string content)
+        {
+            return true;
+        }
+
         internal static bool DontRepeatLast(string content)
         {
             var ret = content != lastContent;
@@ -143,7 +158,83 @@ namespace BossAttacks.Utils
 
         internal static Func<DateTime> TimeFunction = () => DateTime.Now;
         internal static Func<DateTime, string> TimeStringFunction = datetime => datetime.ToString("HH':'mm':'ss'.'fff");
-        internal static Func<string, bool> FilterFunction = (_) => true;
+        internal static Func<string, bool> FilterFunction = NoFilters;
         internal static Action<string> LoggingFunction;
+
+
+        public static void EnableDebugger()
+        {
+            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
+        }
+
+        private static void ModHooks_HeroUpdateHook()
+        {
+            if (Input.GetKeyDown(KeyCode.LeftBracket)) // less logs
+            {
+                LogLevel = LogLevel switch
+                {
+                    LogLevel.Info => LogLevel.Info,
+                    LogLevel.Debug => LogLevel.Info,
+                    LogLevel.Fine => LogLevel.Debug,
+                    _ => throw new ModException($"Should not have log level {LogLevel}"),
+                };
+                typeof(LoggingUtils).LogMod($"LogLevel = {LoggingUtils.LogLevel}");
+            }
+            else if (Input.GetKeyDown(KeyCode.RightBracket)) // more logs
+            {
+                LogLevel = LogLevel switch
+                {
+                    LogLevel.Info => LogLevel.Debug,
+                    LogLevel.Debug => LogLevel.Fine,
+                    LogLevel.Fine => LogLevel.Fine,
+                    _ => throw new ModException($"Should not have log level {LogLevel}"),
+                };
+                typeof(LoggingUtils).LogMod($"LogLevel = {LoggingUtils.LogLevel}");
+            }
+            else if (Input.GetKeyDown(KeyCode.Minus)) // less filters
+            {
+                if (FilterFunction == NoFilters)
+                {
+                    FilterFunction = NoFilters;
+                    typeof(LoggingUtils).LogMod("LogFilter = NoFilters");
+                }
+                else if (FilterFunction == DontRepeatLast)
+                {
+                    FilterFunction = NoFilters;
+                    typeof(LoggingUtils).LogMod("LogFilter = NoFilters");
+                }
+                else if (FilterFunction == DontRepeatWithin1s)
+                {
+                    FilterFunction = DontRepeatLast;
+                    typeof(LoggingUtils).LogMod("LogFilter = DontRepeatLast");
+                }
+                else
+                {
+                    typeof(LoggingUtils).LogMod("LogFilter = unknown");
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Equals)) // more filters
+            {
+                if (FilterFunction == NoFilters)
+                {
+                    FilterFunction = DontRepeatLast;
+                    typeof(LoggingUtils).LogMod("LogFilter = DontRepeatLast");
+                }
+                else if (FilterFunction == DontRepeatLast)
+                {
+                    FilterFunction = DontRepeatWithin1s;
+                    typeof(LoggingUtils).LogMod("LogFilter = DontRepeatWithin1s");
+                }
+                else if (FilterFunction == DontRepeatWithin1s)
+                {
+                    FilterFunction = DontRepeatWithin1s;
+                    typeof(LoggingUtils).LogMod("LogFilter = DontRepeatWithin1s");
+                }
+                else
+                {
+                    typeof(LoggingUtils).LogMod("LogFilter = unknown");
+                }
+            }
+        }
     }
 }
