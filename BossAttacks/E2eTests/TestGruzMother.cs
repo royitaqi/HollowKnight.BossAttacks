@@ -13,11 +13,52 @@ namespace BossAttacks.E2eTests
 
         internal override IEnumerator Script()
         {
-            //yield return EnterFight();
-            //yield return new WaitForSeconds(5f);
-            //yield return InterceptLog();
-            //yield return Left(3);
-            //yield return ExpectLog("Overriding left", 5);
+            TestCase("wait for fight and modules to load");
+            yield return InvincibleHero();
+            yield return EnterFightViaStatueGo();
+            yield return ExpectLog("[ModuleManager] Level is now 0", 10);
+
+            TestCase("turn off all attacks");
+            yield return PressKey(KeyCode.Alpha1, 0.1f);
+            yield return PressKey(KeyCode.Alpha2, 0.1f);
+
+            TestCase("wait for boss idle #1");
+            yield return ExpectLog("Boss entering state Super Choose SCP", 5);
+            InParallel(ExpectNotLog("Boss entering state Charge Antic", 2));
+            yield return ExpectNotLog("Boss entering state Slam Antic", 2);
+
+            TestCase("test attack 1 - CHARGE #1");
+            yield return PressKey(KeyCode.Alpha1, 0.1f);
+            yield return ExpectLog("Boss entering state Charge Antic", 5);
+            TestCase("test attack 1 - CHARGE #2");
+            yield return ExpectLog("Boss entering state Charge Antic", 5);
+            TestCase("test attack 1 - CHARGE #3");
+            yield return ExpectLog("Boss entering state Charge Antic", 5);
+            yield return PressKey(KeyCode.Alpha1, 0.1f);
+
+            TestCase("wait for boss idle #2");
+            yield return ExpectLog("Boss entering state Super Choose SCP", 5);
+            InParallel(ExpectNotLog("Boss entering state Charge Antic", 2));
+            yield return ExpectNotLog("Boss entering state Slam Antic", 2);
+
+            TestCase("test attack 2 - SLAM #1");
+            yield return PressKey(KeyCode.Alpha2, 0.1f);
+            yield return ExpectLog("Boss entering state Slam Antic", 20);
+            TestCase("test attack 2 - SLAM #2");
+            yield return ExpectLog("Boss entering state Slam Antic", 20);
+            TestCase("test attack 2 - SLAM #3");
+            yield return ExpectLog("Boss entering state Slam Antic", 20);
+            yield return PressKey(KeyCode.Alpha2, 0.1f);
+
+            TestCase("wait for boss idle #3");
+            yield return ExpectLog("Boss entering state Super Choose SCP", 20);
+            InParallel(ExpectNotLog("Boss entering state Charge Antic", 2));
+            yield return ExpectNotLog("Boss entering state Slam Antic", 2);
+
+            TestCase("leave fight");
+            yield return LeaveFight();
+            yield return RecoverInvincibility();
+
             yield return 0;
         }
     }

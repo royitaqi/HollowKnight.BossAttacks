@@ -40,6 +40,14 @@ namespace BossAttacks.Utils
             }
         }
 
+        public static void LogModTest<T>(this T self, string message)
+        {
+            if (LogLevel <= Modding.LogLevel.Warn)
+            {
+                LogModImpl(self, "T", message);
+            }
+        }
+
         // These logs are accepted:
         // - The only log for a *manually triggered*, *infrequent* event (a few in a minute; e.g. change scene; start boss fight).
         public static void LogMod<T>(this T self, string message)

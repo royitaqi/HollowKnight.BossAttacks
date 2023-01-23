@@ -32,19 +32,20 @@ namespace BossAttacks
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
                 var t = new TestGruzMother();
-                t.InParallel(t.EnterFightViaSceneChange());
+                t.RunFullTest();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha9))
             {
                 var t = new TestGruzMother();
-                t.InParallel(t.EnterFightViaStatueGo());
+                t.InParallel(t.EnterFightViaSceneChange());
+
+                //var t = new TestGruzMother();
+                //t.InParallel(t.EnterFightViaStatueGo());
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha8))
             {
-                var t = new TestGruzMother();
-                t.InParallel(t.EnterFightViaChallengeMenu());
             }
 
             if (Input.GetKeyDown(leftKey))
@@ -76,8 +77,6 @@ namespace BossAttacks
                 InputUtils.Load();
                 InputUtils.PressButton("attack");
                 this.LogModTEMP($"fake attack: down");
-
-                InputUtils.PressKey(KeyCode.J);
             }
             if (Input.GetKeyUp(attackKey))
             {

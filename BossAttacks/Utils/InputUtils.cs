@@ -47,8 +47,6 @@ namespace BossAttacks.Utils
             ControllerBoolOverrides.Clear();
             ControllerIntOverrides.Clear();
             ControllerFloatOverrides.Clear();
-
-            KeyboardOverrides.Clear();
         }
 
         #region Controller Overrides
@@ -88,7 +86,7 @@ namespace BossAttacks.Utils
                         // override value
                         var key = $"{fieldNames[self]}.{prop.Name}";
                         ret = applyOverride(key, ret);
-                        typeof(InputUtils).LogModTEMP($"~ {typeof(AxisInputControl).Name.Substring(0, 7)} ~ {key}: {ret}");
+                        //typeof(InputUtils).LogModTEMP($"~ {typeof(AxisInputControl).Name.Substring(0, 7)} ~ {key}: {ret}");
                         return ret;
                     };
                     Hooks.Add(new Hook(getter, genericHook));
@@ -152,31 +150,47 @@ namespace BossAttacks.Utils
         private static readonly Dictionary<string, int> ControllerIntOverrides = new();
         private static readonly Dictionary<string, float> ControllerFloatOverrides = new();
         #endregion
+    }
 
-        #region Keyboard Overrides
-        internal static void PressKey(KeyCode key)
+    internal static class KeyboardOverride
+    {
+        internal static void Load()
         {
-            Load();
-            typeof(InputUtils).LogMod($"Pressing {key}");
-            KeyboardOverrides.Add(key, true);
+        }
+
+        internal static void Unload()
+        {
+            KeyboardOverrides.Clear();
+        }
+
+        internal static void PressKey(KeyCode key, int count = 1)
+        {
+            typeof(InputUtils).LogMod($"Pressing {key} ({count} times)");
+            KeyboardOverrides.Add(key, count);
         }
 
         internal static void ReleaseKey(KeyCode key)
         {
-            Load();
-            typeof(InputUtils).LogMod($"Releasing {key}");
-            KeyboardOverrides.Remove(key);
+            if (KeyboardOverrides.ContainsKey(key))
+            {
+                typeof(InputUtils).LogMod($"Releasing {key}");
+                KeyboardOverrides.Remove(key);
+            }
         }
 
         internal static bool GetKeyDown(KeyCode key)
         {
             if (KeyboardOverrides.ContainsKey(key))
             {
-                return KeyboardOverrides[key];
+                if (--KeyboardOverrides[key] == 0)
+                {
+                    typeof(InputUtils).LogMod($"Auto-releasing {key}");
+                    KeyboardOverrides.Remove(key);
+                }
+                return true;
             }
             return Input.GetKeyDown(key);
         }
-        private static readonly Dictionary<KeyCode, bool> KeyboardOverrides = new();
-        #endregion
+        private static readonly Dictionary<KeyCode, int> KeyboardOverrides = new();
     }
 }
