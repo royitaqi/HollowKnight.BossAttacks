@@ -34,6 +34,8 @@ namespace BossAttacks.E2eTests
             yield return ExpectLog("Boss entering state Charge Antic", 5);
             TestCase("test attack 1 - CHARGE #3");
             yield return ExpectLog("Boss entering state Charge Antic", 5);
+            TestCase("test attack 1 - CHARGE #4"); // row check is "if >3 then cancel"
+            yield return ExpectLog("Boss entering state Charge Antic", 5);
             yield return PressKey(KeyCode.Alpha1, 0.1f);
 
             TestCase("wait for boss idle #2");
@@ -46,7 +48,7 @@ namespace BossAttacks.E2eTests
             yield return ExpectLog("Boss entering state Slam Antic", 20);
             TestCase("test attack 2 - SLAM #2");
             yield return ExpectLog("Boss entering state Slam Antic", 20);
-            TestCase("test attack 2 - SLAM #3");
+            TestCase("test attack 2 - SLAM #3"); // row check is "if >2 then cancel"
             yield return ExpectLog("Boss entering state Slam Antic", 20);
             yield return PressKey(KeyCode.Alpha2, 0.1f);
 

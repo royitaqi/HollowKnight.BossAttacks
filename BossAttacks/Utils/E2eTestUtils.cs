@@ -423,6 +423,7 @@ namespace BossAttacks.Utils
         internal IEnumerator LeaveFight()
         {
             this.LogModTest($"LeaveFight()");
+            GameManager.instance.ChangeToScene("GG_Workshop", ReturnDoor, 0);
             yield return 0;
         }
 
