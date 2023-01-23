@@ -24,7 +24,7 @@ namespace BossAttacks.E2eTests
 
             TestCase("wait for boss idle #1");
             yield return ExpectLog("Boss entering state Super Choose SCP", 5);
-            InParallel(ExpectNotLog("Boss entering state Charge Antic", 2));
+            InParallel(ExpectNotLogInParallel("Boss entering state Charge Antic", 2));
             yield return ExpectNotLog("Boss entering state Slam Antic", 2);
 
             TestCase("test attack 1 - CHARGE #1");
@@ -40,7 +40,7 @@ namespace BossAttacks.E2eTests
 
             TestCase("wait for boss idle #2");
             yield return ExpectLog("Boss entering state Super Choose SCP", 5);
-            InParallel(ExpectNotLog("Boss entering state Charge Antic", 2));
+            InParallel(ExpectNotLogInParallel("Boss entering state Charge Antic", 2));
             yield return ExpectNotLog("Boss entering state Slam Antic", 2);
 
             TestCase("test attack 2 - SLAM #1");
@@ -54,7 +54,7 @@ namespace BossAttacks.E2eTests
 
             TestCase("wait for boss idle #3");
             yield return ExpectLog("Boss entering state Super Choose SCP", 20);
-            InParallel(ExpectNotLog("Boss entering state Charge Antic", 2));
+            InParallel(ExpectNotLogInParallel("Boss entering state Charge Antic", 2));
             yield return ExpectNotLog("Boss entering state Slam Antic", 2);
 
             TestCase("leave fight");
@@ -63,7 +63,7 @@ namespace BossAttacks.E2eTests
 
             TestCase("verify module unload");
             yield return ExpectLog("[ModuleManager] Unload", 10);
-            //yield return ExpectLog("[BossAttacks] Updating option display", 2); // bug. see #28
+            yield return ExpectLog("[BossAttacks] Updating option display", 2); // bug. see #28
 
             yield return 0;
         }

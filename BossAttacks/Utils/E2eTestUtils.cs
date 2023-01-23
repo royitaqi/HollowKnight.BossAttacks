@@ -32,7 +32,7 @@ namespace BossAttacks.Utils
 
             // logging
             yield return InterceptLog();
-            InParallel(ExpectNotLog("[E]", int.MaxValue));
+            InParallel(ExpectNotLogInParallel("[E]", int.MaxValue));
             InParallel(ExpectLimitedLogSize());
 
             this.LogModTest($"Setup completed");
@@ -166,6 +166,9 @@ namespace BossAttacks.Utils
             _origFilterFunction = LoggingUtils.FilterFunction;
             _origLogLevel = LoggingUtils.LogLevel;
             _logs = new();
+            _logs.AddLast("BEGINNING OF TEST LOG");
+            _logPointer = _logs.Last;
+            _logPointerInUse = false;
 
             LoggingUtils.LoggingFunction = (log) =>
             {
@@ -185,25 +188,74 @@ namespace BossAttacks.Utils
             LoggingUtils.FilterFunction = _origFilterFunction;
             LoggingUtils.LogLevel = _origLogLevel;
             _logs = null;
+            _logPointer = null;
+            _logPointerInUse = false;
             yield return 0;
         }
 
+        private class LogIterator
+        {
+            internal Func<bool> HasMoreLog;
+            internal Action MoveToNextLog;
+            internal Func<string> GetCurrentLog;
+        }
+
+        /// <param name="mode">0 = continue and exclusive, 1 = continue and parallel, 2 = from head and parallel.</param>
+        private LogIterator GetLogIterator(int mode)
+        {
+            if (mode == 0)
+            {
+                return new LogIterator
+                {
+                    HasMoreLog = () => _logPointer != _logs.Last,
+                    MoveToNextLog = () => _logPointer = _logPointer.Next,
+                    GetCurrentLog = () => _logPointer.Value,
+                };
+            }
+            else if (mode == 1 || mode == 2)
+            {
+                var c = mode == 1 ? _logPointer : _logs.First;
+                return new LogIterator
+                {
+                    HasMoreLog = () => c != _logs.Last,
+                    MoveToNextLog = () => c = c.Next,
+                    GetCurrentLog = () => c.Value,
+                };
+            }
+            else
+            {
+                throw new ModException($"Mode should be 0, 1, or 2 (got {mode})");
+            }
+        }
+
         internal IEnumerator ExpectLog(string content, float timeoutSeconds)
+        {
+            ModAssert.AllBuilds(!_logPointerInUse, "Log pointer can only be used by one mode0 verifier");
+            _logPointerInUse = true;
+            yield return ExpectLog(content, timeoutSeconds, GetLogIterator(0));
+            _logPointerInUse = false;
+        }
+        internal IEnumerator ExpectLogInParallel(string content, float timeoutSeconds) => ExpectLog(content, timeoutSeconds, GetLogIterator(1));
+        private IEnumerator ExpectLog(string content, float timeoutSeconds, LogIterator iter)
         {
             _workers++;
             var self = $"#{_nextWorkerId++}";
             this.LogModTest($"[{self}] ExpectLog(content = \"{content}\", timeoutSeconds = {timeoutSeconds})");
 
-            var c = _logs.Last;
             while (_workerAllowed)
             {
-                while (c != _logs.Last)
+                while (iter.HasMoreLog())
                 {
-                    c = c.Next;
-                    if (c.Value.Contains(content) && !c.Value.Contains("[T]"))
+                    iter.MoveToNextLog();
+                    // Skip test logs
+                    if (iter.GetCurrentLog().Contains("[T]"))
+                    {
+                        continue;
+                    }
+                    if (iter.GetCurrentLog().Contains(content))
                     {
                         // found log. good
-                        this.LogModTest($"[{self}] Found expected content \"{content}\" in log \"{c.Value}\". Good.");
+                        this.LogModTest($"[{self}] Found expected content \"{content}\" in log \"{iter.GetCurrentLog()}\". Good.");
                         _workers--;
                         yield break;
                     }
@@ -214,7 +266,7 @@ namespace BossAttacks.Utils
                 timeoutSeconds -= sleep;
                 ModAssert.AllBuilds(timeoutSeconds > 0 || Mathf.Approximately(timeoutSeconds, 0), $"[{self}] TEST FAILED: Cannot find content \"{content}\" in logs");
 
-                // wait for 1 sec
+                // wait before checking again
                 //this.LogModTest($"        [{self}] Sleeping ...");
                 yield return new WaitForSeconds(sleep);
             }
@@ -224,17 +276,29 @@ namespace BossAttacks.Utils
 
         internal IEnumerator ExpectNotLog(string content, float timeoutSeconds)
         {
+            ModAssert.AllBuilds(!_logPointerInUse, "Log pointer can only be used by one mode0 verifier");
+            _logPointerInUse = true;
+            yield return ExpectNotLog(content, timeoutSeconds, GetLogIterator(0));
+            _logPointerInUse = false;
+        }
+        internal IEnumerator ExpectNotLogInParallel(string content, float timeoutSeconds) => ExpectNotLog(content, timeoutSeconds, GetLogIterator(1));
+        private IEnumerator ExpectNotLog(string content, float timeoutSeconds, LogIterator iter)
+        {
             _workers++;
             var self = $"#{_nextWorkerId++}";
             this.LogModTest($"{self} ExpectNotLog(content = \"{content}\", timeoutSeconds = {timeoutSeconds})");
 
-            var c = _logs.Last;
             while (_workerAllowed)
             {
-                while (c != _logs.Last)
+                while (iter.HasMoreLog())
                 {
-                    c = c.Next;
-                    ModAssert.AllBuilds(!c.Value.Contains(content) || c.Value.Contains("[T]"), $"[{self}] TEST FAILED: Unexpected content \"{content}\" found in log \"{c.Value}\"");
+                    iter.MoveToNextLog();
+                    // Skip test logs
+                    if (iter.GetCurrentLog().Contains("[T]"))
+                    {
+                        continue;
+                    }
+                    ModAssert.AllBuilds(!iter.GetCurrentLog().Contains(content), $"[{self}] TEST FAILED: Unexpected content \"{content}\" found in log \"{iter.GetCurrentLog()}\"");
                 }
 
                 // time is up. no bad log found. good.
@@ -247,7 +311,7 @@ namespace BossAttacks.Utils
                     yield break;
                 }
 
-                // wait for 1 sec
+                // wait before checking again
                 //this.LogModTest($"        [{self}] Sleeping ...");
                 yield return new WaitForSeconds(sleep);
             }
@@ -276,6 +340,8 @@ namespace BossAttacks.Utils
         }
 
         private LinkedList<string> _logs;
+        private LinkedListNode<string> _logPointer;
+        private bool _logPointerInUse;
         private Action<string> _origLoggingFunction;
         private Func<string, bool> _origFilterFunction;
         private LogLevel _origLogLevel;
