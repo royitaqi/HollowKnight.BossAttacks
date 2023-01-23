@@ -423,7 +423,13 @@ namespace BossAttacks.Utils
         internal IEnumerator LeaveFight()
         {
             this.LogModTest($"LeaveFight()");
-            GameManager.instance.ChangeToScene("GG_Workshop", ReturnDoor, 0);
+            GameManager.instance.BeginSceneTransition(new GameManager.SceneLoadInfo
+            {
+                SceneName = "GG_Workshop",
+                EntryGateName = ReturnDoor,
+                PreventCameraFadeOut = true,
+                Visualization = GameManager.SceneLoadVisualizations.GodsAndGlory,
+            });
             yield return 0;
         }
 

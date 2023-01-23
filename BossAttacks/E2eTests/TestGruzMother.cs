@@ -61,6 +61,10 @@ namespace BossAttacks.E2eTests
             yield return LeaveFight();
             yield return RecoverInvincibility();
 
+            TestCase("verify module unload");
+            yield return ExpectLog("[ModuleManager] Unload", 10);
+            //yield return ExpectLog("[BossAttacks] Updating option display", 2); // bug. see #28
+
             yield return 0;
         }
     }
