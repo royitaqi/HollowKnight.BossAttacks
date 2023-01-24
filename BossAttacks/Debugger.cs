@@ -37,15 +37,14 @@ namespace BossAttacks
 
             if (Input.GetKeyDown(KeyCode.Alpha9))
             {
-                var t = new TestGruzMother();
-                t.InParallel(t.EnterFightViaSceneChange());
-
-                //var t = new TestGruzMother();
-                //t.InParallel(t.EnterFightViaStatueGo());
+                var t = new TestPureVessel();
+                t.RunFullTest();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha8))
             {
+                var t = new TestSoulTyrant();
+                t.RunFullTest();
             }
 
             if (Input.GetKeyDown(leftKey))

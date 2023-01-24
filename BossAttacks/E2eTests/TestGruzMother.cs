@@ -8,13 +8,8 @@ namespace BossAttacks.E2eTests
     {
         protected override string BossScene => "GG_Gruz_Mother";
 
-        internal override IEnumerator Script()
+        protected override IEnumerator BossFightScript()
         {
-            TestCase("wait for fight and modules to load");
-            yield return InvincibleHero();
-            yield return EnterFightViaStatueGo();
-            yield return ExpectLog("[ModuleManager] Level is now 0", 10);
-
             TestCase("turn off all attacks");
             yield return PressKey(KeyCode.Alpha1, 0.1f);
             yield return PressKey(KeyCode.Alpha2, 0.1f);
@@ -53,16 +48,6 @@ namespace BossAttacks.E2eTests
             yield return ExpectLog("Boss entering state Super Choose SCP", 20);
             InParallel(ExpectNotLogInParallel("Boss entering state Charge Antic", 2));
             yield return ExpectNotLog("Boss entering state Slam Antic", 2);
-
-            TestCase("leave fight");
-            yield return LeaveFight();
-            yield return RecoverInvincibility();
-
-            TestCase("verify module unload");
-            yield return ExpectLog("[ModuleManager] Unload", 10);
-            yield return ExpectLog("[BossAttacks] Updating option display", 2); // bug. see #28
-
-            yield return 0;
         }
     }
 }

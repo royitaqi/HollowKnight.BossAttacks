@@ -15,7 +15,7 @@ namespace BossAttacks.Utils
      */
     internal abstract class E2eTest
     {
-        internal abstract IEnumerator Script();
+        protected abstract IEnumerator Script();
 
         private IEnumerator Setup()
         {
@@ -430,6 +430,26 @@ namespace BossAttacks.Utils
         protected virtual Vector3 StatuePos => GodhomeUtils.SceneToStatue[BossScene].StatuePos;
         protected virtual string ReturnDoor => GodhomeUtils.SceneToStatue[BossScene].ReturnDoor;
         protected virtual int ChallengeLevel => 0;
+
+        protected abstract IEnumerator BossFightScript();
+
+        protected override IEnumerator Script()
+        {
+            TestCase("wait for fight and modules to load");
+            yield return InvincibleHero();
+            yield return EnterFightViaStatueGo();
+            yield return ExpectLog("[ModuleManager] Level is now 0", 10);
+
+            // Run actual boss fight test script
+            yield return BossFightScript();
+
+            TestCase("leave fight");
+            yield return LeaveFight();
+            yield return RecoverInvincibility();
+
+            TestCase("verify module unload");
+            yield return ExpectLog("[ModuleManager] Unload", 10);
+        }
 
         /**
          * Notes:
