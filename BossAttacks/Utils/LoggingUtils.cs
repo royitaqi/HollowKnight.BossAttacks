@@ -42,10 +42,7 @@ namespace BossAttacks.Utils
 
         public static void LogModTest<T>(this T self, string message)
         {
-            if (LogLevel <= Modding.LogLevel.Warn)
-            {
-                LogModImpl(self, "T", message);
-            }
+            LogModImpl(self, "T", message);
         }
 
         // These logs are accepted:
