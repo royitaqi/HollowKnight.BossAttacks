@@ -414,10 +414,9 @@ namespace BossAttacks.Utils
         private LogLevel _origLogLevel;
 
         private string _testCase;
-        private int _workers;
-        private int _nextWorkerId;
-        private bool _testInProgress;
-        protected bool TestInProgress => _testInProgress;
+        protected int _workers;
+        protected int _nextWorkerId;
+        protected bool _testInProgress;
         private List<string> _testErrors;
     }
 
@@ -435,8 +434,10 @@ namespace BossAttacks.Utils
 
         protected override IEnumerator Script()
         {
+            _fightInProgress = true;
+            InParallel(SetInvincibility());
+
             TestCase("wait for fight and modules to load");
-            yield return InvincibleHero();
             yield return EnterFightViaStatueGo();
             yield return ExpectLog("[ModuleManager] Level is now 0", 10);
 
@@ -445,10 +446,11 @@ namespace BossAttacks.Utils
 
             TestCase("leave fight");
             yield return LeaveFight();
-            yield return RecoverInvincibility();
 
             TestCase("verify module unload");
             yield return ExpectLog("[ModuleManager] Unload", 10);
+
+            _fightInProgress = false;
         }
 
         /**
@@ -460,7 +462,7 @@ namespace BossAttacks.Utils
          */
         internal IEnumerator EnterFightViaSceneChange()
         {
-            if (!TestInProgress) yield break;
+            if (!_testInProgress) yield break;
 
             this.LogModTest($"EnterFightViaSceneChange()");
 
@@ -502,7 +504,7 @@ namespace BossAttacks.Utils
          */
         internal IEnumerator EnterFightViaStatueGo()
         {
-            if (!TestInProgress) yield break;
+            if (!_testInProgress) yield break;
 
             this.LogModTest($"EnterFightViaStatueGo()");
 
@@ -546,7 +548,7 @@ namespace BossAttacks.Utils
          */
         internal IEnumerator EnterFightViaChallengeMenu()
         {
-            if (!TestInProgress) yield break;
+            if (!_testInProgress) yield break;
 
             this.LogModTest($"EnterFightViaChallengeMenu()");
 
@@ -566,25 +568,33 @@ namespace BossAttacks.Utils
             yield return 0;
         }
 
-        internal IEnumerator InvincibleHero()
+        internal IEnumerator SetInvincibility()
         {
-            if (!TestInProgress) yield break;
+            if (!_testInProgress) yield break;
 
-            this.LogModTest($"InvincibleHero()");
-            _origIsInvincible = PlayerData.instance.isInvincible;
-            PlayerData.instance.isInvincible = true;
-            yield return 0;
+            _workers++;
+            var self = $"#{_nextWorkerId++}";
+            this.LogModTest($"[{self}] SetInvincibility()");
+
+            this.LogModTest($"[{self}] Noting down original invincibility: {PlayerData.instance.isInvincible}");
+            bool orig = PlayerData.instance.isInvincible;
+
+            while (_testInProgress && _fightInProgress)
+            {
+                PlayerData.instance.isInvincible = true;
+
+                // wait before checking again
+                //this.LogModTest($"        [{self}] Sleeping ...");
+                const float sleep = 0.1f;
+                yield return new WaitForSeconds(sleep);
+            }
+
+            _workers--;
+            this.LogModTest($"[{self}] Recovering invincibility: {orig}");
+            PlayerData.instance.isInvincible = orig;
         }
 
-        // Tear downs don't need to check TestInProgress
-        internal IEnumerator RecoverInvincibility()
-        {
-            this.LogModTest($"RecoverInvincibility()");
-            PlayerData.instance.isInvincible = _origIsInvincible;
-            yield return 0;
-        }
-
-        // Tear downs don't need to check TestInProgress
+        // Tear downs don't need to check _testInProgress
         internal IEnumerator LeaveFight()
         {
             this.LogModTest($"LeaveFight()");
@@ -598,6 +608,6 @@ namespace BossAttacks.Utils
             yield return 0;
         }
 
-        private bool _origIsInvincible;
+        private bool _fightInProgress;
     }
 }

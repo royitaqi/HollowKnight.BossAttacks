@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using BossAttacks.E2eTests;
 using BossAttacks.Utils;
@@ -25,9 +26,9 @@ namespace BossAttacks
 
         private void OnHeroUpdate()
         {
-            var leftKey = KeyCode.Alpha1;
-            var rightKey = KeyCode.Alpha2;
-            var attackKey = KeyCode.Alpha3;
+            var leftKey = KeyCode.Pause;
+            var rightKey = KeyCode.Pause;
+            var attackKey = KeyCode.Pause;
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
