@@ -29,6 +29,9 @@ namespace BossAttacks
 
         private void EachFsmAtStart(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
         {
+            orig(self);
+
+            // custom logic
             if (self is
                 {
                     name: "Knight",
