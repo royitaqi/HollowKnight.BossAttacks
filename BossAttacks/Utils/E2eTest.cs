@@ -100,7 +100,7 @@ namespace BossAttacks.Utils
         /**
          * Test WITH setup and tear down.
          */
-        private IEnumerator FullTest()
+        internal IEnumerator FullTest()
         {
             yield return Setup();
 

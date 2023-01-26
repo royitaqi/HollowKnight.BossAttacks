@@ -39,6 +39,7 @@ namespace BossAttacks.Utils
             yield return ExpectLog("[ModuleManager] Unload", 10);
 
             _fightInProgress = false;
+            yield return new WaitForSeconds(0.2f); // wait for invincibility to recover
         }
 
         /**

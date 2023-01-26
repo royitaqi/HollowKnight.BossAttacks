@@ -47,7 +47,7 @@ namespace BossAttacks
 
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                var t = new TestGruzMother();
+                var t = new BatchTest();
                 t.RunFullTest();
             }
 
@@ -60,6 +60,12 @@ namespace BossAttacks
             if (Input.GetKeyDown(KeyCode.Alpha8))
             {
                 var t = new TestSoulTyrant();
+                t.RunFullTest();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                var t = new TestGruzMother();
                 t.RunFullTest();
             }
 
