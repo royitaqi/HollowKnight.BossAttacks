@@ -35,16 +35,12 @@ namespace BossAttacks
                     FsmName: "Dream Nail"
                 })
             {
-                _dnFSM = self;
+                // do something for this FSM
             }
         }
-        private PlayMakerFSM _dnFSM = null;
 
         private void EachHeroUpdate()
         {
-            var inputHandler = typeof(HeroController).GetField("inputHandler", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(HeroController.instance) as InputHandler;
-            this.LogModTEMP($"DN = {inputHandler.inputActions.dreamNail.IsPressed}, UP = {inputHandler.inputActions.up.IsPressed}");
-
             var leftKey = KeyCode.Pause;
             var rightKey = KeyCode.Pause;
             var attackKey = KeyCode.Pause;
@@ -65,11 +61,6 @@ namespace BossAttacks
             {
                 var t = new TestSoulTyrant();
                 t.RunFullTest();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha7))
-            {
-                _dnFSM.MakeLog();
             }
 
             if (Input.GetKeyDown(leftKey))

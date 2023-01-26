@@ -8,47 +8,22 @@ namespace BossAttacks.E2eTests
     {
         protected override string BossScene => "GG_Soul_Tyrant";
 
+        protected override BossMetadata BossMeta => new BossMetadata
+        {
+            StartIdle = 5,
+            ScpLog = "Boss entering state Attack Choice SCP",
+            Attacks = new[]
+            {
+                new BossAttackMetadata { Name = "CHARGE", Log = "Boss entering state Charge Antic", Duration = 10,  RepeatTimes = 2 },
+                new BossAttackMetadata { Name = "DIVE", Log = "Boss entering state Quake Antic", Duration = 5,  RepeatTimes = 2 },
+                new BossAttackMetadata { Name = "HIGH SPINNER", Log = "Boss entering state HS Summon", Duration = 10,  RepeatTimes = 2 },
+                new BossAttackMetadata { Name = "SHOOT", Log = "Boss entering state Shot Antic", Duration = 5,  RepeatTimes = 2 },
+            }
+        };
+
         protected override IEnumerator BossFightScript()
         {
-            yield return TurnOffAllAttacks(4);
-
-            yield return WaitForBossIdle("#1", 5);
-
-            TestCase("test attack 1 - CHARGE #1");
-            yield return PressKey(KeyCode.Alpha1, 0.1f);
-            yield return ExpectLog("Boss entering state Charge Antic", 10);
-            TestCase("test attack 1 - CHARGE #2");
-            yield return ExpectLog("Boss entering state Charge Antic", 10);
-            yield return PressKey(KeyCode.Alpha1, 0.1f);
-
-            yield return WaitForBossIdle("#2", 10);
-
-            TestCase("test attack 2 - DIVE #1");
-            yield return PressKey(KeyCode.Alpha2, 0.1f);
-            yield return ExpectLog("Boss entering state Quake Antic", 5);
-            TestCase("test attack 2 - DIVE #2");
-            yield return ExpectLog("Boss entering state Quake Antic", 5);
-            yield return PressKey(KeyCode.Alpha2, 0.1f);
-
-            yield return WaitForBossIdle("#2", 5);
-
-            TestCase("test attack 3 - HIGH SPINNER #1");
-            yield return PressKey(KeyCode.Alpha3, 0.1f);
-            yield return ExpectLog("Boss entering state HS Summon", 10);
-            TestCase("test attack 3 - HIGH SPINNER #2");
-            yield return ExpectLog("Boss entering state HS Summon", 10);
-            yield return PressKey(KeyCode.Alpha3, 0.1f);
-
-            yield return WaitForBossIdle("#3", 10);
-
-            TestCase("test attack 4 - SHOOT #1");
-            yield return PressKey(KeyCode.Alpha4, 0.1f);
-            yield return ExpectLog("Boss entering state Shot Antic", 5);
-            TestCase("test attack 4 - SHOOT #2");
-            yield return ExpectLog("Boss entering state Shot Antic", 5);
-            yield return PressKey(KeyCode.Alpha4, 0.1f);
-
-            yield return WaitForBossIdle("#4", 5);
+            yield return TestFreeAttacks();
 
             TestCase("test advance to phase 2");
             yield return PressKey(KeyCode.Alpha5, 0.1f);

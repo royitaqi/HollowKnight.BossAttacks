@@ -8,86 +8,21 @@ namespace BossAttacks.E2eTests
     {
         protected override string BossScene => "GG_Hollow_Knight";
 
-        protected override IEnumerator BossFightScript()
+        protected override BossMetadata BossMeta => new BossMetadata
         {
-            yield return TurnOffAllAttacks(6);
-
-            yield return WaitForBossIdle("#1", 20);
-
-            TestCase("test attack 1 - DASH #1");
-            yield return PressKey(KeyCode.Alpha1, 0.1f);
-            yield return ExpectLog("Boss entering state Dash Antic", 5);
-            TestCase("test attack 1 - DASH #2");
-            yield return ExpectLog("Boss entering state Dash Antic", 5);
-            yield return PressKey(KeyCode.Alpha1, 0.1f);
-
-            yield return WaitForBossIdle("#2", 5);
-
-            TestCase("test attack 2 - DSTAB #1");
-            yield return PressKey(KeyCode.Alpha2, 0.1f);
-            yield return ExpectLog("Boss entering state Stomp Antic", 5);
-            TestCase("test attack 2 - DSTAB #2");
-            yield return ExpectLog("Boss entering state Stomp Antic", 5);
-            yield return PressKey(KeyCode.Alpha2, 0.1f);
-
-            yield return WaitForBossIdle("#3", 5);
-
-            TestCase("test attack 3 - FOCUS #1");
-            yield return PressKey(KeyCode.Alpha3, 0.1f);
-            yield return ExpectLog("Boss entering state Focus Charge", 10);
-            TestCase("test attack 3 - FOCUS #2");
-            yield return ExpectLog("Boss entering state Focus Charge", 10);
-            yield return PressKey(KeyCode.Alpha3, 0.1f);
-
-            yield return WaitForBossIdle("#4", 10);
-
-            TestCase("test attack 4 - SLASH #1");
-            yield return PressKey(KeyCode.Alpha4, 0.1f);
-            yield return ExpectLog("Boss entering state Slash1 Antic", 5);
-            TestCase("test attack 4 - SLASH #2");
-            yield return ExpectLog("Boss entering state Slash1 Antic", 5);
-            yield return PressKey(KeyCode.Alpha4, 0.1f);
-
-            yield return WaitForBossIdle("#5", 5);
-
-            TestCase("test attack 5 - SMALL SHOT #1");
-            yield return PressKey(KeyCode.Alpha5, 0.1f);
-            yield return ExpectLog("Boss entering state SmallShot Antic", 5);
-            TestCase("test attack 5 - SMALL SHOT #2");
-            yield return ExpectLog("Boss entering state SmallShot Antic", 5);
-            yield return PressKey(KeyCode.Alpha5, 0.1f);
-
-            yield return WaitForBossIdle("#6", 5);
-
-            TestCase("test attack 6 - TENDRIL #1");
-            yield return PressKey(KeyCode.Alpha6, 0.1f);
-            yield return ExpectLog("Boss entering state Tendril Antic", 5);
-            TestCase("test attack 6 - TENDRIL #2");
-            yield return ExpectLog("Boss entering state Tendril Antic", 5);
-            yield return PressKey(KeyCode.Alpha6, 0.1f);
-
-            yield return WaitForBossIdle("#7", 5);
-        }
-
-        private IEnumerator TurnOffAllAttacks(int count)
-        {
-            TestCase("turn off all attacks");
-            for (int i = 1; i <= count; i++)
+            StartIdle = 20,
+            ScpLog = "Boss entering state Choice P3 SCP",
+            Attacks = new[]
             {
-                yield return PressKey(KeyCode.Alpha0 + i, 0.1f);
+                new BossAttackMetadata { Name = "DASH", Log = "Boss entering state Dash Antic", Duration = 5,  RepeatTimes = 2 },
+                new BossAttackMetadata { Name = "DSTAB", Log = "Boss entering state Stomp Antic", Duration = 5,  RepeatTimes = 2 },
+                new BossAttackMetadata { Name = "FOCUS", Log = "Boss entering state Focus Charge", Duration = 10,  RepeatTimes = 2 },
+                new BossAttackMetadata { Name = "SLASH", Log = "Boss entering state Slash1 Antic", Duration = 5,  RepeatTimes = 2 },
+                new BossAttackMetadata { Name = "SMALL SHOT", Log = "Boss entering state SmallShot Antic", Duration = 5,  RepeatTimes = 2 },
+                new BossAttackMetadata { Name = "TENDRIL", Log = "Boss entering state Tendril Antic", Duration = 5,  RepeatTimes = 2 },
             }
-        }
+        };
 
-        private IEnumerator WaitForBossIdle(string id, float seconds)
-        {
-            TestCase($"wait for boss idle {id}");
-            yield return ExpectLog("Boss entering state Choice P3 SCP", seconds);
-            InParallel(ExpectNotLogInParallel("Boss entering state Dash Antic", 2));
-            InParallel(ExpectNotLogInParallel("Boss entering state Stomp Antic", 2));
-            InParallel(ExpectNotLogInParallel("Boss entering state Focus Charge", 2));
-            InParallel(ExpectNotLogInParallel("Boss entering state Slash1 Antic", 2));
-            InParallel(ExpectNotLogInParallel("Boss entering state SmallShot Antic", 2));
-            yield return ExpectNotLog("Boss entering state Tendril Antic", 2);
-        }
+        protected override IEnumerator BossFightScript() => TestFreeAttacks();
     }
 }
