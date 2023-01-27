@@ -1,7 +1,6 @@
-﻿using System;
+﻿using BossAttacks.Utils;
+using System;
 using System.Collections;
-using System.Diagnostics.Contracts;
-using BossAttacks.Utils;
 using UnityEngine;
 
 namespace BossAttacks.E2eTests
@@ -25,6 +24,7 @@ namespace BossAttacks.E2eTests
             typeof(TestTraitorLord),
             typeof(TestUumuu),
             typeof(TestUumuuV),
+            typeof(TestWhiteDefender),
         };
 
         protected override IEnumerator Script()

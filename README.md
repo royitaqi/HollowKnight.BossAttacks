@@ -60,7 +60,7 @@ Train boss fights in Hall of Gods against specific boss attacks and more.
 | Uumuu | ✅ | | ✅
 | Vengefly King | ✅ | ✅ Allow repeated attacks of the same type |
 | Watcher Knight | ✅ | |
-| White Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before; no dive after) |
+| White Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before; no dive after) | ✅
 | Winged Nosk | ✅ | ✅ Unlock all attacks |
 | Xero | n/a | Only does one attack | n/a
 
