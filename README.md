@@ -17,52 +17,52 @@ Train boss fights in Hall of Gods against specific boss attacks and more.
 
 ## Supported bosses
 
-| Boss | Hall of Gods | Extra |
-| --- | :---: | --- |
+| Boss | Hall of Gods | Extra | Auto Tested |
+| --- | :---: | --- | --- |
 | Absolute Radiance | ✅ | ✅ Show different attacks in different phases |
 | Broken Vessel | ✅ | ✅ Unlock all attacks |
 | Brooding Mawlek | ✅ | ✅ Allow repeated attacks of the same type |
 | Brothers Oro & Mato | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Too Complex to figure out, yet |
-| Crystal Guardian | ✅ |  |
+| Crystal Guardian | ✅ |  | ✅
 | Dung Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before) |
 | Elder Hu | ✅ | |
-| Enraged Guardian | ✅ |  |
+| Enraged Guardian | ✅ |  | ✅
 | Failed Champion | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
 | False Knight | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
-| Flukemarm | n/a | Only does one attack |
-| Galien | n/a | Only does one attack |
-| God Tamer | ✅ | |
-| Gorb | n/a | Only does one attack |
+| Flukemarm | n/a | Only does one attack | n/a
+| Galien | n/a | Only does one attack | n/a
+| God Tamer | ✅ | | ✅
+| Gorb | n/a | Only does one attack | n/a
 | Great Nailsage Sly | ✅ | |
 | Grey Prince Zote | ✅ | ✅ Unlock all attacks |
-| Gruz Mother | ✅ | ✅ Allow repeated attacks of the same type |
+| Gruz Mother | ✅ | ✅ Allow repeated attacks of the same type | ✅
 | Hive Knight | ✅ | ✅ Unlock all attacks |
 | Hornet (Protector) | ✅ | <img src="https://user-images.githubusercontent.com/14790745/212979275-bac4c8e1-a784-44c6-899b-66bfeea1ed41.png" width="22" height="22" /> THROW (needle) can be too close to wall |
 | Hornet (Sentinel) | ✅ | <img src="https://user-images.githubusercontent.com/14790745/212979275-bac4c8e1-a784-44c6-899b-66bfeea1ed41.png" width="22" height="22" /> THROW (needle) can be too close to wall |
-| Lost Kin | ✅ |  |
+| Lost Kin | ✅ |  | ✅
 | Mantis Lords | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Uncoordinated Attacks |
-| Markoth | n/a | Only does one attack |
-| Marmu | n/a | Only does one attack |
-| Massive Moss Charger | ✅ | |
+| Markoth | n/a | Only does one attack | n/a
+| Marmu | n/a | Only does one attack | n/a
+| Massive Moss Charger | ✅ | | ✅
 | Nightmare King Grimm | ✅ | ✅ Infinite BALLOON |
-| No Eyes | n/a | Only does one attack |
+| No Eyes | n/a | Only does one attack | n/a
 | Nosk | ✅ | |
-| Oblobbles | n/a | Only does one attack |
+| Oblobbles | n/a | Only does one attack | n/a
 | Paintmaster Sheo | ✅ | |
-| Pure Vessel | ✅ | ✅ Unlock all attacks |
+| Pure Vessel | ✅ | ✅ Unlock all attacks | ✅
 | Sisters of Battle | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Uncoordinated Attacks |
 | Soul Master | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
-| Soul Tyrant | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE |
+| Soul Tyrant | ✅ | ✅ Fast jump to Phase 2<br>✅ New mode in Phase 2: Infinite DIVE | ✅
 | Soul Warrior | ✅ | |
 | The Collector | ✅ | ✅ Enter Phase 2 at start of fight<br>✅ More Jars |
-| Traitor Lord | ✅ | |
+| Traitor Lord | ✅ | | ✅
 | Troupe Master Grimm | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Too Complex to figure out, yet |
-| Uumuu | ✅ | |
+| Uumuu | ✅ | | ✅
 | Vengefly King | ✅ | ✅ Allow repeated attacks of the same type |
 | Watcher Knight | ✅ | |
 | White Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before; no dive after) |
 | Winged Nosk | ✅ | ✅ Unlock all attacks |
-| Xero | n/a | Only does one attack |
+| Xero | n/a | Only does one attack | n/a
 
 
 ## Have a question or report a bug?
