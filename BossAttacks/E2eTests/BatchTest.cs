@@ -9,9 +9,17 @@ namespace BossAttacks.E2eTests
     {
         private Type[] ToTest => new[]
         {
+            typeof(TestCrystalGuardian),
+            typeof(TestEnragedGuardian),
+            typeof(TestGodTamer),
             typeof(TestGruzMother),
+            typeof(TestLostKin),
+            typeof(TestMegaMossCharger),
             typeof(TestPureVessel),
             typeof(TestSoulTyrant),
+            typeof(TestTraitorLord),
+            typeof(TestUumuu),
+            typeof(TestUumuuV),
         };
 
         protected override IEnumerator Script()

@@ -33,7 +33,7 @@ namespace BossAttacks.Utils
 
             // logging
             yield return InterceptLog();
-            InParallel(ExpectNotLogInParallel("[E]", int.MaxValue));
+            ExpectNoLogInParallel(ToContain, "[E]", int.MaxValue);
             InParallel(ExpectLimitedLogSize());
 
             this.LogModTest($"Setup completed");
@@ -277,15 +277,18 @@ namespace BossAttacks.Utils
             }
         }
 
-        internal IEnumerator ExpectLog(string content, float timeoutSeconds)
+        internal static Func<string, string, bool> ToContain => (log, content) => log.Contains(content);
+        internal static Func<string, string, bool> ToEndWith => (log, content) => log.EndsWith(content);
+
+        internal IEnumerator ExpectLog(string content, float timeoutSeconds) => ExpectLog(ToEndWith, content, timeoutSeconds);
+        internal IEnumerator ExpectLog(Func<string, string, bool> func, string content, float timeoutSeconds)
         {
             if (Assert(!_logPointerInUse, "Log pointer can only be used by one mode0 verifier")) yield break;
             _logPointerInUse = true;
-            yield return ExpectLog(content, timeoutSeconds, GetLogIterator(0));
+            yield return ExpectLog(func, content, timeoutSeconds, GetLogIterator(0));
             _logPointerInUse = false;
         }
-        internal IEnumerator ExpectLogInParallel(string content, float timeoutSeconds) => ExpectLog(content, timeoutSeconds, GetLogIterator(1));
-        private IEnumerator ExpectLog(string content, float timeoutSeconds, LogIterator iter)
+        private IEnumerator ExpectLog(Func<string, string, bool> func, string content, float timeoutSeconds, LogIterator iter)
         {
             if (!_testInProgress) yield break;
 
@@ -303,7 +306,7 @@ namespace BossAttacks.Utils
                     {
                         continue;
                     }
-                    if (iter.GetCurrentLog().Contains(content))
+                    if (func(iter.GetCurrentLog(), content))
                     {
                         // found log. good
                         this.LogModTest($"[{self}] Found expected content \"{content}\" in log \"{iter.GetCurrentLog()}\". Good.");
@@ -329,15 +332,17 @@ namespace BossAttacks.Utils
             _workers--;
         }
 
-        internal IEnumerator ExpectNotLog(string content, float timeoutSeconds)
+        internal IEnumerator ExpectNoLog(string content, float timeoutSeconds) => ExpectNoLog(ToEndWith, content, timeoutSeconds);
+        internal IEnumerator ExpectNoLog(Func<string, string, bool> func, string content, float timeoutSeconds)
         {
             if (Assert(!_logPointerInUse, "Log pointer can only be used by one mode0 verifier")) yield break;
             _logPointerInUse = true;
-            yield return ExpectNotLog(content, timeoutSeconds, GetLogIterator(0));
+            yield return ExpectNoLog(func, content, timeoutSeconds, GetLogIterator(0));
             _logPointerInUse = false;
         }
-        internal IEnumerator ExpectNotLogInParallel(string content, float timeoutSeconds) => ExpectNotLog(content, timeoutSeconds, GetLogIterator(1));
-        private IEnumerator ExpectNotLog(string content, float timeoutSeconds, LogIterator iter)
+        internal void ExpectNoLogInParallel(string content, float timeoutSeconds) => ExpectNoLogInParallel(ToEndWith, content, timeoutSeconds);
+        internal void ExpectNoLogInParallel(Func<string, string, bool> func, string content, float timeoutSeconds) => InParallel(ExpectNoLog(func, content, timeoutSeconds, GetLogIterator(1)));
+        private IEnumerator ExpectNoLog(Func<string, string, bool> func, string content, float timeoutSeconds, LogIterator iter)
         {
             if (!_testInProgress) yield break;
 
@@ -355,7 +360,7 @@ namespace BossAttacks.Utils
                     {
                         continue;
                     }
-                    if (Assert(!iter.GetCurrentLog().Contains(content), $"[{self}] TEST FAILED: Unexpected content \"{content}\" found in log \"{iter.GetCurrentLog()}\""))
+                    if (Assert(!func(iter.GetCurrentLog(), content), $"[{self}] TEST FAILED: Unexpected content \"{content}\" found in log \"{iter.GetCurrentLog()}\""))
                     {
                         _workers--;
                         yield break;

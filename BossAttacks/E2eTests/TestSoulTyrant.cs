@@ -48,28 +48,9 @@ namespace BossAttacks.E2eTests
             yield return ExpectLog("[ModuleManager]     [     ] - Extra: Infinite DIVE", 2);
 
             TestCase("test shoot");
-            InParallel(ExpectNotLogInParallel("Boss entering state Quake Antic", 5));
+            ExpectNoLogInParallel("Boss entering state Quake Antic", 5);
             yield return ExpectLog("Boss entering state Shot Antic", 5);
             yield return ExpectLog("Boss entering state Quake Antic", 20);
-        }
-
-        private IEnumerator TurnOffAllAttacks(int count)
-        {
-            TestCase("turn off all attacks");
-            for (int i = 1; i <= count; i++)
-            {
-                yield return PressKey(KeyCode.Alpha0 + i, 0.1f);
-            }
-        }
-
-        private IEnumerator WaitForBossIdle(string id, float seconds)
-        {
-            TestCase($"wait for boss idle {id}");
-            yield return ExpectLog("Boss entering state Attack Choice SCP", seconds);
-            InParallel(ExpectNotLogInParallel("Boss entering state Charge Antic", 2));
-            InParallel(ExpectNotLogInParallel("Boss entering state Quake Antic", 2));
-            InParallel(ExpectNotLogInParallel("Boss entering state HS Summon", 2));
-            yield return ExpectNotLog("Boss entering state Shot Antic", 2);
         }
     }
 }

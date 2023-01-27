@@ -244,9 +244,9 @@ namespace BossAttacks.Utils
             yield return ExpectLog(BossMeta.ScpLog, _lastAttackDuration);
             for (int i = 0; i < BossMeta.Attacks.Length - 1; i++)
             {
-                InParallel(ExpectNotLogInParallel(BossMeta.Attacks[i].Log, 2));
+                ExpectNoLogInParallel(BossMeta.Attacks[i].Log, 2);
             }
-            yield return ExpectNotLog(BossMeta.Attacks.Last().Log, 2);
+            yield return ExpectNoLog(BossMeta.Attacks.Last().Log, 2);
             _lastAttackDuration = 2; // no attack is going on
         }
 
