@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BossAttacks.E2eTests
 {
-    internal class TestMegaMossCharger : E2eBossFightTest
+    internal class TestMassiveMossCharger : E2eBossFightTest
     {
         protected override string BossScene => "GG_Mega_Moss_Charger";
 

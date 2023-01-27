@@ -15,7 +15,7 @@ namespace BossAttacks.E2eTests
             typeof(TestGodTamer),
             typeof(TestGruzMother),
             typeof(TestLostKin),
-            typeof(TestMegaMossCharger),
+            typeof(TestMassiveMossCharger),
             typeof(TestPureVessel),
             typeof(TestSoulTyrant),
             typeof(TestTraitorLord),
