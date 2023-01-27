@@ -205,12 +205,13 @@ namespace BossAttacks.Utils
             internal string Log { get; set; }
             internal float Duration { get; set; }
             internal int RepeatTimes { get; set; }
+            internal BossAttackMetadata[] Parts { get; set; }
         }
 
         protected class BossMetadata
         {
             internal float StartIdle { get; set; }
-            internal string ScpLog { get; set; }
+            internal string IdleLog { get; set; }
             internal BossAttackMetadata[] Attacks { get; set; }
         }
 
@@ -229,7 +230,7 @@ namespace BossAttacks.Utils
             }
         }
 
-        private IEnumerator TurnOffAllAttacks()
+        protected IEnumerator TurnOffAllAttacks()
         {
             TestCase("turn off all attacks");
             for (int i = 0; i < BossMeta.Attacks.Length; i++)
@@ -238,15 +239,33 @@ namespace BossAttacks.Utils
             }
         }
 
-        private IEnumerator WaitForBossIdle(string id)
+        protected IEnumerator WaitForBossIdle(string id)
         {
             TestCase($"wait for boss idle {id}");
-            yield return ExpectLog(BossMeta.ScpLog, _lastAttackDuration);
-            for (int i = 0; i < BossMeta.Attacks.Length - 1; i++)
+            yield return ExpectLog(BossMeta.IdleLog, _lastAttackDuration);
+
+            var noLogs = new List<string>();
+            foreach (var attack in BossMeta.Attacks)
             {
-                ExpectNoLogInParallel(BossMeta.Attacks[i].Log, 2);
+                // Parts has higher priority than Log/Duration
+                if (attack.Parts != null)
+                {
+                    foreach (var part in attack.Parts)
+                    {
+                        noLogs.Add(part.Log);
+                    }
+                }
+                else
+                {
+                    noLogs.Add(attack.Log);
+                }
             }
-            yield return ExpectNoLog(BossMeta.Attacks.Last().Log, 2);
+
+            for (int i = 0; i < noLogs.Count - 1; i++)
+            {
+                ExpectNoLogInParallel(noLogs[i], 2);
+            }
+            yield return ExpectNoLog(noLogs.Last(), 2);
             _lastAttackDuration = 2; // no attack is going on
         }
 
@@ -261,14 +280,26 @@ namespace BossAttacks.Utils
             for (int i = 0; i < attack.RepeatTimes; i++)
             {
                 TestCase($"test attack {idx + 1} - {attack.Name} #{i + 1}");
-                yield return ExpectLog(attack.Log, _lastAttackDuration);
-                _lastAttackDuration = attack.Duration; // this attack is going on
+                // Parts has higher priority than Log/Duration
+                if (attack.Parts != null)
+                {
+                    foreach (var part in attack.Parts)
+                    {
+                        yield return ExpectLog(part.Log, _lastAttackDuration);
+                        _lastAttackDuration = part.Duration; // this attack is going on
+                    }
+                }
+                else
+                {
+                    yield return ExpectLog(attack.Log, _lastAttackDuration);
+                    _lastAttackDuration = attack.Duration; // this attack is going on
+                }
             }
 
             // disable attack
             yield return PressKey(KeyCode.Alpha1 + idx, 0.1f);
         }
 
-        private float _lastAttackDuration;
+        protected float _lastAttackDuration;
     }
 }

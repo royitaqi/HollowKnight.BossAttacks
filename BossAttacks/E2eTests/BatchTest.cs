@@ -10,7 +10,11 @@ namespace BossAttacks.E2eTests
     {
         private Type[] ToTest => new[]
         {
+            typeof(TestBrokenVessel),
+            typeof(TestBroodingMawlek),
+            typeof(TestBroodingMawlekV),
             typeof(TestCrystalGuardian),
+            typeof(TestDungDefender),
             typeof(TestEnragedGuardian),
             typeof(TestGodTamer),
             typeof(TestGruzMother),

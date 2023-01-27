@@ -11,7 +11,7 @@ namespace BossAttacks.E2eTests
         protected override BossMetadata BossMeta => new BossMetadata
         {
             StartIdle = 10,
-            ScpLog = "Boss entering state Choice SCP",
+            IdleLog = "Boss entering state Choice SCP",
             Attacks = new[]
             {
                 new BossAttackMetadata { Name = "CHASE", Log = "Boss entering state Zapping", Duration = 10,  RepeatTimes = 6 }, // 3 Zapping per attack

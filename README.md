@@ -20,11 +20,11 @@ Train boss fights in Hall of Gods against specific boss attacks and more.
 | Boss | Hall of Gods | Extra | Auto Tested |
 | --- | :---: | --- | --- |
 | Absolute Radiance | ✅ | ✅ Show different attacks in different phases |
-| Broken Vessel | ✅ | ✅ Unlock all attacks |
-| Brooding Mawlek | ✅ | ✅ Allow repeated attacks of the same type |
+| Broken Vessel | ✅ | ✅ Unlock all attacks | ✅
+| Brooding Mawlek | ✅ | ✅ Allow repeated attacks of the same type | ✅
 | Brothers Oro & Mato | ✖️ | <img src="https://user-images.githubusercontent.com/14790745/212978125-5665feb9-d73f-494d-a1e9-8cb960450d35.png" width="22" height="22" /> Too Complex to figure out, yet |
 | Crystal Guardian | ✅ |  | ✅
-| Dung Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before) |
+| Dung Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before) | ✅
 | Elder Hu | ✅ | |
 | Enraged Guardian | ✅ |  | ✅
 | Failed Champion | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
