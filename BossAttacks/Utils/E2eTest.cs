@@ -33,7 +33,7 @@ namespace BossAttacks.Utils
 
             // logging
             yield return InterceptLog();
-            ExpectNoLogInParallel(ToContain, "[E]", int.MaxValue);
+            ExpectNoLogInParallel(ToContain, "[E]", float.MaxValue);
             InParallel(ExpectLimitedLogSize());
 
             this.LogModTest($"Setup completed");
@@ -64,7 +64,7 @@ namespace BossAttacks.Utils
             yield return 0;
         }
 
-        private IEnumerator Conclude()
+        protected virtual IEnumerator Conclude()
         {
             _testCase = "Conclude";
             this.LogModTest("Concluding");
@@ -279,9 +279,15 @@ namespace BossAttacks.Utils
 
         internal static Func<string, string, bool> ToContain => (log, content) => log.Contains(content);
         internal static Func<string, string, bool> ToEndWith => (log, content) => log.EndsWith(content);
+        private static string FuncToString(Func<string, string, bool> func)
+        {
+            if (func == ToContain) return "ToContain";
+            if (func == ToEndWith) return "ToEndWidth";
+            return "Custom";
+        }
 
-        internal IEnumerator ExpectLog(string content, float timeoutSeconds) => ExpectLog(ToEndWith, content, timeoutSeconds);
-        internal IEnumerator ExpectLog(Func<string, string, bool> func, string content, float timeoutSeconds)
+        protected IEnumerator ExpectLog(string content, float timeoutSeconds) => ExpectLog(ToEndWith, content, timeoutSeconds);
+        protected IEnumerator ExpectLog(Func<string, string, bool> func, string content, float timeoutSeconds)
         {
             if (Assert(!_logPointerInUse, "Log pointer can only be used by one mode0 verifier")) yield break;
             _logPointerInUse = true;
@@ -294,15 +300,15 @@ namespace BossAttacks.Utils
 
             _workers++;
             var self = $"#{_nextWorkerId++}";
-            this.LogModTest($"[{self}] ExpectLog(content = \"{content}\", timeoutSeconds = {timeoutSeconds})");
+            this.LogModTest($"[{self}] ExpectLog{FuncToString(func)}(content = \"{content}\", timeoutSeconds = {timeoutSeconds})");
 
             while (_testInProgress)
             {
                 while (iter.HasMoreLog())
                 {
                     iter.MoveToNextLog();
-                    // Skip test logs
-                    if (iter.GetCurrentLog().Contains("[T]"))
+                    // Skip self logs
+                    if (iter.GetCurrentLog().Contains($"[{self}]"))
                     {
                         continue;
                     }
@@ -332,31 +338,31 @@ namespace BossAttacks.Utils
             _workers--;
         }
 
-        internal IEnumerator ExpectNoLog(string content, float timeoutSeconds) => ExpectNoLog(ToEndWith, content, timeoutSeconds);
-        internal IEnumerator ExpectNoLog(Func<string, string, bool> func, string content, float timeoutSeconds)
+        protected IEnumerator ExpectNoLog(string content, float timeoutSeconds) => ExpectNoLog(ToEndWith, content, timeoutSeconds);
+        protected IEnumerator ExpectNoLog(Func<string, string, bool> func, string content, float timeoutSeconds)
         {
             if (Assert(!_logPointerInUse, "Log pointer can only be used by one mode0 verifier")) yield break;
             _logPointerInUse = true;
             yield return ExpectNoLog(func, content, timeoutSeconds, GetLogIterator(0));
             _logPointerInUse = false;
         }
-        internal void ExpectNoLogInParallel(string content, float timeoutSeconds) => ExpectNoLogInParallel(ToEndWith, content, timeoutSeconds);
-        internal void ExpectNoLogInParallel(Func<string, string, bool> func, string content, float timeoutSeconds) => InParallel(ExpectNoLog(func, content, timeoutSeconds, GetLogIterator(1)));
+        protected void ExpectNoLogInParallel(string content, float timeoutSeconds) => ExpectNoLogInParallel(ToEndWith, content, timeoutSeconds);
+        protected void ExpectNoLogInParallel(Func<string, string, bool> func, string content, float timeoutSeconds) => InParallel(ExpectNoLog(func, content, timeoutSeconds, GetLogIterator(1)));
         private IEnumerator ExpectNoLog(Func<string, string, bool> func, string content, float timeoutSeconds, LogIterator iter)
         {
             if (!_testInProgress) yield break;
 
             _workers++;
             var self = $"#{_nextWorkerId++}";
-            this.LogModTest($"[{self}] ExpectNotLog(content = \"{content}\", timeoutSeconds = {timeoutSeconds})");
+            this.LogModTest($"[{self}] ExpectNotLog{FuncToString(func)}(content = \"{content}\", timeoutSeconds = {timeoutSeconds})");
 
             while (_testInProgress)
             {
                 while (iter.HasMoreLog())
                 {
                     iter.MoveToNextLog();
-                    // Skip test logs
-                    if (iter.GetCurrentLog().Contains("[T]"))
+                    // Skip self logs
+                    if (iter.GetCurrentLog().Contains($"[{self}]"))
                     {
                         continue;
                     }
@@ -385,6 +391,51 @@ namespace BossAttacks.Utils
             _workers--;
         }
 
+        protected class Counter
+        {
+            internal bool InProgress { get; set; }
+            internal int Value { get; set; }
+        }
+
+        protected void CountLogInParallel(string content, float timeoutSeconds, Counter counter) => CountLogInParallel(ToEndWith, content, timeoutSeconds, counter);
+        protected void CountLogInParallel(Func<string, string, bool> func, string content, float timeoutSeconds, Counter counter) => InParallel(CountLog(func, content, timeoutSeconds, counter, GetLogIterator(1)));
+        private IEnumerator CountLog(Func<string, string, bool> func, string content, float timeoutSeconds, Counter counter, LogIterator iter)
+        {
+            if (!_testInProgress) yield break;
+
+            _workers++;
+            var self = $"#{_nextWorkerId++}";
+            this.LogModTest($"[{self}] CountLog{FuncToString(func)}(content = \"{content}\", timeoutSeconds = {timeoutSeconds})");
+
+            while (_testInProgress && counter.InProgress && (timeoutSeconds > 0 || Mathf.Approximately(timeoutSeconds, 0)))
+            {
+                while (iter.HasMoreLog())
+                {
+                    iter.MoveToNextLog();
+                    // Skip self logs
+                    if (iter.GetCurrentLog().Contains($"[{self}]"))
+                    {
+                        continue;
+                    }
+                    if (func(iter.GetCurrentLog(), content))
+                    {
+                        // found log. good
+                        counter.Value++;
+                    }
+                }
+
+                // can no longer wait
+                const float sleep = 0.1f;
+                timeoutSeconds -= sleep;
+
+                // wait before checking again
+                //this.LogModTest($"        [{self}] Sleeping ...");
+                yield return new WaitForSeconds(sleep);
+            }
+
+            _workers--;
+        }
+
         internal IEnumerator ExpectLimitedLogSize()
         {
             if (!_testInProgress) yield break;
@@ -393,7 +444,7 @@ namespace BossAttacks.Utils
             var self = $"#{_nextWorkerId++}";
             this.LogModTest($"[{self}] ExpectLimitedLogSize()");
 
-            const int limit = 99999;
+            const int limit = 299999;
             while (_testInProgress)
             {
                 if (Assert(_logs.Count <= limit, $"[{self}] TEST FAILED: Too many logs have been generated ({_logs.Count} > {limit})"))
