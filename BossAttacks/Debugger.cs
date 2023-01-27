@@ -17,20 +17,53 @@ namespace BossAttacks
 
         public void Load()
         {
-            ModHooks.HeroUpdateHook += EachHeroUpdate;
-            On.PlayMakerFSM.Start += EachFsmAtStart;
+            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook; ;
+            On.PlayMakerFSM.Start += PlayMakerFSM_Start;
         }
 
         public void Unload()
         {
-            ModHooks.HeroUpdateHook -= EachHeroUpdate;
-            On.PlayMakerFSM.Start -= EachFsmAtStart;
+            ModHooks.HeroUpdateHook -= ModHooks_HeroUpdateHook;
+            On.PlayMakerFSM.Start -= PlayMakerFSM_Start;
+            _coroutineInProgress = false;
         }
 
-        private void EachFsmAtStart(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
+        private void ModHooks_HeroUpdateHook()
+        {
+            if (!_coroutineInProgress && HeroController.instance != null)
+            {
+                _coroutineInProgress = true;
+                HeroController.instance.StartCoroutine(CoroutineLoop());
+            }
+
+            EachHeroUpdate();
+        }
+
+        private void PlayMakerFSM_Start(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
         {
             orig(self);
 
+            EachFsmAtStart(self);
+        }
+
+        private IEnumerator CoroutineLoop()
+        {
+            while (_coroutineInProgress)
+            {
+                EachCoroutineCall();
+                yield return new WaitForSeconds(1f);
+            }
+        }
+        private bool _coroutineInProgress;
+
+        #region Playground
+        private void EachCoroutineCall()
+        {
+            this.LogModDebug("EachCoroutineCall()");
+        }
+
+        private void EachFsmAtStart(PlayMakerFSM self)
+        {
             // custom logic
             if (self is
                 {
@@ -109,5 +142,6 @@ namespace BossAttacks
                 this.LogModTEMP($"fake attack: up");
             }
         }
+        #endregion Playground
     }
 }
