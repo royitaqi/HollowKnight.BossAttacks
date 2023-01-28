@@ -42,7 +42,9 @@ namespace BossAttacks.Utils
 
         public static void LogModTest<T>(this T self, string message)
         {
+#if DEBUG
             LogModImpl(self, "T", message);
+#endif
         }
 
         // These logs are accepted:

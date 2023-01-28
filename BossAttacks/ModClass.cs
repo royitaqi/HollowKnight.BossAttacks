@@ -57,9 +57,11 @@ namespace BossAttacks
             // input overrides
             KeyboardOverride.Load();
 
+#if (DEBUG)
             // debugger
             Debugger.Instance = new Debugger();
             Debugger.Instance.Load();
+#endif
 
             Log("Initialized mod");
         }
@@ -159,12 +161,14 @@ namespace BossAttacks
         ///
         public void Unload()
         {
+#if (DEBUG)
             // debugger
             if (Debugger.Instance != null)
             {
                 Debugger.Instance.Unload();
                 Debugger.Instance = null;
             }
+#endif
 
             // input overrides
             KeyboardOverride.Unload();

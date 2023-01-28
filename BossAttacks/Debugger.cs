@@ -11,13 +11,14 @@ using UnityEngine;
 
 namespace BossAttacks
 {
+#if (DEBUG)
     internal class Debugger
     {
         public static Debugger Instance;
 
         public void Load()
         {
-            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook; ;
+            ModHooks.HeroUpdateHook += ModHooks_HeroUpdateHook;
             On.PlayMakerFSM.Start += PlayMakerFSM_Start;
         }
 
@@ -144,4 +145,5 @@ namespace BossAttacks
         }
         #endregion Playground
     }
+#endif
 }
