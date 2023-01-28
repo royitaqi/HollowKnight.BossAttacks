@@ -27,8 +27,8 @@ Train boss fights in Hall of Gods against specific boss attacks and more.
 | Dung Defender | ✅ | ✅ Trim ROLL JUMP (no throw balls before) | ✅
 | Elder Hu | ✅ | |
 | Enraged Guardian | ✅ |  | ✅
-| Failed Champion | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
-| False Knight | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns |
+| Failed Champion | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns | ✅
+| False Knight | ✅ | ✅ Allow repeated attacks of the same type<br>✅ Infinite stuns | ✅
 | Flukemarm | n/a | Only does one attack | n/a
 | Galien | n/a | Only does one attack | n/a
 | God Tamer | ✅ | | ✅

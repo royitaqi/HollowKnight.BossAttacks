@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,11 +71,11 @@ namespace BossAttacks.Utils
 
             if (_testErrors.Count == 0)
             {
-                this.LogModTest("TEST SUCCEEDED");
+                this.LogModTest("✅ TEST SUCCEEDED");
             }
             else
             {
-                this.LogModTest($"TEST FAILED with {_testErrors.Count} error(s):");
+                this.LogModTest($"❌ TEST FAILED with {_testErrors.Count} error(s):");
                 foreach (var error in _testErrors)
                 {
                     this.LogModTest($"    - {error}");

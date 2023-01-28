@@ -12,14 +12,14 @@ internal abstract class SingleFsmModule : Module
         _go = FindGameObject(scene, config.GoName);
         if (_go == null)
         {
-            this.LogModError($"Cannot find GO {config.GoName} in scene");
+            this.LogModError($"Cannot find GO \"{config.GoName}\" in scene");
         }
         this.LogModDebug($"GO = {_go.name}  ({_go.GetInstanceID()})");
 
         _fsm = _go.LocateMyFSM(config.FsmName);
         if (_fsm == null)
         {
-            this.LogModError($"Cannot find FSM {config.FsmName} in GO");
+            this.LogModError($"Cannot find FSM \"{config.FsmName}\" in GO");
         }
         this.LogModDebug($"FSM = {_fsm.FsmName} ({_fsm.GetInstanceID()})");
     }

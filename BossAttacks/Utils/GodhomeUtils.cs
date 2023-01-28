@@ -394,11 +394,11 @@ namespace BossAttacks.Utils
         {
             var falseKnight = new Dictionary<string, string>
             {
-                { "GoName", "False Knight Dream" },
+                { "GoName", "Battle Scene/False Knight New" },
             };
             var failedChampion = new Dictionary<string, string>
             {
-                { "GoName", "Battle Scene/False Knight New" },
+                { "GoName", "False Knight Dream" },
             };
             var boss = v ? failedChampion : falseKnight;
 
@@ -409,7 +409,7 @@ namespace BossAttacks.Utils
                         new("JA In A Row", 0), // row count for JUMP ATTACK
                         new("Slam In A Row", 0), // row count for SMASH
                         new("Jump Count", 0), // row check for JUMP
-                        new("Stunned Amount", -9), // Needed for JUMP. See Determine Jump-1.
+                        new("Stunned Amount", -2), // Needed for JUMP. See Determine Jump-1.
                     },
                 },
             };
